@@ -267,7 +267,7 @@ neon-arena-telegram/
 5. PostgreSQL + Redis при росте аудитории.
 6. Панель администратора: покупки, пользователи, возвраты, экономика, бан/античит.
 7. Telegram notifications: новый сезон, награда Top-10, ежедневная серия.
-
+Deploy refresh
 ---
 
 Версия проекта: **Telegram MVP 1.0 / Neon Arena gameplay v1.5.11**.
