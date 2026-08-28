@@ -556,7 +556,7 @@
     projectiles:[],enemies:[],particles:[],stars:[],powerupDrop:null,powerupSpawnClock:9,activePowerups:{speed:0,damage:0,shield:0},joystick:{active:false,pointerId:null,startX:0,startY:0,rawStartX:0,rawStartY:0,x:0,y:0},keys:new Set(),suspendedByPlatform:false,manualPause:false
   };
   const player = {x:0,y:0,r:15,speed:235,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:590,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,invuln:0,trail:[]};
-  const ANALYTICS_APP_VERSION='1.5.28';
+  const ANALYTICS_APP_VERSION='1.5.29';
   function makeAnalyticsId(prefix='evt'){
     try{if(globalThis.crypto?.randomUUID)return `${prefix}_${globalThis.crypto.randomUUID().replace(/-/g,'')}`}catch(_){}
     return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,14)}`;
