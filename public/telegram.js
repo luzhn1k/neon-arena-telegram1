@@ -23,7 +23,9 @@
         this.initData=String(this.tg.initData||'');this.user=this.tg.initDataUnsafe?.user||null;
         const lc=String(this.user?.language_code||'').toLowerCase();if(lc)this.language=lc.startsWith('ru')?'ru':'en';
         this.authorized=!!this.initData;this.platformAvailable=true;this.platformApi={telegram:true};
+        const viewportSignal=()=>{try{window.dispatchEvent(new CustomEvent('neon:telegramviewport'))}catch(_){window.dispatchEvent(new Event('resize'))}};
         this.tg.onEvent?.('deactivated',()=>this.callbacks.pause());this.tg.onEvent?.('activated',()=>this.callbacks.resume());
+        this.tg.onEvent?.('viewportChanged',viewportSignal);this.tg.onEvent?.('safeAreaChanged',viewportSignal);this.tg.onEvent?.('contentSafeAreaChanged',viewportSignal);
       }else{
         try{const health=await fetch('/api/health').then(r=>r.json());this.devMode=!!health.devMode;this.authorized=this.devMode;this.platformAvailable=this.devMode;this.platformApi=this.devMode?{dev:true}:null}catch(_){ }
       }
@@ -31,14 +33,28 @@
     }
     setCallbacks(callbacks={}){this.callbacks={pause:typeof callbacks.pause==='function'?callbacks.pause:()=>{},resume:typeof callbacks.resume==='function'?callbacks.resume:()=>{}}}
     ready(){try{this.tg?.ready?.();this.tg?.expand?.()}catch(_){ }return true}
-    gameplayStart(){try{this.tg?.expand?.();this.tg?.requestFullscreen?.()}catch(_){ }}
+    prepareGameplay(){
+      try{this.tg?.expand?.();this.tg?.requestFullscreen?.();this.tg?.disableVerticalSwipes?.()}catch(_){ }
+    }
+    gameplayStart(){
+      try{
+        this.tg?.expand?.();this.tg?.requestFullscreen?.();this.tg?.disableVerticalSwipes?.();
+        if(window.innerWidth>window.innerHeight)this.tg?.lockOrientation?.();
+      }catch(_){ }
+    }
     gameplayStop(){ }
+    gameplayExit(){
+      try{this.tg?.enableVerticalSwipes?.();this.tg?.unlockOrientation?.()}catch(_){ }
+    }
     async login(){return{ok:this.authorized,player:this.user}}
     async loadCloudProgress(){if(!this.authorized)return null;try{return(await this.api('/api/me')).progress}catch(e){console.warn('[Telegram] cloud load',e);return null}}
     async saveCloudProgress(progress){if(!this.authorized)return false;try{await this.api('/api/progress',{method:'PUT',body:JSON.stringify({progress})});return true}catch(e){console.warn('[Telegram] cloud save',e);return false}}
-    async submitScore(score,meta={}){if(!this.authorized)return false;try{await this.api('/api/score',{method:'POST',body:JSON.stringify({score:Math.max(0,Math.floor(Number(score)||0)),meta})});return true}catch(e){console.warn('[Telegram] score',e);return false}}
-    async getLeaderboard(){if(!this.authorized)return null;try{const d=await this.api('/api/leaderboard');return{entries:d.entries||[],userRank:d.userRank||0}}catch(e){console.warn('[Telegram] leaderboard',e);return null}}
+    async submitScore(score,meta={}){if(!this.authorized)return null;try{return await this.api('/api/score',{method:'POST',body:JSON.stringify({score:Math.max(0,Math.floor(Number(score)||0)),meta})})}catch(e){console.warn('[Telegram] score',e);return null}}
+    async getLeaderboard(){if(!this.authorized)return null;try{const d=await this.api('/api/leaderboard');return{entries:d.entries||[],userRank:d.userRank||0,season:d.season||null,reward:d.reward||null}}catch(e){console.warn('[Telegram] leaderboard',e);return null}}
     async getPlayerEntry(){if(!this.authorized)return null;try{return(await this.api('/api/player-entry')).entry||null}catch(_){return null}}
+    async getStarChestStatus(){if(!this.authorized)return null;try{return(await this.api('/api/star-chest/status')).pity||null}catch(_){return null}}
+    async getSeasonPass(){if(!this.authorized)return null;try{return await this.api('/api/pass')}catch(e){console.warn('[Telegram] season pass',e);return null}}
+    async claimPassReward(track,level){try{return await this.api('/api/pass/claim',{method:'POST',body:JSON.stringify({track,level})})}catch(e){return{ok:false,reason:e.data?.reason||'error'}}}
     async getPaymentsCatalog(){try{return(await this.api('/api/store')).products||[]}catch(_){return[]}}
     async purchaseProduct(productId){
       if(!this.authorized||!this.tg?.openInvoice)return null;
@@ -48,7 +64,7 @@
         if(status!=='paid')return{paid:false,status};
         for(let i=0;i<14;i++){
           await new Promise(r=>setTimeout(r,450));
-          try{const check=await this.api(`/api/purchase-status?id=${encodeURIComponent(invoice.purchaseId)}`);if(check.status==='paid')return{paid:true,status:'paid',progress:check.progress}}catch(_){ }
+          try{const check=await this.api(`/api/purchase-status?id=${encodeURIComponent(invoice.purchaseId)}`);if(check.status==='paid')return{paid:true,status:'paid',progress:check.progress,reward:check.reward}}catch(_){ }
         }
         return{paid:true,status:'paid',progress:await this.loadCloudProgress()};
       }catch(e){console.warn('[Telegram] purchase',e);return null}
@@ -57,10 +73,11 @@
       try{return await this.api('/api/shop/buy',{method:'POST',body:JSON.stringify({kind,id})})}
       catch(e){return{ok:false,reason:e.data?.reason||'error'}}
     }
-    async claimTop10Reward(){
-      try{return await this.api('/api/rewards/top10',{method:'POST',body:'{}'})}
-      catch(e){return{ok:false,reason:e.data?.reason||'error',rank:e.data?.rank||0}}
+    async claimWeeklyLeaderboardReward(){
+      try{return await this.api('/api/rewards/weekly',{method:'POST',body:'{}'})}
+      catch(e){return{ok:false,reason:e.data?.reason||'error',rank:e.data?.rank||0,weekId:e.data?.weekId||''}}
     }
+    async claimTop10Reward(){return this.claimWeeklyLeaderboardReward()}
     async getPurchases(){return[]}
     async consumePurchase(){return true}
     showInterstitial(){return Promise.resolve(false)}

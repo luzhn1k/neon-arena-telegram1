@@ -10,6 +10,8 @@
   const hudWave = document.getElementById('hudWave');
   const hudCombo = document.getElementById('hudCombo');
   const toast = document.getElementById('toast');
+  const rotateOverlay = document.getElementById('rotateOverlay');
+  const rotateCancelBtn = document.getElementById('rotateCancelBtn');
 
   const panels = {
     menu: document.getElementById('mainMenu'),
@@ -18,6 +20,7 @@
     leaderboard: document.getElementById('leaderboardPanel'),
     shop: document.getElementById('shopPanel'),
     rewards: document.getElementById('rewardsPanel'),
+    seasonPass: document.getElementById('seasonPassPanel'),
     help: document.getElementById('helpPanel'),
     pause: document.getElementById('pausePanel'),
   };
@@ -44,6 +47,28 @@
     shopPreviewKind: document.getElementById('shopPreviewKind'),
     shopPreviewPrev: document.getElementById('shopPreviewPrev'),
     shopPreviewNext: document.getElementById('shopPreviewNext'),
+    mythicShop: document.getElementById('mythicShop'),
+    mythicFeatureStage: document.getElementById('mythicFeatureStage'),
+    mythicFeatureName: document.getElementById('mythicFeatureName'),
+    mythicFeatureKind: document.getElementById('mythicFeatureKind'),
+    mythicFeatureRarity: document.getElementById('mythicFeatureRarity'),
+    mythicFeatureDesc: document.getElementById('mythicFeatureDesc'),
+    mythicFeaturePerks: document.getElementById('mythicFeaturePerks'),
+    mythicFeaturePrice: document.getElementById('mythicFeaturePrice'),
+    mythicFeatureAction: document.getElementById('mythicFeatureAction'),
+    starChestShop: document.getElementById('starChestShop'),
+    legendaryPityText: document.getElementById('legendaryPityText'),
+    legendaryPityBar: document.getElementById('legendaryPityBar'),
+    mythicPityText: document.getElementById('mythicPityText'),
+    mythicPityBar: document.getElementById('mythicPityBar'),
+    seasonPassId: document.getElementById('seasonPassId'),
+    seasonPassLevel: document.getElementById('seasonPassLevel'),
+    seasonPassTimer: document.getElementById('seasonPassTimer'),
+    seasonPassXpBar: document.getElementById('seasonPassXpBar'),
+    seasonPassXpText: document.getElementById('seasonPassXpText'),
+    seasonPassPrice: document.getElementById('seasonPassPrice'),
+    buySeasonPassBtn: document.getElementById('buySeasonPassBtn'),
+    seasonPassRewards: document.getElementById('seasonPassRewards'),
     loginBtn: document.getElementById('loginBtn'),
     authHint: document.getElementById('authHint'),
     upgradeChoices: document.getElementById('upgradeChoices'),
@@ -77,6 +102,15 @@
     leaderboardCrystalRewardText: document.getElementById('leaderboardCrystalRewardText'),
     claimLeaderboardCrystalBtn: document.getElementById('claimLeaderboardCrystalBtn'),
     capsuleOverlay: document.getElementById('capsuleOverlay'),
+    capsuleDialog: document.getElementById('capsuleDialog'),
+    capsuleFXLayer: document.getElementById('capsuleFXLayer'),
+    mythicBurst: document.getElementById('mythicBurst'),
+    mythicBurstTitle: document.getElementById('mythicBurstTitle'),
+    mythicBurstHint: document.getElementById('mythicBurstHint'),
+    capsuleIntro: document.getElementById('capsuleIntro'),
+    capsuleIntroTitle: document.getElementById('capsuleIntroTitle'),
+    capsuleIntroHint: document.getElementById('capsuleIntroHint'),
+    capsuleReelFrame: document.getElementById('capsuleReelFrame'),
     capsuleReel: document.getElementById('capsuleReel'),
     capsuleResult: document.getElementById('capsuleResult'),
     capsuleResultPreview: document.getElementById('capsuleResultPreview'),
@@ -95,15 +129,16 @@
   const I18N = {
     ru: {
       score:'Счёт', wave:'Волна', combo:'Комбо', tagline:'Выживай. Собирай комбо. Поднимайся в рейтинге.', best:'Рекорд', play:'Играть',
+      rotateEyebrow:'LANDSCAPE MODE', rotateTitle:'Поверните телефон', rotateText:'Для боя поверните устройство горизонтально. Игра запустится автоматически.',
       leaderboard:'Рейтинг', howToPlay:'Как играть', upgradeEyebrow:'УСИЛЕНИЕ', chooseUpgrade:'Выбери улучшение', runComplete:'ЗАБЕГ ЗАВЕРШЁН',
       gameOver:'Арена окончена', kills:'Побеждено', bestCombo:'Лучшее комбо', newRecord:'Новый рекорд!', again:'Ещё раз', menu:'Меню',
-      leaderboardNote:'Глобальный результат привязан к вашему Telegram-аккаунту.', training:'ТРЕНИРОВКА', moveTitle:'Двигайся',
+      leaderboardNote:'Недельный сезон сбрасывается каждую неделю. Награда за место в топ-10 доступна один раз за сезон.', training:'ТРЕНИРОВКА', moveTitle:'Двигайся',
       moveText:'WASD/стрелки на ПК. На телефоне веди пальцем по арене.', attackTitle:'Атакуй', attackText:'Оружие автоматически стреляет в ближайшего врага.',
       comboTitle:'Держи комбо', comboText:'Быстрые победы увеличивают множитель очков. Получение урона сбрасывает комбо.', upgradeTitle:'Усиливайся',
       upgradeText:'После каждой волны выбирай усиление. Редкость определяет его силу.', enterArena:'На арену', paused:'Пауза', continue:'Продолжить',
       login:'Telegram подключён', loginBenefit:'Откройте Mini App из Telegram, чтобы синхронизировать прогресс и участвовать в рейтинге.',
       authorized:'Telegram подключён · облачное сохранение и глобальный рейтинг активны', localMode:'Локальный режим: откройте Mini App из Telegram для облачного прогресса.',
-      leaderboardLoading:'Загружаем рейтинг…', leaderboardUnavailable:'Глобальный рейтинг сейчас недоступен.', globalBoard:'ГЛОБАЛЬНЫЙ РЕЙТИНГ', globalBoardHint:'Лучшие результаты игроков Neon Arena', yourPosition:'ВАША ПОЗИЦИЯ', place:'Место', leaderboardPlayer:'Игрок', result:'Результат', topPlayer:'ЛИДЕР', points:'очков',
+      leaderboardLoading:'Загружаем рейтинг…', leaderboardUnavailable:'Недельный рейтинг сейчас недоступен.', globalBoard:'НЕДЕЛЬНЫЙ РЕЙТИНГ', globalBoardHint:'Лучшие результаты игроков Neon Arena за текущую неделю', yourPosition:'ВАША ПОЗИЦИЯ', place:'Место', leaderboardPlayer:'Игрок', result:'Результат', topPlayer:'ЛИДЕР', points:'очков',
       authSuccess:'Telegram-профиль подключён. Облачный прогресс и рейтинг активированы.', authCancelled:'Откройте игру из Telegram, чтобы включить облачный прогресс.', rank:'Ваше место: #{rank}',
       noRank:'Откройте игру через Telegram, чтобы получить место в глобальном рейтинге.', waveIncoming:'ВОЛНА {wave}', bossIncoming:'БОСС · ВОЛНА {wave}', shieldSaved:'Щит поглотил удар!', evaded:'Фазовый сдвиг!', powerupSpeed:'УСКОРЕНИЕ', powerupDamage:'УСИЛЕННЫЙ УРОН', powerupShield:'ЭНЕРГОЩИТ', powerupPicked:'{name} · 10 сек.',
       localBest:'Локальный рекорд', player:'Игрок', leaderboardEmpty:'Пока нет результатов.', currency:'Неон-кредиты', crystals:'Нео-кристаллы', shop:'Магазин', rewards:'Награды',
@@ -120,14 +155,16 @@
       adReceived:'Косметика за рекламу получена!', adFailed:'Реклама не была просмотрена до награды.', rewardReadyShort:'Есть награды для получения', rewardWaitShort:'Новые награды появятся позже',
       chestsTitle:'Сундуки', chestsHint:'Чем выше редкость сундука, тем выше шанс редкой косметики', chestBuy:'Открыть за {coins} ◆', chestStandard:'Стандартный сундук', chestRare:'Редкий сундук', chestEpic:'Эпический сундук', chestLegendary:'Легендарный сундук', chestOdds:'Шансы: {odds}', chestOpened:'Сундук открыт!',
       adCreditsTitle:'100 неон-кредитов', adCapsuleTitle:'Косметическая капсула', adCreditsReady:'Посмотреть рекламу и получить 100 ◆. Доступно раз в 15 минут.', adCreditsCooldown:'Следующие 100 ◆ через {time}.', adCapsuleReady:'Посмотреть рекламу и получить косметическую капсулу. Доступно раз в 30 минут.', adCapsuleCooldown:'Следующая капсула через {time}.', adCreditsReceived:'Получено 100 неон-кредитов!', adCapsuleReceived:'Капсула за рекламу получена!', adCreditsWatch:'Смотреть рекламу → 100 ◆', adCapsuleWatch:'Смотреть рекламу → капсула',
-      leaderboardRewardsTag:'НАГРАДЫ РЕЙТИНГА', leaderboardRewardsTitle:'За попадание и удержание', leaderboardRewardsAuth:'Откройте игру через Telegram, чтобы получать награды за рейтинг.', leaderboardRewardsNoEntry:'Сначала установите результат в глобальном рейтинге.', leaderboardRewardsChecking:'Проверяем вашу позицию…', leaderboardRewardsNone:'Сегодня награда недоступна. Возвращайтесь завтра и удерживайте место.', leaderboardMilestoneReady:'Новый диапазон: топ-{tier}. Награда +{coins} ◆.', leaderboardHoldReady:'Удержание топ-{tier}: +{coins} ◆. Серия: {streak} дн.', leaderboardBothReady:'Новый диапазон + удержание: +{coins} ◆.', leaderboardRewardClaim:'Забрать +{coins} ◆', leaderboardRewardClaimed:'Рейтинговая награда получена!', leaderboardFirstDay:'Позиция зафиксирована. Удержите её до завтра для ежедневной награды.',
+      leaderboardRewardsTag:'НАГРАДЫ СЕЗОНА', leaderboardRewardsTitle:'Награды сезона', leaderboardRewardsAuth:'Откройте игру через Telegram, чтобы получать награды за рейтинг.', leaderboardRewardsNoEntry:'Сначала установите результат в глобальном рейтинге.', leaderboardRewardsChecking:'Проверяем вашу позицию…', leaderboardRewardsNone:'Сегодня награда недоступна. Возвращайтесь завтра и удерживайте место.', leaderboardMilestoneReady:'Новый диапазон: топ-{tier}. Награда +{coins} ◆.', leaderboardHoldReady:'Удержание топ-{tier}: +{coins} ◆. Серия: {streak} дн.', leaderboardBothReady:'Новый диапазон + удержание: +{coins} ◆.', leaderboardRewardClaim:'Забрать +{coins} ◆', leaderboardRewardClaimed:'Рейтинговая награда получена!', leaderboardFirstDay:'Позиция зафиксирована. Удержите её до завтра для ежедневной награды.',
       dailyQuestsTag:'ЕЖЕДНЕВНЫЕ КВЕСТЫ', dailyQuestsTitle:'Задания дня', questReset:'Сброс в полночь', dailyQuestBonusTag:'БОНУС ЗА ВСЕ КВЕСТЫ', dailyQuestBonusTitle:'Закрой все задания дня',
       dailyQuestBonusReady:'Все задания выполнены: +200 ◆ и 1 косметическая капсула.', dailyQuestBonusNeed:'Выполнено заданий: {done}/{total}.', questClaim:'Забрать', questClaimed:'Получено', questRewardCredits:'+{coins} ◆', questRewardCapsule:'Косметическая капсула',
       questKills:'Победи {target} врагов', questScore:'Набери {target} очков за забег', questCombo:'Собери комбо ×{target}', questWave:'Доберись до волны {target}', questGames:'Заверши {target} забега', questBoss:'Победи босса', duplicateNote:'Повторный предмет из капсулы автоматически превращается в неон-кредиты.',
       commonChance:'65%', rareChance:'26%', epicChance:'8%', legendaryChance:'1%', testCapsuleTitle:'Тестовая капсула', testCapsuleText:'Открывай без ограничений. Лента прокрутит все предметы и остановится на выпавшем.', openTestCapsule:'Открыть тестовую капсулу', capsuleOpening:'ОТКРЫТИЕ КАПСУЛЫ', capsuleTitle:'Косметическая капсула', openAgain:'Открыть ещё', close:'Закрыть', newCosmetic:'Новый предмет добавлен в коллекцию.', testDrop:'Тестовый дроп — прогресс и коллекция не изменяются.',
 
-      crystalShopTag:'НЕО-КРИСТАЛЛЫ', crystalShopTitle:'Мифическая коллекция', crystalShopHint:'Эксклюзивная косметика за нео-кристаллы. Мифическая редкость выше легендарной.', crystalTopRewardTitle:'Нео-кристаллы за топ-10', crystalTopRewardAuth:'Откройте игру через Telegram, чтобы получать ежедневные нео-кристаллы за топ-10.', crystalTopRewardNeed:'Попадите в топ-10 глобального рейтинга, чтобы получить нео-кристаллы.', crystalTopRewardReady:'Место #{rank}: ежедневная награда +{crystals} ◈.', crystalTopRewardClaim:'Забрать +{crystals} ◈', crystalTopRewardClaimed:'Награда топ-10 уже получена сегодня.', crystalTopRewardReceived:'Получено {crystals} нео-кристаллов!', crystalAdTitle:'10 нео-кристаллов', crystalAdReady:'Посмотреть рекламу и получить 10 ◈. Доступно раз в час.', crystalAdCooldown:'Следующие 10 ◈ через {time}.', crystalAdWatch:'Смотреть рекламу → 10 ◈', crystalAdReceived:'Получено 10 нео-кристаллов!', crystalPacksTitle:'Пополнить нео-кристаллы', crystalPacksHint:'Покупки проходят через Telegram Stars.', crystalPackBuy:'Купить', crystalPackUnavailable:'Покупки сейчас недоступны.', crystalLoginRequired:'Для покупки нео-кристаллов откройте игру как Telegram Mini App.', notEnoughCrystals:'Недостаточно нео-кристаллов.', crystalPurchaseFailed:'Покупка не завершена.', crystalPurchaseDone:'Получено {crystals} нео-кристаллов!', crystalPurchasePending:'Платёж подтверждается Telegram…', mythicOnly:'Только за нео-кристаллы',
-      skinQuantum:'Квант', skinPhoenix:'Феникс', skinAstral:'Астрал', bulletCelestial:'Небесный импульс', bulletDragon:'Драконий импульс', bulletVoidLance:'Копьё пустоты', trailGalaxy:'Галактический след', trailLightning:'Разлом молнии', trailCosmicRoyal:'Королевский космос',
+      crystalShopTag:'НЕО-КРИСТАЛЛЫ', crystalShopTitle:'Мифическая коллекция', crystalShopHint:'Эксклюзивная косметика за нео-кристаллы. Мифическая редкость выше легендарной.', crystalTopRewardTitle:'Еженедельная награда топ-10', crystalTopRewardAuth:'Откройте игру через Telegram, чтобы участвовать в недельном рейтинге.', crystalTopRewardNeed:'Войдите в топ-10 недели, чтобы забрать награду.', crystalTopRewardReady:'Место #{rank}: награда недели +{crystals} ◈.', crystalTopRewardClaim:'Забрать +{crystals} ◈', crystalTopRewardClaimed:'Награда этой недели уже получена.', crystalTopRewardReceived:'Получено {crystals} нео-кристаллов!', crystalAdTitle:'10 нео-кристаллов', crystalAdReady:'Посмотреть рекламу и получить 10 ◈. Доступно раз в час.', crystalAdCooldown:'Следующие 10 ◈ через {time}.', crystalAdWatch:'Смотреть рекламу → 10 ◈', crystalAdReceived:'Получено 10 нео-кристаллов!', crystalPacksTitle:'Пополнить нео-кристаллы', crystalPacksHint:'Покупки проходят через Telegram Stars.', crystalPackBuy:'Купить', crystalPackUnavailable:'Покупки сейчас недоступны.', crystalLoginRequired:'Для покупки нео-кристаллов откройте игру как Telegram Mini App.', notEnoughCrystals:'Недостаточно нео-кристаллов.', crystalPurchaseFailed:'Покупка не завершена.', crystalPurchaseDone:'Получено {crystals} нео-кристаллов!', crystalPurchasePending:'Платёж подтверждается Telegram…', mythicOnly:'Только за нео-кристаллы',
+      starChestsTitle:'Сундуки за Stars', starChestsHint:'Премиальные сундуки за Telegram Stars. Внутри все редкости, включая mythic.', starChest10:'Сундук 10 Stars', starChest20:'Сундук 20 Stars', starChest30:'Сундук 30 Stars', starChestDesc10:'Базовый premium-дроп: mythic 1%, legendary 15%.', starChestDesc20:'Улучшенный сундук: mythic 1%, legendary 17%.', starChestDesc30:'Топовый сундук: mythic 1%, legendary 20%.', starChestBuy:'Открыть за {stars} ⭐', starChestOdds:'Шансы: {odds}', starChestOpened:'Премиальный сундук открыт!', starChestUnavailable:'Платёж за сундук сейчас недоступен.', starChestNeedTelegram:'Откройте игру как Telegram Mini App, чтобы купить сундук за Stars.', starChestPurchaseFailed:'Покупка сундука не завершена.', starChestOpeningHint:'Готовим премиальную награду…', mythicDrop:'МИФИЧЕСКИЙ ДРОП!', mythicDropHint:'Эксклюзивный косметический предмет с особыми визуальными эффектами.', chestTier10Hint:'Быстрый premium-ролл · повышенный шанс rare/epic.', chestTier20Hint:'Улучшенный сундук · больше epic и legendary наград.', chestTier30Hint:'Топовый сундук · максимальный premium-эффект и лучшие шансы.', mythicBurstHint:'Ультра-редкая награда активирована.', legendaryGuarantee:'Гарант legendary', mythicGuarantee:'Гарант mythic', pitySharedHint:'Гарант общий для всех сундуков за Stars. Legendary — максимум на 10-м открытии, mythic — максимум на 100-м.', pityRemaining:'До гаранта: {count}', pityReady:'Следующее открытие — гарант!', seasonPass:'Season Pass', seasonPassTitle:'Neon Season Pass', seasonPassHint:'20 уровней на 28 дней. Баланс рассчитан примерно на 35–40 обычных забегов. Premium открывает второй трек наград.', seasonLevel:'Уровень', premiumTrack:'PREMIUM TRACK', premiumPassTitle:'Premium Season Pass', premiumPassHint:'Дополнительные кристаллы и эксклюзивная сезонная косметика. Без боевых преимуществ.', price:'Стоимость', buyPremiumPass:'Купить Premium', premiumOwned:'Premium активирован', freeTrack:'FREE', seasonPassNote:'Награды детерминированы. Premium Pass и сезонная косметика не усиливают характеристики персонажа.', passExclusive:'SEASON PASS', passExclusiveHint:'Этот предмет можно получить только в Season Pass.', passClaim:'Забрать', passLocked:'Уровень не открыт', passPremiumRequired:'Нужен Premium Pass', passClaimed:'Получено', passPurchaseDone:'Premium Season Pass активирован!', passPurchaseFailed:'Покупка Season Pass не завершена.', passUnavailable:'Season Pass сейчас недоступен.', passEndsIn:'До конца сезона: {time}', passXp:'{xp} / {next} XP', passXpGained:'Season Pass: +{xp} XP', passRewardCredits:'{amount} ◆', passRewardCrystals:'{amount} ◈', passRewardCosmetic:'Сезонная косметика', skinSeasonFlux:'Сезонный импульс', skinSeasonCrown:'Неоновая корона', skinSeasonAscendant:'Вознесение', bulletSeasonPulse:'Сезонный разряд', bulletSeasonNova:'Сезонная нова', trailSeasonComet:'Сезонная комета', trailSeasonHalo:'Сезонное гало',
+      mythicVaultTag:'MYTHIC VAULT', mythicVaultTitle:'Магазин mythic-косметики', mythicVaultHint:'Премиальная витрина самой редкой косметики за нео-кристаллы.', mythicVaultFeatured:'ПРЕМИАЛЬНАЯ ВИТРИНА', mythicVaultPrice:'Стоимость', mythicVaultGridTitle:'Все mythic-предметы', mythicVaultGridHint:'Выбери предмет, чтобы открыть подробный предпросмотр и купить его за нео-кристаллы.',
+      skinQuantum:'Квант', skinPhoenix:'Феникс', skinAstral:'Астрал', skinMint:'Мята', skinSunset:'Закат', skinThunder:'Гроза', skinJade:'Нефрит', skinVelvet:'Бархат', skinHolo:'Голограмма', skinMonarch:'Монарх', skinSupernova:'Сверхновая', skinSeraph:'Серафим', skinAbyssal:'Бездна', bulletCelestial:'Небесный импульс', bulletDragon:'Драконий импульс', bulletVoidLance:'Копьё пустоты', bulletBeamlet:'Луч', bulletGlimmer:'Искра', bulletVortex:'Вихрь', bulletEmberBolt:'Тлеющий болт', bulletBlossom:'Цветение', bulletOverclock:'Разгон', bulletCrownShot:'Корона', bulletStormCore:'Штормовое ядро', bulletSeraphic:'Серафический луч', bulletBlackstar:'Чёрная звезда', trailGalaxy:'Галактический след', trailLightning:'Разлом молнии', trailCosmicRoyal:'Королевский космос', trailShimmer:'Мерцание', trailDrift:'Дрифт', trailSparkline:'Искролиния', trailMist:'Туманность', trailVelvet:'Бархатный след', trailPixel:'Пиксельный след', trailComet:'Кометный след', trailHalo:'Гало', trailSeraph:'След серафима', trailVoidStorm:'Шторм пустоты',
       skinAqua:'Аква', skinMagenta:'Маджента', skinLime:'Лайм', skinSolar:'Солар', skinVoid:'Войд', skinIce:'Лёд', skinEmber:'Эмбер', skinGhost:'Фантом', skinRoyal:'Роял', skinNova:'Нова', skinPrism:'Призма',
       bulletOrb:'Сфера', bulletBolt:'Импульс', bulletShard:'Осколок', bulletComet:'Комета', bulletPulse:'Кольцо', bulletArc:'Дуга', bulletRocket:'Ракета', bulletStar:'Звезда', bulletWave:'Волна', bulletSingularity:'Сингулярность', bulletRainbow:'Спектр',
       skinCoral:'Коралл', skinCobalt:'Кобальт', skinToxic:'Токсин', skinMoon:'Луна', skinGlitch:'Глитч', skinAurora:'Аврора', skinEclipse:'Эклипс',
@@ -139,12 +176,13 @@
     },
     en: {
       score:'Score', wave:'Wave', combo:'Combo', tagline:'Survive. Build combos. Climb the leaderboard.', best:'Best', play:'Play', leaderboard:'Leaderboard', howToPlay:'How to play',
+      rotateEyebrow:'LANDSCAPE MODE', rotateTitle:'Rotate your phone', rotateText:'Turn your device sideways for combat. The run will start automatically.',
       upgradeEyebrow:'UPGRADE', chooseUpgrade:'Choose an upgrade', runComplete:'RUN COMPLETE', gameOver:'Arena complete', kills:'Defeated', bestCombo:'Best combo', newRecord:'New record!', again:'Play again', menu:'Menu',
-      leaderboardNote:'Global scores are linked to your Telegram account.', training:'TRAINING', moveTitle:'Move', moveText:'Use WASD/arrows on desktop. On mobile, drag your finger on the arena.', attackTitle:'Attack',
+      leaderboardNote:'The weekly season resets every week. A top-10 reward can be claimed once per season.', training:'TRAINING', moveTitle:'Move', moveText:'Use WASD/arrows on desktop. On mobile, drag your finger on the arena.', attackTitle:'Attack',
       attackText:'Your weapon automatically fires at the nearest enemy.', comboTitle:'Keep the combo', comboText:'Fast defeats increase your score multiplier. Taking damage resets the combo.', upgradeTitle:'Power up',
       upgradeText:'After every wave, choose an upgrade. Rarity determines its strength.', enterArena:'Enter arena', paused:'Paused', continue:'Continue', login:'Telegram connected',
       loginBenefit:'Open this Mini App from Telegram to sync progress and join the global leaderboard.', authorized:'Telegram connected · cloud saves and global leaderboard enabled',
-      localMode:'Local mode: open the Mini App from Telegram for cloud progress.', leaderboardLoading:'Loading leaderboard…', leaderboardUnavailable:'The global leaderboard is currently unavailable.', globalBoard:'GLOBAL LEADERBOARD', globalBoardHint:'Top Neon Arena player scores', yourPosition:'YOUR POSITION', place:'Place', leaderboardPlayer:'Player', result:'Score', topPlayer:'LEADER', points:'points',
+      localMode:'Local mode: open the Mini App from Telegram for cloud progress.', leaderboardLoading:'Loading leaderboard…', leaderboardUnavailable:'The weekly leaderboard is currently unavailable.', globalBoard:'WEEKLY LEADERBOARD', globalBoardHint:'Top Neon Arena player scores for the current week', yourPosition:'YOUR POSITION', place:'Place', leaderboardPlayer:'Player', result:'Score', topPlayer:'LEADER', points:'points',
       authSuccess:'Telegram profile connected. Cloud progress and leaderboard enabled.', authCancelled:'Open the game from Telegram to enable cloud progress.', rank:'Your rank: #{rank}', noRank:'Open the game through Telegram to receive a global rank.',
       waveIncoming:'WAVE {wave}', bossIncoming:'BOSS · WAVE {wave}', shieldSaved:'Shield absorbed the hit!', evaded:'Phase shift!', powerupSpeed:'SPEED BOOST', powerupDamage:'DAMAGE BOOST', powerupShield:'ENERGY SHIELD', powerupPicked:'{name} · 10 sec.', localBest:'Local best', player:'Player', leaderboardEmpty:'No scores yet.', currency:'Neon credits', crystals:'Neo Crystals', shop:'Shop', rewards:'Rewards',
       cosmetics:'COSMETICS', balance:'Balance', characterSkins:'Character skins', bulletStyles:'Bullet styles', characterTrails:'Character trails', livePreview:'LIVE PREVIEW', previewHint:'Hover an item or browse with arrows', previewSkin:'Skin', previewBullet:'Bullets', previewTrail:'Trail', cosmeticOnly:'Visual only', rarityHint:'Rarity determines upgrade strength.', buy:'Buy', equip:'Equip', equipped:'Equipped', owned:'Owned',
@@ -154,11 +192,13 @@
       dailyReady:'Today: +{coins} ◆ and 1 random cosmetic. Streak: {streak} days.', dailyDone:'Today’s reward is already claimed.', weeklyReady:'Ready! 3 cosmetic capsules + 500 ◆.', weeklyNeed:'Claim daily rewards: {days}/7. At 7 days: 3 cosmetic capsules.',
       adReady:'Watch a rewarded ad and get 1 random cosmetic. Available once every 6 hours.', adCooldown:'Next ad cosmetic in {time}.', adLocal:'Rewarded ads are disabled in the Telegram build.', adWatch:'Watch ad → cosmetic',
       rewardReceived:'Received: {item}', duplicateReward:'Duplicate {item}: +{coins} ◆ compensation', dailyReceived:'Daily reward claimed!', weeklyReceived:'Weekly reward claimed!', adReceived:'Ad cosmetic received!', adFailed:'The rewarded ad did not reach the reward point.',
-      rewardReadyShort:'Rewards are ready to claim', rewardWaitShort:'More rewards will appear later', chestsTitle:'Chests', chestsHint:'Higher-tier chests have better odds for rare cosmetics', chestBuy:'Open for {coins} ◆', chestStandard:'Standard chest', chestRare:'Rare chest', chestEpic:'Epic chest', chestLegendary:'Legendary chest', chestOdds:'Odds: {odds}', chestOpened:'Chest opened!', adCreditsTitle:'100 neon credits', adCapsuleTitle:'Cosmetic capsule', adCreditsReady:'Watch a rewarded ad and get 100 ◆. Available every 15 minutes.', adCreditsCooldown:'Next 100 ◆ in {time}.', adCapsuleReady:'Watch a rewarded ad and get a cosmetic capsule. Available every 30 minutes.', adCapsuleCooldown:'Next capsule in {time}.', adCreditsReceived:'Received 100 neon credits!', adCapsuleReceived:'Ad capsule received!', adCreditsWatch:'Watch ad → 100 ◆', adCapsuleWatch:'Watch ad → capsule', leaderboardRewardsTag:'LEADERBOARD REWARDS', leaderboardRewardsTitle:'Entry and retention rewards', leaderboardRewardsAuth:'Open the game through Telegram to earn leaderboard rewards.', leaderboardRewardsNoEntry:'Set a score on the global leaderboard first.', leaderboardRewardsChecking:'Checking your position…', leaderboardRewardsNone:'No reward is available today. Return tomorrow and hold your position.', leaderboardMilestoneReady:'New tier: top {tier}. Reward +{coins} ◆.', leaderboardHoldReady:'Held top {tier}: +{coins} ◆. Streak: {streak} days.', leaderboardBothReady:'New tier + retention: +{coins} ◆.', leaderboardRewardClaim:'Claim +{coins} ◆', leaderboardRewardClaimed:'Leaderboard reward claimed!', leaderboardFirstDay:'Position recorded. Hold it until tomorrow for a daily reward.', dailyQuestsTag:'DAILY QUESTS', dailyQuestsTitle:'Daily missions', questReset:'Resets at midnight', dailyQuestBonusTag:'ALL-QUEST BONUS', dailyQuestBonusTitle:'Complete every daily quest',
+      rewardReadyShort:'Rewards are ready to claim', rewardWaitShort:'More rewards will appear later', chestsTitle:'Chests', chestsHint:'Higher-tier chests have better odds for rare cosmetics', chestBuy:'Open for {coins} ◆', chestStandard:'Standard chest', chestRare:'Rare chest', chestEpic:'Epic chest', chestLegendary:'Legendary chest', chestOdds:'Odds: {odds}', chestOpened:'Chest opened!', adCreditsTitle:'100 neon credits', adCapsuleTitle:'Cosmetic capsule', adCreditsReady:'Watch a rewarded ad and get 100 ◆. Available every 15 minutes.', adCreditsCooldown:'Next 100 ◆ in {time}.', adCapsuleReady:'Watch a rewarded ad and get a cosmetic capsule. Available every 30 minutes.', adCapsuleCooldown:'Next capsule in {time}.', adCreditsReceived:'Received 100 neon credits!', adCapsuleReceived:'Ad capsule received!', adCreditsWatch:'Watch ad → 100 ◆', adCapsuleWatch:'Watch ad → capsule', leaderboardRewardsTag:'SEASON REWARDS', leaderboardRewardsTitle:'Season rewards', leaderboardRewardsAuth:'Open the game through Telegram to earn leaderboard rewards.', leaderboardRewardsNoEntry:'Set a score on the global leaderboard first.', leaderboardRewardsChecking:'Checking your position…', leaderboardRewardsNone:'No reward is available today. Return tomorrow and hold your position.', leaderboardMilestoneReady:'New tier: top {tier}. Reward +{coins} ◆.', leaderboardHoldReady:'Held top {tier}: +{coins} ◆. Streak: {streak} days.', leaderboardBothReady:'New tier + retention: +{coins} ◆.', leaderboardRewardClaim:'Claim +{coins} ◆', leaderboardRewardClaimed:'Leaderboard reward claimed!', leaderboardFirstDay:'Position recorded. Hold it until tomorrow for a daily reward.', dailyQuestsTag:'DAILY QUESTS', dailyQuestsTitle:'Daily missions', questReset:'Resets at midnight', dailyQuestBonusTag:'ALL-QUEST BONUS', dailyQuestBonusTitle:'Complete every daily quest',
       dailyQuestBonusReady:'All quests complete: +200 ◆ and 1 cosmetic capsule.', dailyQuestBonusNeed:'Quests complete: {done}/{total}.', questClaim:'Claim', questClaimed:'Claimed', questRewardCredits:'+{coins} ◆', questRewardCapsule:'Cosmetic capsule', questKills:'Defeat {target} enemies', questScore:'Score {target} in one run', questCombo:'Build a ×{target} combo', questWave:'Reach wave {target}', questGames:'Finish {target} runs', questBoss:'Defeat a boss', duplicateNote:'Duplicate capsule drops automatically convert into neon credits.', commonChance:'65%', rareChance:'26%', epicChance:'8%', legendaryChance:'1%', testCapsuleTitle:'Test capsule', testCapsuleText:'Open without limits. The reel scrolls through every item and stops on the drop.', openTestCapsule:'Open test capsule', capsuleOpening:'CAPSULE OPENING', capsuleTitle:'Cosmetic capsule', openAgain:'Open again', close:'Close', newCosmetic:'New item added to your collection.', testDrop:'Test drop — progress and collection are not changed.',
 
-      crystalShopTag:'NEO CRYSTALS', crystalShopTitle:'Mythic collection', crystalShopHint:'Exclusive cosmetics for Neo Crystals. Mythic rarity is above Legendary.', crystalTopRewardTitle:'Top-10 Neo Crystal reward', crystalTopRewardAuth:'Open the game through Telegram to earn daily Neo Crystals for a top-10 position.', crystalTopRewardNeed:'Reach the global top 10 to earn Neo Crystals.', crystalTopRewardReady:'Rank #{rank}: daily reward +{crystals} ◈.', crystalTopRewardClaim:'Claim +{crystals} ◈', crystalTopRewardClaimed:'Today’s top-10 reward has already been claimed.', crystalTopRewardReceived:'Received {crystals} Neo Crystals!', crystalAdTitle:'10 Neo Crystals', crystalAdReady:'Watch a rewarded ad and get 10 ◈. Available once per hour.', crystalAdCooldown:'Next 10 ◈ in {time}.', crystalAdWatch:'Watch ad → 10 ◈', crystalAdReceived:'Received 10 Neo Crystals!', crystalPacksTitle:'Get Neo Crystals', crystalPacksHint:'Purchases are processed through Telegram Stars.', crystalPackBuy:'Buy', crystalPackUnavailable:'Purchases are currently unavailable.', crystalLoginRequired:'Open the game as a Telegram Mini App before buying Neo Crystals.', notEnoughCrystals:'Not enough Neo Crystals.', crystalPurchaseFailed:'Purchase was not completed.', crystalPurchaseDone:'Received {crystals} Neo Crystals!', crystalPurchasePending:'Telegram is confirming the payment…', mythicOnly:'Neo Crystals only',
-      skinQuantum:'Quantum', skinPhoenix:'Phoenix', skinAstral:'Astral', bulletCelestial:'Celestial pulse', bulletDragon:'Dragon pulse', bulletVoidLance:'Void lance', trailGalaxy:'Galaxy wake', trailLightning:'Lightning rift', trailCosmicRoyal:'Royal cosmos',
+      crystalShopTag:'NEO CRYSTALS', crystalShopTitle:'Mythic collection', crystalShopHint:'Exclusive cosmetics for Neo Crystals. Mythic rarity is above Legendary.', crystalTopRewardTitle:'Weekly top-10 reward', crystalTopRewardAuth:'Open the game through Telegram to join the weekly leaderboard.', crystalTopRewardNeed:'Reach the weekly top 10 to earn Neo Crystals.', crystalTopRewardReady:'Rank #{rank}: weekly reward +{crystals} ◈.', crystalTopRewardClaim:'Claim +{crystals} ◈', crystalTopRewardClaimed:'This week’s reward has already been claimed.', crystalTopRewardReceived:'Received {crystals} Neo Crystals!', crystalAdTitle:'10 Neo Crystals', crystalAdReady:'Watch a rewarded ad and get 10 ◈. Available once per hour.', crystalAdCooldown:'Next 10 ◈ in {time}.', crystalAdWatch:'Watch ad → 10 ◈', crystalAdReceived:'Received 10 Neo Crystals!', crystalPacksTitle:'Get Neo Crystals', crystalPacksHint:'Purchases are processed through Telegram Stars.', crystalPackBuy:'Buy', crystalPackUnavailable:'Purchases are currently unavailable.', crystalLoginRequired:'Open the game as a Telegram Mini App before buying Neo Crystals.', notEnoughCrystals:'Not enough Neo Crystals.', crystalPurchaseFailed:'Purchase was not completed.', crystalPurchaseDone:'Received {crystals} Neo Crystals!', crystalPurchasePending:'Telegram is confirming the payment…', mythicOnly:'Neo Crystals only',
+      starChestsTitle:'Stars chests', starChestsHint:'Premium chests for Telegram Stars. They can drop every rarity, including mythic.', starChest10:'10 Stars chest', starChest20:'20 Stars chest', starChest30:'30 Stars chest', starChestDesc10:'Base premium drop: mythic 1%, legendary 15%.', starChestDesc20:'Upgraded chest: mythic 1%, legendary 17%.', starChestDesc30:'Top chest: mythic 1%, legendary 20%.', starChestBuy:'Open for {stars} ⭐', starChestOdds:'Odds: {odds}', starChestOpened:'Premium chest opened!', starChestUnavailable:'Chest payment is currently unavailable.', starChestNeedTelegram:'Open the game as a Telegram Mini App to buy a Stars chest.', starChestPurchaseFailed:'Chest purchase was not completed.', starChestOpeningHint:'Preparing your premium reward…', mythicDrop:'MYTHIC DROP!', mythicDropHint:'Exclusive cosmetic item with special visual effects.', chestTier10Hint:'Fast premium roll · improved rare/epic chances.', chestTier20Hint:'Upgraded chest · more epic and legendary rewards.', chestTier30Hint:'Top chest · maximum premium effect and best odds.', mythicBurstHint:'Ultra-rare reward sequence activated.', legendaryGuarantee:'Legendary guarantee', mythicGuarantee:'Mythic guarantee', pitySharedHint:'Guarantee is shared across all Stars chests. Legendary is guaranteed by the 10th opening, mythic by the 100th.', pityRemaining:'Guarantee in {count}', pityReady:'Next opening is guaranteed!', seasonPass:'Season Pass', seasonPassTitle:'Neon Season Pass', seasonPassHint:'20 levels over 28 days. Balance is tuned for roughly 35–40 normal runs. Premium unlocks the second reward track.', seasonLevel:'Level', premiumTrack:'PREMIUM TRACK', premiumPassTitle:'Premium Season Pass', premiumPassHint:'Extra crystals and exclusive seasonal cosmetics. No combat advantage.', price:'Price', buyPremiumPass:'Buy Premium', premiumOwned:'Premium active', freeTrack:'FREE', seasonPassNote:'Rewards are deterministic. Premium Pass and seasonal cosmetics do not increase combat power.', passExclusive:'SEASON PASS', passExclusiveHint:'This item is exclusive to the Season Pass.', passClaim:'Claim', passLocked:'Level locked', passPremiumRequired:'Premium Pass required', passClaimed:'Claimed', passPurchaseDone:'Premium Season Pass activated!', passPurchaseFailed:'Season Pass purchase was not completed.', passUnavailable:'Season Pass is currently unavailable.', passEndsIn:'Season ends in {time}', passXp:'{xp} / {next} XP', passXpGained:'Season Pass: +{xp} XP', passRewardCredits:'{amount} ◆', passRewardCrystals:'{amount} ◈', passRewardCosmetic:'Season cosmetic', skinSeasonFlux:'Season Flux', skinSeasonCrown:'Neon Crown', skinSeasonAscendant:'Ascendant', bulletSeasonPulse:'Season Pulse', bulletSeasonNova:'Season Nova', trailSeasonComet:'Season Comet', trailSeasonHalo:'Season Halo',
+      mythicVaultTag:'MYTHIC VAULT', mythicVaultTitle:'Mythic cosmetics store', mythicVaultHint:'A premium storefront for the rarest cosmetics, priced in Neo Crystals.', mythicVaultFeatured:'PREMIUM SHOWCASE', mythicVaultPrice:'Price', mythicVaultGridTitle:'All mythic items', mythicVaultGridHint:'Select an item to inspect it in detail and buy it with Neo Crystals.',
+      skinQuantum:'Quantum', skinPhoenix:'Phoenix', skinAstral:'Astral', skinMint:'Mint', skinSunset:'Sunset', skinThunder:'Thunder', skinJade:'Jade', skinVelvet:'Velvet', skinHolo:'Holo', skinMonarch:'Monarch', skinSupernova:'Supernova', skinSeraph:'Seraph', skinAbyssal:'Abyssal', bulletCelestial:'Celestial pulse', bulletDragon:'Dragon pulse', bulletVoidLance:'Void lance', bulletBeamlet:'Beamlet', bulletGlimmer:'Glimmer', bulletVortex:'Vortex', bulletEmberBolt:'Ember bolt', bulletBlossom:'Blossom', bulletOverclock:'Overclock', bulletCrownShot:'Crown shot', bulletStormCore:'Storm core', bulletSeraphic:'Seraphic beam', bulletBlackstar:'Black star', trailGalaxy:'Galaxy wake', trailLightning:'Lightning rift', trailCosmicRoyal:'Royal cosmos', trailShimmer:'Shimmer', trailDrift:'Drift', trailSparkline:'Sparkline', trailMist:'Mist veil', trailVelvet:'Velvet wake', trailPixel:'Pixel trail', trailComet:'Comet wake', trailHalo:'Halo wake', trailSeraph:'Seraph wake', trailVoidStorm:'Void storm',
       skinAqua:'Aqua', skinMagenta:'Magenta', skinLime:'Lime', skinSolar:'Solar', skinVoid:'Void', skinIce:'Ice', skinEmber:'Ember', skinGhost:'Phantom', skinRoyal:'Royal', skinNova:'Nova', skinPrism:'Prism',
       bulletOrb:'Orb', bulletBolt:'Bolt', bulletShard:'Shard', bulletComet:'Comet', bulletPulse:'Pulse ring', bulletArc:'Arc', bulletRocket:'Rocket', bulletStar:'Star', bulletWave:'Wave', bulletSingularity:'Singularity', bulletRainbow:'Spectrum',
       skinCoral:'Coral', skinCobalt:'Cobalt', skinToxic:'Toxic', skinMoon:'Moon', skinGlitch:'Glitch', skinAurora:'Aurora', skinEclipse:'Eclipse',
@@ -198,7 +238,12 @@
     {id:'neo_crystals_500',amount:500},
     {id:'neo_crystals_1000',amount:1000},
   ];
-  const TOP10_CRYSTAL_REWARDS = {1:100,2:80,3:65,4:50,5:40,6:30,7:25,8:20,9:15,10:10};
+  const STAR_CHESTS = [
+    {id:'star_chest_10',nameKey:'starChest10',descKey:'starChestDesc10',stars:10,rarity:'rare',odds:[{id:'common',chance:.34},{id:'rare',chance:.30},{id:'epic',chance:.20},{id:'legendary',chance:.15},{id:'mythic',chance:.01}]},
+    {id:'star_chest_20',nameKey:'starChest20',descKey:'starChestDesc20',stars:20,rarity:'epic',odds:[{id:'common',chance:.18},{id:'rare',chance:.31},{id:'epic',chance:.33},{id:'legendary',chance:.17},{id:'mythic',chance:.01}]},
+    {id:'star_chest_30',nameKey:'starChest30',descKey:'starChestDesc30',stars:30,rarity:'legendary',odds:[{id:'common',chance:.08},{id:'rare',chance:.26},{id:'epic',chance:.45},{id:'legendary',chance:.20},{id:'mythic',chance:.01}]},
+  ];
+  const TOP10_CRYSTAL_REWARDS = {1:180,2:140,3:110,4:90,5:75,6:60,7:50,8:45,9:40,10:35};
   const LEADERBOARD_TIERS = [
     {maxRank:1,id:'top1',milestone:5000,hold:700},
     {maxRank:3,id:'top3',milestone:2500,hold:450},
@@ -248,6 +293,19 @@
     {id:'quantum',nameKey:'skinQuantum',rarity:'mythic',crystalPrice:500,primary:'#a7ffff',secondary:'#ff82f8',core:'#020a12',effect:'quantum'},
     {id:'phoenix',nameKey:'skinPhoenix',rarity:'mythic',crystalPrice:650,primary:'#fff0a8',secondary:'#ff5f77',core:'#1c0705',effect:'phoenix'},
     {id:'astral',nameKey:'skinAstral',rarity:'mythic',crystalPrice:800,primary:'#ffffff',secondary:'#8d63ff',core:'#03020b',effect:'astral'},
+    {id:'mint',nameKey:'skinMint',rarity:'common',price:230,primary:'#bfffe0',secondary:'#63ffc8',core:'#061710'},
+    {id:'sunset',nameKey:'skinSunset',rarity:'common',price:240,primary:'#ffba94',secondary:'#ff7ca8',core:'#1d0b10'},
+    {id:'thunder',nameKey:'skinThunder',rarity:'rare',price:590,primary:'#d9eeff',secondary:'#7ea7ff',core:'#07111f'},
+    {id:'jade',nameKey:'skinJade',rarity:'rare',price:620,primary:'#98ffd8',secondary:'#39d89f',core:'#071711'},
+    {id:'velvet',nameKey:'skinVelvet',rarity:'epic',price:1210,primary:'#ff9cf1',secondary:'#8a66ff',core:'#13091d',effect:'glitch'},
+    {id:'holo',nameKey:'skinHolo',rarity:'epic',price:1270,primary:'#f4ffff',secondary:'#69f6ff',core:'#08131d',effect:'prism'},
+    {id:'monarch',nameKey:'skinMonarch',rarity:'legendary',price:2810,primary:'#ffe09d',secondary:'#d56cff',core:'#180a10',effect:'royal'},
+    {id:'supernova',nameKey:'skinSupernova',rarity:'legendary',price:2960,primary:'#fff7bf',secondary:'#6ee2ff',core:'#09111b',effect:'nova'},
+    {id:'seraph',nameKey:'skinSeraph',rarity:'mythic',crystalPrice:900,primary:'#ffffff',secondary:'#69f6ff',core:'#050b13',effect:'seraph'},
+    {id:'abyssal',nameKey:'skinAbyssal',rarity:'mythic',crystalPrice:980,primary:'#eed6ff',secondary:'#b14dff',core:'#04020a',effect:'abyssal'},
+    {id:'seasonFlux',nameKey:'skinSeasonFlux',rarity:'epic',exclusive:'pass',primary:'#82f7ff',secondary:'#8f73ff',core:'#07121f',effect:'aurora'},
+    {id:'seasonCrown',nameKey:'skinSeasonCrown',rarity:'legendary',exclusive:'pass',primary:'#ffe29b',secondary:'#ff75e5',core:'#170a13',effect:'royal'},
+    {id:'seasonAscendant',nameKey:'skinSeasonAscendant',rarity:'mythic',exclusive:'pass',primary:'#ffffff',secondary:'#8af7ff',core:'#050a14',effect:'seraph'},
   ];
   const BULLET_STYLES = [
     {id:'orb',nameKey:'bulletOrb',rarity:'common',price:0,shape:'orb',primary:'#b9fbff',glow:'#69f6ff'},
@@ -275,6 +333,18 @@
     {id:'celestial',nameKey:'bulletCelestial',rarity:'mythic',crystalPrice:500,shape:'star',primary:'#ffffff',glow:'#6ff8ff',effect:'celestial'},
     {id:'dragonPulse',nameKey:'bulletDragon',rarity:'mythic',crystalPrice:650,shape:'flare',primary:'#ffd36a',glow:'#ff5f77',effect:'dragon'},
     {id:'voidLance',nameKey:'bulletVoidLance',rarity:'mythic',crystalPrice:800,shape:'needle',primary:'#e8d7ff',glow:'#a257ff',effect:'voidlance'},
+    {id:'beamlet',nameKey:'bulletBeamlet',rarity:'common',price:210,shape:'bolt',primary:'#d9fffb',glow:'#69f6ff'},
+    {id:'glimmer',nameKey:'bulletGlimmer',rarity:'common',price:240,shape:'orb',primary:'#ffeeb0',glow:'#ffc86a'},
+    {id:'vortex',nameKey:'bulletVortex',rarity:'rare',price:590,shape:'pulse',primary:'#c7c3ff',glow:'#7d63ff'},
+    {id:'emberBolt',nameKey:'bulletEmberBolt',rarity:'rare',price:640,shape:'bolt',primary:'#ffd09a',glow:'#ff786a'},
+    {id:'blossom',nameKey:'bulletBlossom',rarity:'epic',price:1240,shape:'star',primary:'#ffd0ef',glow:'#ff8ad0',effect:'petals'},
+    {id:'overclock',nameKey:'bulletOverclock',rarity:'epic',price:1310,shape:'hex',primary:'#aefcff',glow:'#5bdfff',effect:'fractal'},
+    {id:'crownShot',nameKey:'bulletCrownShot',rarity:'legendary',price:2840,shape:'star',primary:'#ffe09d',glow:'#ff76e0',effect:'rainbow'},
+    {id:'stormCore',nameKey:'bulletStormCore',rarity:'legendary',price:2990,shape:'chronos',primary:'#d7fbff',glow:'#67baff',effect:'chronos'},
+    {id:'seraphic',nameKey:'bulletSeraphic',rarity:'mythic',crystalPrice:900,shape:'star',primary:'#ffffff',glow:'#69f6ff',effect:'seraphic'},
+    {id:'blackstar',nameKey:'bulletBlackstar',rarity:'mythic',crystalPrice:980,shape:'singularity',primary:'#f8e8ff',glow:'#b14dff',effect:'blackstar'},
+    {id:'seasonPulse',nameKey:'bulletSeasonPulse',rarity:'epic',exclusive:'pass',shape:'pulse',primary:'#8cf7ff',glow:'#8e78ff',effect:'wave'},
+    {id:'seasonNova',nameKey:'bulletSeasonNova',rarity:'legendary',exclusive:'pass',shape:'star',primary:'#fff1a8',glow:'#ff73e6',effect:'rainbow'},
   ];
   const TRAIL_STYLES = [
     {id:'pulseLine',nameKey:'trailPulseLine',rarity:'common',price:0,primary:'#69f6ff',secondary:'#5c7cff',effect:'pulse'},
@@ -291,6 +361,18 @@
     {id:'galaxyTrail',nameKey:'trailGalaxy',rarity:'mythic',crystalPrice:500,primary:'#ffffff',secondary:'#8d63ff',effect:'galaxytrail'},
     {id:'lightningTrail',nameKey:'trailLightning',rarity:'mythic',crystalPrice:650,primary:'#bffcff',secondary:'#4b9fff',effect:'lightningtrail'},
     {id:'cosmicRoyalTrail',nameKey:'trailCosmicRoyal',rarity:'mythic',crystalPrice:800,primary:'#ffd36a',secondary:'#ff82f8',effect:'cosmicroyal'},
+    {id:'shimmerTrail',nameKey:'trailShimmer',rarity:'common',price:180,primary:'#dffeff',secondary:'#8effdb',effect:'afterglow'},
+    {id:'driftTrail',nameKey:'trailDrift',rarity:'common',price:220,primary:'#ffc4ea',secondary:'#ffa56f',effect:'pulse'},
+    {id:'sparklineTrail',nameKey:'trailSparkline',rarity:'rare',price:520,primary:'#a8f8ff',secondary:'#63a8ff',effect:'frost'},
+    {id:'mistTrail',nameKey:'trailMist',rarity:'rare',price:580,primary:'#f2e2ff',secondary:'#a487ff',effect:'ribbon'},
+    {id:'velvetTrail',nameKey:'trailVelvet',rarity:'epic',price:1190,primary:'#ffb4ef',secondary:'#8b66ff',effect:'auroratrail'},
+    {id:'pixelTrail',nameKey:'trailPixel',rarity:'epic',price:1260,primary:'#69f6ff',secondary:'#ff5be7',effect:'glitchtrail'},
+    {id:'cometTrail',nameKey:'trailComet',rarity:'legendary',price:2780,primary:'#ffe5a3',secondary:'#ff7f90',effect:'solartrail'},
+    {id:'haloTrail',nameKey:'trailHalo',rarity:'legendary',price:2920,primary:'#effcff',secondary:'#77cbff',effect:'prismtrail'},
+    {id:'seraphTrail',nameKey:'trailSeraph',rarity:'mythic',crystalPrice:900,primary:'#ffffff',secondary:'#69f6ff',effect:'seraphtrail'},
+    {id:'voidStormTrail',nameKey:'trailVoidStorm',rarity:'mythic',crystalPrice:980,primary:'#f2e5ff',secondary:'#b14dff',effect:'voidstorm'},
+    {id:'seasonComet',nameKey:'trailSeasonComet',rarity:'epic',exclusive:'pass',primary:'#9cf7ff',secondary:'#8976ff',effect:'stardust'},
+    {id:'seasonHalo',nameKey:'trailSeasonHalo',rarity:'legendary',exclusive:'pass',primary:'#fff5bd',secondary:'#ff78e6',effect:'prismtrail'},
   ];
   const ALL_COSMETICS = [
     ...SKINS.map(x=>({...x,kind:'skin'})), ...BULLET_STYLES.map(x=>({...x,kind:'bullet'})), ...TRAIL_STYLES.map(x=>({...x,kind:'trail'}))
@@ -302,7 +384,7 @@
   const LEADERBOARD_SCORE_SCALE = 5;
   const defaultQuestStats = () => ({kills:0,score:0,combo:0,wave:1,games:0,bosses:0});
   const defaultProgress = () => ({
-    schemaVersion:7, updatedAt:0, syncRevision:0, bestScore:0, gamesPlayed:0, coins:0, crystals:0, ownedSkins:['aqua'], ownedBullets:['orb'], ownedTrails:['pulseLine'], selectedSkin:'aqua', selectedBullet:'orb', selectedTrail:'pulseLine',
+    schemaVersion:8, updatedAt:0, syncRevision:0, bestScore:0, gamesPlayed:0, coins:0, crystals:0, ownedSkins:['aqua'], ownedBullets:['orb'], ownedTrails:['pulseLine'], selectedSkin:'aqua', selectedBullet:'orb', selectedTrail:'pulseLine',
     lastDailyDate:'', dailyStreak:0, weeklyProgress:0, lastAdCreditsAt:0, lastAdCapsuleAt:0, lastAdCrystalsAt:0,
     dailyQuestDate:'', dailyQuestStats:defaultQuestStats(), dailyQuestClaims:[], dailyQuestBonusClaimed:false,
     leaderboardMilestones:[], leaderboardSeenDate:'', leaderboardSeenRank:0, leaderboardHoldClaimDate:'', leaderboardHoldStreak:0, lastTopCrystalRewardDate:'', lastTopCrystalRewardRank:0, handledPurchaseTokens:[]
@@ -314,7 +396,7 @@
   function normalizeProgress(raw={}) {
     const p = defaultProgress();
     const incomingSchema=Math.max(0,Math.floor(Number(raw.schemaVersion)||0));
-    p.schemaVersion = 7;
+    p.schemaVersion = 8;
     p.updatedAt = Math.max(0, Number(raw.updatedAt)||0);
     p.syncRevision = Math.max(0, Math.floor(Number(raw.syncRevision)||0));
     p.bestScore = Math.max(0, Math.floor(Number(raw.bestScore)||0));
@@ -410,9 +492,9 @@
 
 
   const state = {
-    mode:'menu', prevMode:'menu', w:1280,h:720,dpr:1,lastTime:performance.now(), gameTime:0,wave:1,waveClock:0,waveLength:22.5,
+    mode:'menu', prevMode:'menu', w:1280,h:720,dpr:1,scale:1,lastTime:performance.now(), gameTime:0,wave:1,waveClock:0,waveLength:22.5,
     spawnClock:0,shootClock:0,score:0,kills:0,combo:0,comboClock:99,bestCombo:0,comboGrace:3,cameraShake:0,flash:0,bannerText:'',bannerClock:0,
-    projectiles:[],enemies:[],particles:[],stars:[],powerupDrop:null,powerupSpawnClock:9,activePowerups:{speed:0,damage:0,shield:0},joystick:{active:false,pointerId:null,startX:0,startY:0,x:0,y:0},keys:new Set(),suspendedByPlatform:false,manualPause:false
+    projectiles:[],enemies:[],particles:[],stars:[],powerupDrop:null,powerupSpawnClock:9,activePowerups:{speed:0,damage:0,shield:0},joystick:{active:false,pointerId:null,startX:0,startY:0,rawStartX:0,rawStartY:0,x:0,y:0},keys:new Set(),suspendedByPlatform:false,manualPause:false
   };
   const player = {x:0,y:0,r:15,speed:235,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:590,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,repairEvery:999,killsSinceRepair:0,invuln:0,trail:[]};
   const enemyTypes = {
@@ -469,7 +551,48 @@
   const selectedBullet=()=>BULLET_STYLES.find(x=>x.id===progress.selectedBullet)||BULLET_STYLES[0];
   const selectedTrail=()=>TRAIL_STYLES.find(x=>x.id===progress.selectedTrail)||TRAIL_STYLES[0];
   let shopPreviewIndex=0;
+  let mythicFeatureKey='';
   function previewKindLabel(kind){return kind==='skin'?t('previewSkin'):kind==='bullet'?t('previewBullet'):t('previewTrail')}
+  function cosmeticOwned(item){return (item.kind==='skin'?progress.ownedSkins:item.kind==='bullet'?progress.ownedBullets:progress.ownedTrails).includes(item.id)}
+  function cosmeticEquipped(item){return (item.kind==='skin'?progress.selectedSkin:item.kind==='bullet'?progress.selectedBullet:progress.selectedTrail)===item.id}
+  function mythicCollection(){return ALL_COSMETICS.filter(item=>item.rarity==='mythic'&&!item.exclusive)}
+  function mythicItemKey(item){return `${item.kind}:${item.id}`}
+  function findCosmetic(kind,id){return ALL_COSMETICS.find(item=>item.kind===kind&&item.id===id)||null}
+  function mythicToneLabel(item){
+    if(lang==='ru')return item.kind==='skin'?'Аура персонажа · усиленные визуальные эффекты':item.kind==='bullet'?'Премиальный выстрел · насыщенные следы и вспышки':'Премиальный след · редкий неоновый шлейф';
+    return item.kind==='skin'?'Character aura · enhanced VFX':item.kind==='bullet'?'Premium shot · rich trails and flashes':'Premium trail · rare neon wake';
+  }
+  function mythicPerks(item){
+    if(lang==='ru'){
+      const base=['Mythic rarity','Эксклюзив за нео-кристаллы'];
+      if(item.kind==='skin')return [...base,'Уникальная аура вокруг героя','Мощные орбиты и частицы'];
+      if(item.kind==='bullet')return [...base,'Элитный визуал снарядов','Особые вспышки попадания'];
+      return [...base,'Роскошный след движения','Дополнительные свечение и частицы'];
+    }
+    const base=['Mythic rarity','Exclusive Neo Crystal item'];
+    if(item.kind==='skin')return [...base,'Unique hero aura','Powerful orbit and particle effects'];
+    if(item.kind==='bullet')return [...base,'Elite projectile visuals','Special impact flashes'];
+    return [...base,'Luxury movement trail','Extra glow and particle accents'];
+  }
+  function mythicDescription(item){
+    const name=t(item.nameKey);
+    if(lang==='ru'){
+      if(item.kind==='skin')return `${name} — коллекционный mythic-скин с дорогой подачей, выразительным свечением и сценическим визуальным эффектом прямо в бою.`;
+      if(item.kind==='bullet')return `${name} — mythic-оформление выстрела с уникальным силуэтом, заметными вспышками и эффектной неоновой подачей.`;
+      return `${name} — mythic-след движения с премиальной анимацией, ярким шлейфом и дополнительными частицами высокого класса.`;
+    }
+    if(item.kind==='skin')return `${name} is a collectible mythic skin with a premium silhouette, strong glow and stage-worthy combat presence.`;
+    if(item.kind==='bullet')return `${name} is a mythic shot style with a unique silhouette, brighter flashes and a high-end neon presentation.`;
+    return `${name} is a mythic movement trail with premium animation, vivid wake effects and extra high-tier particles.`;
+  }
+  function livePreviewMarkup(item,featured=false){
+    if(item.kind==='skin')return `<div class="live-preview skin-live rarity-${item.rarity} effect-${item.effect||'base'}${featured?' featured':''}" style="--p1:${item.primary};--p2:${item.secondary};--core:${item.core}"><span class="live-orbit a"></span><span class="live-orbit b"></span><span class="live-player"></span><span class="live-spark s1"></span><span class="live-spark s2"></span><span class="live-spark s3"></span></div>`;
+    if(item.kind==='bullet')return `<div class="live-preview bullet-live rarity-${item.rarity}${featured?' featured':''}" style="--p1:${item.primary};--p2:${item.glow}"><span class="live-shot shot1"></span><span class="live-shot shot2"></span><span class="live-shot shot3"></span><span class="live-target"></span></div>`;
+    return `<div class="live-preview trail-live rarity-${item.rarity} trail-${item.effect}${featured?' featured':''}" style="--p1:${item.primary};--p2:${item.secondary}"><span class="trail-dot d1"></span><span class="trail-dot d2"></span><span class="trail-dot d3"></span><span class="trail-dot d4"></span><span class="trail-runner"></span></div>`;
+  }
+  function mythicStageMarkup(item){
+    return `<div class="mythic-stage-shell kind-${item.kind}"><span class="mythic-stage-glow g1"></span><span class="mythic-stage-glow g2"></span><span class="mythic-stage-grid"></span>${livePreviewMarkup(item,true)}<div class="mythic-stage-caption"><span>${mythicToneLabel(item)}</span></div></div>`;
+  }
   function setShopPreview(item){
     if(!item||!ui.shopPreviewStage)return;
     const idx=ALL_COSMETICS.findIndex(x=>x.kind===item.kind&&x.id===item.id);if(idx>=0)shopPreviewIndex=idx;
@@ -478,15 +601,51 @@
     ui.shopPreviewKind.textContent=previewKindLabel(item.kind);
     ui.shopPreviewRarity.className=`rarity-badge rarity-${item.rarity}`;
     ui.shopPreviewRarity.textContent=t(rar.key);
-    if(item.kind==='skin'){
-      ui.shopPreviewStage.innerHTML=`<div class="live-preview skin-live rarity-${item.rarity} effect-${item.effect||'base'}" style="--p1:${item.primary};--p2:${item.secondary};--core:${item.core}"><span class="live-orbit a"></span><span class="live-orbit b"></span><span class="live-player"></span><span class="live-spark s1"></span><span class="live-spark s2"></span><span class="live-spark s3"></span></div>`;
-    }else if(item.kind==='bullet'){
-      ui.shopPreviewStage.innerHTML=`<div class="live-preview bullet-live rarity-${item.rarity}" style="--p1:${item.primary};--p2:${item.glow}"><span class="live-shot shot1"></span><span class="live-shot shot2"></span><span class="live-shot shot3"></span><span class="live-target"></span></div>`;
-    }else{
-      ui.shopPreviewStage.innerHTML=`<div class="live-preview trail-live rarity-${item.rarity} trail-${item.effect}" style="--p1:${item.primary};--p2:${item.secondary}"><span class="trail-dot d1"></span><span class="trail-dot d2"></span><span class="trail-dot d3"></span><span class="trail-dot d4"></span><span class="trail-runner"></span></div>`;
-    }
+    ui.shopPreviewStage.innerHTML=livePreviewMarkup(item,false);
   }
   function stepShopPreview(dir){if(!ALL_COSMETICS.length)return;shopPreviewIndex=(shopPreviewIndex+dir+ALL_COSMETICS.length)%ALL_COSMETICS.length;setShopPreview(ALL_COSMETICS[shopPreviewIndex])}
+  function setMythicFeature(item){
+    if(!item||!ui.mythicFeatureStage)return;
+    mythicFeatureKey=mythicItemKey(item);
+    setShopPreview(item);
+    ui.mythicFeatureName.textContent=t(item.nameKey);
+    ui.mythicFeatureKind.textContent=previewKindLabel(item.kind);
+    ui.mythicFeatureRarity.className=`rarity-badge rarity-${item.rarity}`;
+    ui.mythicFeatureRarity.textContent=t(RARITY[item.rarity].key);
+    ui.mythicFeatureDesc.textContent=mythicDescription(item);
+    ui.mythicFeaturePerks.innerHTML=mythicPerks(item).map(perk=>`<span class="mythic-perk">${perk}</span>`).join('');
+    ui.mythicFeaturePrice.textContent=`${formatScore(Number(item.crystalPrice)||0)} ◈`;
+    ui.mythicFeatureStage.innerHTML=mythicStageMarkup(item);
+    const owned=cosmeticOwned(item),equipped=cosmeticEquipped(item);
+    ui.mythicFeatureAction.disabled=equipped;
+    ui.mythicFeatureAction.dataset.state=equipped?'equipped':owned?'owned':'buy';
+    ui.mythicFeatureAction.textContent=equipped?t('equipped'):owned?t('equip'):`${t('buy')} · ${formatScore(Number(item.crystalPrice)||0)} ◈`;
+  }
+  function renderMythicShop(){
+    if(!ui.mythicShop)return;
+    const items=mythicCollection();
+    if(!items.length){ui.mythicShop.innerHTML='';return}
+    if(!items.some(item=>mythicItemKey(item)===mythicFeatureKey))mythicFeatureKey=mythicItemKey(items[0]);
+    ui.mythicShop.innerHTML='';
+    items.forEach(item=>{
+      const owned=cosmeticOwned(item),equipped=cosmeticEquipped(item),active=mythicItemKey(item)===mythicFeatureKey;
+      const card=document.createElement('button');
+      card.className=`mythic-item-card${active?' active':''}${owned?' owned':''}${equipped?' equipped':''}`;
+      card.type='button';
+      card.innerHTML=`<div class="mythic-item-top"><span class="rarity-badge rarity-mythic">${t('rarityMythic')}</span><span class="mythic-item-kind">${previewKindLabel(item.kind)}</span></div><div class="mythic-item-preview">${cosmeticPreviewMarkup(item)}</div><div class="mythic-item-copy"><strong>${t(item.nameKey)}</strong><small>${mythicToneLabel(item)}</small></div><div class="mythic-item-meta"><span class="mythic-item-price">${owned?(equipped?t('equipped'):t('owned')):`${formatScore(Number(item.crystalPrice)||0)} ◈`}</span></div>`;
+      card.addEventListener('click',()=>{setMythicFeature(item);renderMythicShop()});
+      card.addEventListener('pointerenter',()=>setShopPreview(item));
+      ui.mythicShop.appendChild(card);
+    });
+    const current=items.find(item=>mythicItemKey(item)===mythicFeatureKey)||items[0];
+    setMythicFeature(current);
+  }
+  async function activateMythicFeature(){
+    const item=mythicCollection().find(entry=>mythicItemKey(entry)===mythicFeatureKey);
+    if(!item)return;
+    await handleShopItem(item,item.kind);
+    renderMythicShop();
+  }
 
   function showPanel(name){Object.entries(panels).forEach(([k,el])=>el.classList.toggle('hidden',k!==name));hud.classList.toggle('hidden',name!=='game'&&name!=='pause'&&state.mode!=='game')}
   function hideAllPanels(){Object.values(panels).forEach(el=>el.classList.add('hidden'))}
@@ -590,10 +749,10 @@
   }
 
   function rollRarity(odds=COSMETIC_ODDS){const r=Math.random();let acc=0;for(const x of odds){acc+=x.chance;if(r<acc)return x.id}return odds[odds.length-1]?.id||'common'}
-  function duplicateComp(rarity){return{common:35,rare:90,epic:260,legendary:900}[rarity]||35}
+  function duplicateComp(rarity){return{common:35,rare:90,epic:260,legendary:900,mythic:2500}[rarity]||35}
   function grantCosmeticRoll(odds=COSMETIC_ODDS){
     const rarity=rollRarity(odds);
-    const pool=DROPPABLE_COSMETICS.filter(x=>x.rarity===rarity);
+    const pool=ALL_COSMETICS.filter(x=>x.rarity===rarity&&!x.exclusive);
     const item=pool[Math.floor(Math.random()*pool.length)];
     const owned=item.kind==='skin'?progress.ownedSkins:item.kind==='bullet'?progress.ownedBullets:progress.ownedTrails;
     if(owned.includes(item.id)){const coins=duplicateComp(rarity);progress.coins+=coins;return{item,duplicate:true,coins}}
@@ -611,20 +770,75 @@
     return `<div class="capsule-reel-item rarity-${item.rarity}${target?' target':''}" data-item="${item.kind}:${item.id}"><div class="capsule-reel-preview">${cosmeticPreviewMarkup(item)}</div><span class="rarity-badge rarity-${item.rarity}">${t(RARITY[item.rarity].key)}</span><b>${t(item.nameKey)}</b></div>`;
   }
   let capsuleAnimating=false;
-  function closeCapsule(){if(capsuleAnimating)return;ui.capsuleOverlay.classList.add('hidden');ui.capsuleAgainBtn.classList.add('hidden')}
+  function chestTierClass(chest){const stars=Number(chest?.stars||0);if(stars>=30)return'tier-30';if(stars>=20)return'tier-20';return'tier-10'}
+  function chestTierHint(chest){const stars=Number(chest?.stars||0);return t(stars>=30?'chestTier30Hint':stars>=20?'chestTier20Hint':'chestTier10Hint')}
+  function playToneSequence(notes,step=110,type='triangle',gain=.03){notes.forEach((freq,i)=>setTimeout(()=>sound.tone(freq,Math.max(.08,step/1000*1.15),type,gain),i*step))}
+  function playChestIntroSound(chest){const stars=Number(chest?.stars||0);if(stars>=30)playToneSequence([540,680,860,1080],90,'triangle',.035);else if(stars>=20)playToneSequence([520,660,820],95,'triangle',.032);else playToneSequence([500,620],110,'triangle',.028)}
+  function playChestSpinSound(chest){const stars=Number(chest?.stars||0);if(stars>=30)playToneSequence([520,610,720,840],120,'sine',.022);else if(stars>=20)playToneSequence([500,620,760],130,'sine',.02);else playToneSequence([480,590],140,'sine',.018)}
+  function playChestStopSound(result,chest){if(result.item.rarity==='mythic')return;const stars=Number(chest?.stars||0);if(stars>=30)playToneSequence([780,940,1100],85,'triangle',.03);else if(stars>=20)playToneSequence([760,900],95,'triangle',.028);else playToneSequence([700],110,'triangle',.024)}
+  function playMythicBurstSound(){playToneSequence([720,880,1060,1320,1580],80,'triangle',.034);setTimeout(()=>playToneSequence([1320,1580,1890],70,'sine',.022),160)}
+  function resetCapsuleVisualState(){
+    const tierClasses=['tier-10','tier-20','tier-30'];
+    ui.capsuleOverlay?.classList.remove('star-chest-mode',...tierClasses);
+    ui.capsuleDialog?.classList.remove('star-chest-mode','mythic-win',...tierClasses);
+    ui.capsuleReelFrame?.classList.remove('star-chest-mode',...tierClasses);
+    ui.capsuleFXLayer?.classList.remove('active');
+    ui.capsuleIntro?.classList.remove('show');
+    ui.capsuleIntro?.classList.add('hidden');
+    ui.mythicBurst?.classList.remove('show');
+    ui.mythicBurst?.classList.add('hidden');
+  }
+  function closeCapsule(){if(capsuleAnimating)return;ui.capsuleOverlay.classList.add('hidden');ui.capsuleAgainBtn.classList.add('hidden');resetCapsuleVisualState()}
   function easeOutQuint(x){return 1-Math.pow(1-x,5)}
-  async function openCapsuleAnimation(result,{test=false,allowAgain=false}={}){
+  async function showStarChestIntro(chest){
+    if(!ui.capsuleIntro)return;
+    ui.capsuleIntroTitle.textContent=t(chest?.nameKey||'starChestsTitle');
+    ui.capsuleIntroHint.textContent=chestTierHint(chest);
+    ui.capsuleIntro.classList.remove('hidden');
+    ui.capsuleIntro.classList.remove('show');
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    ui.capsuleIntro.classList.add('show');
+    playChestIntroSound(chest);
+    await new Promise(r=>setTimeout(r,Number(chest?.stars||0)>=30?1080:Number(chest?.stars||0)>=20?960:860));
+    ui.capsuleIntro.classList.remove('show');
+    await new Promise(r=>setTimeout(r,180));
+    ui.capsuleIntro.classList.add('hidden');
+  }
+  async function showMythicBurst(item){
+    if(!ui.mythicBurst)return;
+    ui.mythicBurstTitle.textContent=t('mythicDrop');
+    ui.mythicBurstHint.textContent=`${t(item.nameKey)} · ${t('mythicBurstHint')}`;
+    ui.mythicBurst.classList.remove('hidden');
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    ui.mythicBurst.classList.add('show');
+    playMythicBurstSound();
+    await new Promise(r=>setTimeout(r,1550));
+    ui.mythicBurst.classList.remove('show');
+    await new Promise(r=>setTimeout(r,220));
+    ui.mythicBurst.classList.add('hidden');
+  }
+  async function openCapsuleAnimation(result,{test=false,allowAgain=false,source='capsule',chest=null}={}){
     if(capsuleAnimating)return;
     capsuleAnimating=true;
     sound.ensure();
+    const starMode=source==='star';
+    const mythicMode=result?.item?.rarity==='mythic';
+    const tierClass=starMode?chestTierClass(chest):'';
     ui.capsuleOverlay.classList.remove('hidden');
+    resetCapsuleVisualState();
+    if(starMode){
+      ui.capsuleOverlay?.classList.add('star-chest-mode',tierClass);
+      ui.capsuleDialog?.classList.add('star-chest-mode',tierClass);
+      ui.capsuleReelFrame?.classList.add('star-chest-mode',tierClass);
+      ui.capsuleFXLayer?.classList.add('active');
+    }
     ui.capsuleResult.classList.add('hidden');
     ui.capsuleAgainBtn.classList.add('hidden');
     ui.capsuleCloseBtn.disabled=true;
     ui.capsuleReel.innerHTML='';
+    if(starMode) await showStarChestIntro(chest);
 
-    // Every full cycle contains every cosmetic item. The final target is injected near the end.
-    const base=[...DROPPABLE_COSMETICS];
+    const base=ALL_COSMETICS.filter(x=>!x.exclusive);
     const sequence=[];
     for(let cycle=0;cycle<5;cycle++) sequence.push(...base);
     const targetIndex=sequence.length-6;
@@ -639,28 +853,46 @@
     const targetCenter=target.offsetLeft+target.offsetWidth/2;
     const frameCenter=frame.clientWidth/2;
     const finalX=frameCenter-targetCenter;
-    const start=performance.now(),duration=3600;
+    const stars=Number(chest?.stars||0);
+    const duration=starMode?(stars>=30?4700:stars>=20?4250:3850):3600;
+    const wobbleSize=starMode?(stars>=30?10:stars>=20?8.7:7.8):7;
+    if(starMode) playChestSpinSound(chest);
+    const start=performance.now();
     await new Promise(resolve=>{
       const step=now=>{
         const p=Math.min(1,(now-start)/duration),e=easeOutQuint(p);
-        const wobble=(1-p)*Math.sin(p*55)*7;
+        const wobble=(1-p)*Math.sin(p*(starMode?(stars>=30?68:stars>=20?61:57):55))*wobbleSize;
         ui.capsuleReel.style.transform=`translate3d(${finalX*e+wobble}px,0,0)`;
         if(p<1)requestAnimationFrame(step);else resolve();
       };
       requestAnimationFrame(step);
     });
     target.classList.add('won');
+    if(mythicMode){
+      ui.capsuleDialog?.classList.add('mythic-win');
+      ui.capsuleFXLayer?.classList.add('active');
+      await showMythicBurst(result.item);
+    }else if(starMode){
+      playChestStopSound(result,chest);
+    }
     const rar=RARITY[result.item.rarity];
+    const resultCopy=ui.capsuleResult.children[1];const oldTag=resultCopy?.querySelector('.reward-tag');if(oldTag)oldTag.remove();
     ui.capsuleResultPreview.innerHTML=cosmeticPreviewMarkup(result.item);
     ui.capsuleResultRarity.className=`rarity-badge rarity-${result.item.rarity}`;
     ui.capsuleResultRarity.textContent=t(rar.key);
     ui.capsuleResultName.textContent=t(result.item.nameKey);
-    ui.capsuleResultNote.textContent=result.duplicate?t('duplicateReward',{item:t(result.item.nameKey),coins:result.coins}):(test?t('testDrop'):t('newCosmetic'));
+    ui.capsuleResultNote.textContent=(mythicMode&&!result.duplicate)?t('mythicDropHint'):(result.duplicate?t('duplicateReward',{item:t(result.item.nameKey),coins:result.coins}):(test?t('testDrop'):t('newCosmetic')));
     ui.capsuleResult.className=`capsule-result rarity-${result.item.rarity}`;
     ui.capsuleResult.classList.remove('hidden');
+    if(mythicMode){
+      const hint=document.createElement('span');
+      hint.className='reward-tag';
+      hint.textContent=t('mythicDrop');
+      ui.capsuleResult.querySelector('div:last-child')?.prepend(hint);
+    }
     ui.capsuleCloseBtn.disabled=false;
     if(allowAgain)ui.capsuleAgainBtn.classList.remove('hidden');
-    sound.tone(result.item.rarity==='legendary'?1100:result.item.rarity==='epic'?900:result.item.rarity==='rare'?760:620,.24,'triangle',.045);
+    sound.tone(result.item.rarity==='mythic'?1240:result.item.rarity==='legendary'?1100:result.item.rarity==='epic'?900:result.item.rarity==='rare'?760:620,.24,'triangle',.045);
     capsuleAnimating=false;
   }
   function claimDaily(){
@@ -682,14 +914,28 @@
     progress.lastAdCapsuleAt=Date.now();const drop=grantCosmeticRoll();saveProgress();renderShop();showToast(`${t('adCapsuleReceived')} ${rewardResultText(drop)}`,2600);await openCapsuleAnimation(drop,{test:false,allowAgain:false})
   }
 
-  let crystalCatalog=new Map();
+  let crystalCatalog=new Map(), starChestCatalog=new Map(), starChestPityState=null, seasonPassData=null;
   function productCurrencyIcon(product){try{return typeof product?.getPriceCurrencyImage==='function'?product.getPriceCurrencyImage('small'):''}catch(_){return''}}
   function renderCrystalPacks(){
     if(!ui.crystalPackShop)return;ui.crystalPackShop.innerHTML='';let visible=0;
     CRYSTAL_PACKS.forEach(pack=>{const product=crystalCatalog.get(pack.id);if(!product)return;visible++;const card=document.createElement('article');card.className='crystal-pack-card';const icon=productCurrencyIcon(product);const title=String(product.title||`${formatScore(pack.amount)} ◈`),desc=String(product.description||`${formatScore(pack.amount)} ◈`),price=String(product.price||'');card.innerHTML=`<span class="crystal-pack-icon">◈</span><strong class="crystal-product-title"></strong><small class="crystal-product-amount">+${formatScore(pack.amount)} ◈</small><span class="crystal-product-desc"></span><em class="crystal-product-price"></em><button class="btn btn-primary" type="button">${t('crystalPackBuy')}</button>`;if(product.imageURI){const productImg=document.createElement('img');productImg.src=product.imageURI;productImg.alt='';productImg.className='crystal-product-image';card.querySelector('.crystal-pack-icon').replaceWith(productImg)}card.querySelector('.crystal-product-title').textContent=title;card.querySelector('.crystal-product-desc').textContent=desc;const priceEl=card.querySelector('.crystal-product-price');if(icon){const img=document.createElement('img');img.src=icon;img.alt='';img.className='portal-currency-icon';priceEl.appendChild(img)}const priceText=document.createElement('span');priceText.textContent=price;priceEl.appendChild(priceText);const btn=card.querySelector('button');btn.addEventListener('click',()=>purchaseCrystalPack(pack));ui.crystalPackShop.appendChild(card)});
     ui.crystalPacksWrap?.classList.toggle('hidden',visible===0);
   }
-  async function loadCrystalCatalog(){const products=await window.PlatformBridge?.getPaymentsCatalog?.();const supported=new Set(CRYSTAL_PACKS.map(x=>x.id));crystalCatalog=new Map((Array.isArray(products)?products:[]).filter(p=>p&&supported.has(p.id)).map(p=>[p.id,p]));renderCrystalPacks()}
+  function renderPityStatus(){
+    if(!ui.legendaryPityText||!ui.mythicPityText)return;
+    const legendary=starChestPityState?.legendary,mythic=starChestPityState?.mythic;
+    if(!legendary||!mythic){ui.legendaryPityText.textContent='—';ui.mythicPityText.textContent='—';return}
+    ui.legendaryPityText.textContent=legendary.remaining<=1?t('pityReady'):t('pityRemaining',{count:legendary.remaining});
+    ui.mythicPityText.textContent=mythic.remaining<=1?t('pityReady'):t('pityRemaining',{count:mythic.remaining});
+    if(ui.legendaryPityBar)ui.legendaryPityBar.style.width=`${clamp((legendary.count/legendary.guaranteedAt)*100,0,100)}%`;
+    if(ui.mythicPityBar)ui.mythicPityBar.style.width=`${clamp((mythic.count/mythic.guaranteedAt)*100,0,100)}%`;
+  }
+  function renderStarChests(){
+    if(!ui.starChestShop)return;ui.starChestShop.innerHTML='';
+    STAR_CHESTS.forEach(chest=>{const product=starChestCatalog.get(chest.id);const card=document.createElement('article');card.className=`star-chest-card rarity-${chest.rarity}${product?'':' disabled'}`;const icon=product?productCurrencyIcon(product):'';const price=(product&&product.price)||`${chest.stars} ⭐`;card.innerHTML=`<div class="star-chest-top"><span class="rarity-badge rarity-${chest.rarity}">${t(RARITY[chest.rarity].key)}</span><span class="star-chest-price"></span></div><div class="star-chest-icon">✦</div><strong>${t(chest.nameKey)}</strong><p>${t(chest.descKey)}</p><small>${t('starChestOdds',{odds:chestOddsText(chest)})}</small><button class="btn btn-primary" type="button">${t('starChestBuy',{stars:chest.stars})}</button>`;const priceEl=card.querySelector('.star-chest-price');if(icon){const img=document.createElement('img');img.src=icon;img.alt='';img.className='portal-currency-icon';priceEl.appendChild(img)}const span=document.createElement('span');span.textContent=price;priceEl.appendChild(span);const btn=card.querySelector('button');btn.disabled=!product;btn.addEventListener('click',()=>purchaseStarChest(chest));ui.starChestShop.appendChild(card)})
+    renderPityStatus();
+  }
+  async function loadCrystalCatalog(){const products=await window.PlatformBridge?.getPaymentsCatalog?.();const all=Array.isArray(products)?products:[];const crystalSupported=new Set(CRYSTAL_PACKS.map(x=>x.id));const starSupported=new Set(STAR_CHESTS.map(x=>x.id));crystalCatalog=new Map(all.filter(p=>p&&crystalSupported.has(p.id)).map(p=>[p.id,p]));starChestCatalog=new Map(all.filter(p=>p&&starSupported.has(p.id)).map(p=>[p.id,p]));starChestPityState=await window.PlatformBridge?.getStarChestStatus?.()||starChestPityState;renderCrystalPacks();renderStarChests()}
   async function applyCrystalPurchase(){return false}
   async function purchaseCrystalPack(pack){
     if(!window.PlatformBridge?.platformAvailable||!crystalCatalog.has(pack.id)){showToast(t('crystalPackUnavailable'));return}
@@ -699,8 +945,68 @@
     const cloud=purchase.progress||await window.PlatformBridge.loadCloudProgress();applyAuthoritativeCloud(cloud);
     showToast(t('crystalPurchaseDone',{crystals:pack.amount}));sound.tone(920,.18,'triangle',.04)
   }
+  async function purchaseStarChest(chest){
+    if(capsuleAnimating)return;
+    if(!window.PlatformBridge?.platformAvailable||!starChestCatalog.has(chest.id)){showToast(t('starChestUnavailable'));return}
+    if(!window.PlatformBridge?.authorized){showToast(t('starChestNeedTelegram'));return}
+    const purchase=await window.PlatformBridge.purchaseProduct(chest.id);
+    if(!purchase?.paid){if(purchase?.status!=='cancelled')showToast(t('starChestPurchaseFailed'));return}
+    const cloud=purchase.progress||await window.PlatformBridge.loadCloudProgress();applyAuthoritativeCloud(cloud);
+    const reward=purchase.reward||purchase.fulfillment||null;
+    if(reward?.pity)starChestPityState=reward.pity;else starChestPityState=await window.PlatformBridge?.getStarChestStatus?.()||starChestPityState;
+    const itemData=reward?.item?findCosmetic(reward.item.kind,reward.item.id):null;
+    if(itemData){
+      const result={item:itemData,duplicate:!!reward.duplicate,coins:Math.max(0,Number(reward.coins)||0)};
+      showToast(`${t('starChestOpened')} ${rewardResultText(result)}`,2600);
+      await openCapsuleAnimation(result,{test:false,allowAgain:false,source:'star',chest});
+      renderShop();
+    }else showToast(t('starChestOpened'));
+    sound.tone(980,.18,'triangle',.04)
+  }
   async function recoverCrystalPurchases(){
     if(!window.PlatformBridge?.authorized)return;const cloud=await window.PlatformBridge.loadCloudProgress();if(cloud)applyAuthoritativeCloud(cloud)
+  }
+  function passRewardItem(reward){return reward?.type==='cosmetic'?findCosmetic(reward.cosmetic?.kind,reward.cosmetic?.id):null}
+  function passRewardLabel(reward){
+    if(!reward)return'—';
+    if(reward.type==='credits')return t('passRewardCredits',{amount:formatScore(reward.amount||0)});
+    if(reward.type==='crystals')return t('passRewardCrystals',{amount:formatScore(reward.amount||0)});
+    const item=passRewardItem(reward);return item?t(item.nameKey):t('passRewardCosmetic');
+  }
+  function passRewardPreview(reward){
+    if(!reward)return'<span class="pass-reward-icon">•</span>';
+    if(reward.type==='credits')return'<span class="pass-reward-icon credits">◆</span>';
+    if(reward.type==='crystals')return'<span class="pass-reward-icon crystals">◈</span>';
+    const item=passRewardItem(reward);return item?`<span class="pass-cosmetic-preview">${cosmeticPreviewMarkup(item)}</span>`:'<span class="pass-reward-icon">✦</span>';
+  }
+  function renderSeasonPass(){
+    const data=seasonPassData;if(!data||!ui.seasonPassRewards)return;
+    const season=data.season||{},level=Math.max(1,Number(data.level)||1),xp=Math.max(0,Number(data.xp)||0),xpPer=Math.max(1,Number(season.xpPerLevel)||800),levels=Math.max(1,Number(season.levels)||20);
+    ui.seasonPassId.textContent=season.seasonId||'SEASON';ui.seasonPassLevel.textContent=`${level} / ${levels}`;
+    ui.seasonPassTimer.textContent=t('passEndsIn',{time:formatLongDuration(Math.max(0,Number(season.resetAt||0)-Date.now()))});
+    const xpInLevel=level>=levels?xpPer:xp%xpPer,pct=level>=levels?100:clamp((xpInLevel/xpPer)*100,0,100);ui.seasonPassXpBar.style.width=`${pct}%`;ui.seasonPassXpText.textContent=t('passXp',{xp:formatScore(xpInLevel),next:formatScore(xpPer)});
+    ui.seasonPassPrice.textContent=`${Number(data.priceStars)||149} ⭐`;
+    ui.buySeasonPassBtn.disabled=!!data.premium||!window.PlatformBridge?.authorized;ui.buySeasonPassBtn.textContent=data.premium?t('premiumOwned'):t('buyPremiumPass');
+    ui.seasonPassRewards.innerHTML='';
+    for(let i=1;i<=levels;i++){
+      const free=data.rewards?.free?.[i-1],premium=data.rewards?.premium?.[i-1],unlocked=i<=level,freeClaimed=data.claims?.free?.includes(i),premiumClaimed=data.claims?.premium?.includes(i);
+      const row=document.createElement('article');row.className=`season-level-row${unlocked?' unlocked':' locked'}${i===level?' current':''}`;
+      const levelBox=document.createElement('div');levelBox.className='season-level-index';levelBox.innerHTML=`<span>LVL</span><strong>${i}</strong>`;row.appendChild(levelBox);
+      const makeReward=(track,reward,claimed,isPremium)=>{const card=document.createElement('button');card.type='button';card.className=`season-reward-card ${track}${claimed?' claimed':''}${!unlocked?' locked':''}`;const item=passRewardItem(reward);card.innerHTML=`<div class="season-reward-preview">${passRewardPreview(reward)}</div><div class="season-reward-copy"><small>${isPremium?t('premiumTrack'):t('freeTrack')}</small><strong></strong><span></span></div>`;card.querySelector('strong').textContent=passRewardLabel(reward);const status=card.querySelector('span');if(claimed)status.textContent=t('passClaimed');else if(!unlocked)status.textContent=t('passLocked');else if(isPremium&&!data.premium)status.textContent=t('passPremiumRequired');else status.textContent=t('passClaim');if(item)card.classList.add(`rarity-${item.rarity}`);card.disabled=claimed||!unlocked||(isPremium&&!data.premium);card.addEventListener('click',()=>claimSeasonPassReward(track,i));return card};
+      row.appendChild(makeReward('free',free,freeClaimed,false));row.appendChild(makeReward('premium',premium,premiumClaimed,true));ui.seasonPassRewards.appendChild(row)
+    }
+  }
+  async function loadSeasonPass(){seasonPassData=await window.PlatformBridge?.getSeasonPass?.();if(seasonPassData)renderSeasonPass();return seasonPassData}
+  async function showSeasonPass(){state.mode='seasonPass';showPanel('seasonPass');if(!window.PlatformBridge?.authorized){showToast(t('passUnavailable'));return}await loadSeasonPass()}
+  async function claimSeasonPassReward(track,level){
+    const result=await window.PlatformBridge?.claimPassReward?.(track,level);if(!result?.ok){showToast(result?.reason==='premium'?t('passPremiumRequired'):result?.reason==='locked'?t('passLocked'):t('passClaimed'));return}
+    if(result.progress)applyAuthoritativeCloud(result.progress);seasonPassData=result.pass||seasonPassData;renderSeasonPass();showToast(t('passClaimed'));sound.tone(880,.15,'triangle',.03)
+  }
+  async function buySeasonPass(){
+    if(!window.PlatformBridge?.authorized){showToast(t('passUnavailable'));return}
+    ui.buySeasonPassBtn.disabled=true;const purchase=await window.PlatformBridge.purchaseProduct('season_pass');
+    if(!purchase?.paid){ui.buySeasonPassBtn.disabled=false;if(purchase?.status!=='cancelled')showToast(t('passPurchaseFailed'));return}
+    if(purchase.progress)applyAuthoritativeCloud(purchase.progress);await loadSeasonPass();showToast(t('passPurchaseDone'));sound.tone(1040,.18,'triangle',.04)
   }
   async function claimAdCrystals(){
     if(adCrystalsRemaining()>0||!window.PlatformBridge?.supportsRewarded)return;ui.claimAdCrystalsBtn.disabled=true;const rewarded=await window.PlatformBridge.showRewarded();
@@ -710,7 +1016,7 @@
   function renderShop(){
     if(!ui.skinShop||!ui.bulletShop||!ui.trailShop)return;ui.skinShop.innerHTML='';ui.bulletShop.innerHTML='';ui.trailShop.innerHTML='';if(ui.chestShop){ui.chestShop.innerHTML='';CHESTS.forEach(chest=>ui.chestShop.appendChild(chestCard(chest)))}
     SKINS.forEach(item=>ui.skinShop.appendChild(shopCard(item,'skin')));BULLET_STYLES.forEach(item=>ui.bulletShop.appendChild(shopCard(item,'bullet')));TRAIL_STYLES.forEach(item=>ui.trailShop.appendChild(shopCard(item,'trail')));
-    renderCrystalPacks();if(!ui.shopPreviewStage?.firstChild)setShopPreview({...selectedTrail(),kind:'trail'});
+    renderCrystalPacks();renderStarChests();renderMythicShop();if(!ui.shopPreviewStage?.firstChild)setShopPreview({...selectedTrail(),kind:'trail'});
   }
   function chestOddsText(chest){return chest.odds.map(x=>`${Math.round(x.chance*100)}% ${t(RARITY[x.id].key)}`).join(' · ')}
   function chestCard(chest){
@@ -726,7 +1032,7 @@
     const owned=(kind==='skin'?progress.ownedSkins:kind==='bullet'?progress.ownedBullets:progress.ownedTrails).includes(item.id);const equipped=(kind==='skin'?progress.selectedSkin:kind==='bullet'?progress.selectedBullet:progress.selectedTrail)===item.id;const rar=RARITY[item.rarity];
     const btn=document.createElement('button');btn.className=`shop-item rarity-${item.rarity}${equipped?' equipped':''}${owned?'':' locked'}`;
     const preview=cosmeticPreviewMarkup({...item,kind});
-    const premium=Number(item.crystalPrice)>0;const status=equipped?t('equipped'):owned?t('equip'):premium?`${formatScore(item.crystalPrice)} ◈`:`${formatScore(item.price)} ◆`;
+    const passExclusive=item.exclusive==='pass',premium=Number(item.crystalPrice)>0;const status=equipped?t('equipped'):owned?t('equip'):passExclusive?t('passExclusive'):premium?`${formatScore(item.crystalPrice)} ◈`:`${formatScore(item.price)} ◆`;
     btn.innerHTML=`<div class="shop-preview">${preview}</div><div><span class="rarity-badge rarity-${item.rarity}">${t(rar.key)}</span><h4>${t(item.nameKey)}</h4></div><div class="shop-meta"><span>${item.rarity==='legendary'?'✦ FX':item.rarity==='epic'?'◆ FX':'COSMETIC'}</span><span class="${owned?'shop-state':'shop-price'}">${status}</span></div>`;
     const previewItem={...item,kind};
     btn.addEventListener('pointerenter',()=>setShopPreview(previewItem));
@@ -736,6 +1042,7 @@
   async function handleShopItem(item,kind){
     const list=kind==='skin'?progress.ownedSkins:kind==='bullet'?progress.ownedBullets:progress.ownedTrails;const owned=list.includes(item.id);const selectedKey=kind==='skin'?'selectedSkin':kind==='bullet'?'selectedBullet':'selectedTrail';
     if(!owned){
+      if(item.exclusive==='pass'){showToast(t('passExclusiveHint'));return}
       const premium=Number(item.crystalPrice)>0;
       if(premium){
         if(progress.crystals<item.crystalPrice){showToast(t('notEnoughCrystals'));return}
@@ -751,37 +1058,61 @@
 
   function weightedPick(arr,weightKey='weight'){let total=arr.reduce((s,x)=>s+x[weightKey],0),r=Math.random()*total;for(const x of arr){r-=x[weightKey];if(r<=0)return x}return arr[arr.length-1]}
 
-  function resize(){const rect=app.getBoundingClientRect();state.w=Math.max(320,rect.width);state.h=Math.max(320,rect.height);state.dpr=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.floor(state.w*state.dpr);canvas.height=Math.floor(state.h*state.dpr);ctx.setTransform(state.dpr,0,0,state.dpr,0,0);if(state.mode==='game'){player.x=clamp(player.x,30,state.w-30);player.y=clamp(player.y,30,state.h-30)}makeStars()}
-  function makeStars(){const target=Math.round((state.w*state.h)/14000);state.stars=Array.from({length:clamp(target,28,100)},()=>({x:Math.random()*state.w,y:Math.random()*state.h,r:rand(.4,1.5),a:rand(.12,.55),p:rand(0,Math.PI*2)}))}
-  function resetPlayer(){Object.assign(player,{x:state.w/2,y:state.h/2,r:15,speed:235,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:590,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,repairEvery:999,killsSinceRepair:0,invuln:0,trail:[]})}
+  let pendingLandscapeStart=false;
+  function isCoarseInput(){return !!window.matchMedia?.('(pointer: coarse)')?.matches||/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent||'')}
+  function requiresLandscapeGate(){return isCoarseInput()&&window.innerHeight>window.innerWidth}
+  function viewportGameScale(height){return isCoarseInput()?clamp(height/390,.82,1.28):1}
+  function telegramInset(side){const tg=window.Telegram?.WebApp;return Math.max(0,Number(tg?.contentSafeAreaInset?.[side]||tg?.safeAreaInset?.[side]||0)||0)}
+  function setGameplayActive(active){document.documentElement.classList.toggle('gameplay-active',!!active)}
+  function rescaleLiveObjects(ratio){
+    if(!Number.isFinite(ratio)||Math.abs(ratio-1)<.001)return;
+    player.r*=ratio;player.speed*=ratio;player.projectileSpeed*=ratio;
+    for(const e of state.enemies){e.r*=ratio;e.speed*=ratio;e.vx*=ratio;e.vy*=ratio}
+    for(const p of state.projectiles){p.r*=ratio;p.vx*=ratio;p.vy*=ratio}
+    if(state.powerupDrop)state.powerupDrop.r*=ratio;
+    for(const p of state.particles){p.r*=ratio;p.vx*=ratio;p.vy*=ratio}
+  }
+  function resize(){
+    const rect=app.getBoundingClientRect(),oldScale=state.scale||1;
+    state.w=Math.max(320,rect.width);state.h=Math.max(320,rect.height);state.dpr=Math.min(2,window.devicePixelRatio||1);state.scale=viewportGameScale(state.h);
+    canvas.width=Math.floor(state.w*state.dpr);canvas.height=Math.floor(state.h*state.dpr);ctx.setTransform(state.dpr,0,0,state.dpr,0,0);
+    if(['game','pause','upgrade'].includes(state.mode))rescaleLiveObjects(state.scale/oldScale);
+    if(['game','pause','upgrade'].includes(state.mode)){const m=Math.max(12,player.r*.8),l=telegramInset('left')+m,r=state.w-telegramInset('right')-m,t=telegramInset('top')+m,b=state.h-telegramInset('bottom')-m;player.x=clamp(player.x,Math.min(l,state.w/2),Math.max(state.w/2,r));player.y=clamp(player.y,Math.min(t,state.h/2),Math.max(state.h/2,b))}
+    makeStars();
+  }
+  function makeStars(){const target=Math.round((state.w*state.h)/14000);state.stars=Array.from({length:clamp(target,28,100)},()=>({x:Math.random()*state.w,y:Math.random()*state.h,r:rand(.4,1.5)*Math.min(1.2,state.scale),a:rand(.12,.55),p:rand(0,Math.PI*2)}))}
+  function resetPlayer(){const s=state.scale;Object.assign(player,{x:state.w/2,y:state.h/2,r:15*s,speed:235*s,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:590*s,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,repairEvery:999,killsSinceRepair:0,invuln:0,trail:[]})}
   function resetGame(){ensureDailyQuestDate();state.gameTime=0;state.wave=1;state.waveClock=0;state.spawnClock=.3;state.shootClock=0;state.score=0;state.kills=0;state.combo=0;state.comboClock=99;state.bestCombo=0;state.comboGrace=3;state.cameraShake=0;state.flash=0;state.bannerClock=2;state.bannerText=t('waveIncoming',{wave:1});state.projectiles=[];state.enemies=[];state.particles=[];state.powerupDrop=null;state.powerupSpawnClock=rand(7,14);state.activePowerups={speed:0,damage:0,shield:0};resetPlayer();updateHUD()}
-  function startGame(){hideAllPanels();hud.classList.remove('hidden');state.mode='game';state.manualPause=false;resetGame();sound.ensure();window.PlatformBridge?.gameplayStart?.()}
-  function goMenu(){if(['game','pause','upgrade'].includes(state.mode))window.PlatformBridge?.gameplayStop?.();state.mode='menu';state.manualPause=false;state.joystick.active=false;hud.classList.add('hidden');showPanel('menu');refreshProgressUI();updateAuthUI()}
+  function beginGameNow(){pendingLandscapeStart=false;rotateOverlay?.classList.add('hidden');setGameplayActive(true);hideAllPanels();hud.classList.remove('hidden');state.mode='game';state.manualPause=false;resize();resetGame();sound.ensure();window.PlatformBridge?.gameplayStart?.()}
+  function startGame(){sound.ensure();window.PlatformBridge?.prepareGameplay?.();if(requiresLandscapeGate()){pendingLandscapeStart=true;setGameplayActive(false);hideAllPanels();hud.classList.add('hidden');rotateOverlay?.classList.remove('hidden');return}beginGameNow()}
+  function syncPendingLandscapeStart(){if(!pendingLandscapeStart)return;if(requiresLandscapeGate()){rotateOverlay?.classList.remove('hidden');return}beginGameNow()}
+  function cancelLandscapeStart(){pendingLandscapeStart=false;rotateOverlay?.classList.add('hidden');setGameplayActive(false);window.PlatformBridge?.gameplayExit?.();state.mode='menu';state.manualPause=false;hud.classList.add('hidden');showPanel('menu');refreshProgressUI();updateAuthUI()}
+  function goMenu(){if(['game','pause','upgrade'].includes(state.mode))window.PlatformBridge?.gameplayExit?.();pendingLandscapeStart=false;rotateOverlay?.classList.add('hidden');setGameplayActive(false);state.mode='menu';state.manualPause=false;state.joystick.active=false;hud.classList.add('hidden');showPanel('menu');refreshProgressUI();updateAuthUI()}
   function pauseGame(manual=true){if(state.mode!=='game')return;state.prevMode='game';state.mode='pause';state.manualPause=manual;window.PlatformBridge?.gameplayStop?.();sound.pause();if(manual){panels.pause.classList.remove('hidden');hud.classList.remove('hidden')}}
   function resumeGame(manual=true){if(state.mode!=='pause')return;if(manual&&!state.manualPause)return;panels.pause.classList.add('hidden');state.mode='game';state.manualPause=false;sound.resume();window.PlatformBridge?.gameplayStart?.()}
   function platformPause(){state.suspendedByPlatform=true;sound.pause();if(state.mode==='game'){state.prevMode='game';state.mode='pause';state.manualPause=false;window.PlatformBridge?.gameplayStop?.()}}
   function platformResume(){state.suspendedByPlatform=false;if(state.mode==='pause'&&!state.manualPause){state.mode='game';sound.resume();window.PlatformBridge?.gameplayStart?.();return}sound.resume();if(state.mode==='game')window.PlatformBridge?.gameplayStart?.()}
   async function retryWithAd(){const shouldShow=progress.gamesPlayed>0&&progress.gamesPlayed%3===0;if(shouldShow)await window.PlatformBridge?.showInterstitial?.();startGame()}
 
-  function enemySpawnPoint(padding=60){const side=Math.floor(Math.random()*4);if(side===0)return{x:rand(-padding,state.w+padding),y:-padding};if(side===1)return{x:state.w+padding,y:rand(-padding,state.h+padding)};if(side===2)return{x:rand(-padding,state.w+padding),y:state.h+padding};return{x:-padding,y:rand(-padding,state.h+padding)}}
+  function enemySpawnPoint(padding=60){padding*=state.scale;const side=Math.floor(Math.random()*4);if(side===0)return{x:rand(-padding,state.w+padding),y:-padding};if(side===1)return{x:state.w+padding,y:rand(-padding,state.h+padding)};if(side===2)return{x:rand(-padding,state.w+padding),y:state.h+padding};return{x:-padding,y:rand(-padding,state.h+padding)}}
   function chooseEnemyType(){const w=state.wave,roll=Math.random();if(w>=10&&roll<.08)return'spinner';if(w>=8&&roll<.17)return'splitter';if(w>=7&&roll<.27)return'sniper';if(w>=5&&roll<.39)return'orbiter';if(w>=6&&roll<.51)return'shooter';if(w>=4&&roll<.63)return'tank';if(w>=2&&roll<.78)return'dasher';return'chaser'}
-  function spawnEnemy(type=chooseEnemyType(),at=null){const base=enemyTypes[type],pos=at||enemySpawnPoint(type==='boss'?90:50);const waveHp=type==='boss'?1+Math.max(0,state.wave-5)*.135:1+Math.max(0,state.wave-1)*.054;const hp=Math.max(.45,base.hp*waveHp*.9);const e={type,x:pos.x,y:pos.y,r:base.r,hp,maxHp:hp,speed:base.speed*(1+Math.min(.66,state.wave*.0245)),score:base.score,age:0,dashClock:rand(.4,1.6),dashTime:0,vx:0,vy:0,shootClock:rand(.4,1.4),summonClock:rand(2.8,4.2),hitFlash:0,orbit:Math.random()<.5?-1:1,bossKind:null};state.enemies.push(e);return e}
+  function spawnEnemy(type=chooseEnemyType(),at=null){const base=enemyTypes[type],pos=at||enemySpawnPoint(type==='boss'?90:50);const waveHp=type==='boss'?1+Math.max(0,state.wave-5)*.135:1+Math.max(0,state.wave-1)*.054;const hp=Math.max(.45,base.hp*waveHp*.9);const e={type,x:pos.x,y:pos.y,r:base.r*state.scale,hp,maxHp:hp,speed:base.speed*state.scale*(1+Math.min(.66,state.wave*.0245)),score:base.score,age:0,dashClock:rand(.4,1.6),dashTime:0,vx:0,vy:0,shootClock:rand(.4,1.4),summonClock:rand(2.8,4.2),hitFlash:0,orbit:Math.random()<.5?-1:1,bossKind:null};state.enemies.push(e);return e}
   function spawnBoss(){const index=(Math.max(1,Math.floor(state.wave/5))-1)%BOSS_KINDS.length,kind=BOSS_KINDS[index],e=spawnEnemy('boss');e.bossKind=kind.id;e.shootClock=.65;e.dashClock=1.25;e.summonClock=3.1;if(kind.id==='spiral'){e.speed*=.86;e.hp=Math.ceil(e.hp*.94);e.maxHp=e.hp}else if(kind.id==='charger'){e.speed*=1.18;e.hp=Math.ceil(e.hp*.9);e.maxHp=e.hp}else if(kind.id==='summoner'){e.speed*=.88;e.hp=Math.ceil(e.hp*1.08);e.maxHp=e.hp}state.bannerText=`${t('bossIncoming',{wave:state.wave})} · ${kind[lang]||kind.ru}`;state.bannerClock=2.4;sound.tone(110,.3,'sawtooth',.05)}
-  function playerDirection(){let x=0,y=0;if(state.keys.has('KeyA')||state.keys.has('ArrowLeft'))x--;if(state.keys.has('KeyD')||state.keys.has('ArrowRight'))x++;if(state.keys.has('KeyW')||state.keys.has('ArrowUp'))y--;if(state.keys.has('KeyS')||state.keys.has('ArrowDown'))y++;if(state.joystick.active){const dx=state.joystick.x-state.joystick.startX,dy=state.joystick.y-state.joystick.startY,len=Math.hypot(dx,dy);if(len>5){x+=dx/Math.max(55,len);y+=dy/Math.max(55,len)}}const len=Math.hypot(x,y);return len>0?{x:x/Math.max(1,len),y:y/Math.max(1,len)}:{x:0,y:0}}
+  function playerDirection(){let x=0,y=0;if(state.keys.has('KeyA')||state.keys.has('ArrowLeft'))x--;if(state.keys.has('KeyD')||state.keys.has('ArrowRight'))x++;if(state.keys.has('KeyW')||state.keys.has('ArrowUp'))y--;if(state.keys.has('KeyS')||state.keys.has('ArrowDown'))y++;if(state.joystick.active){const dx=state.joystick.x-state.joystick.startX,dy=state.joystick.y-state.joystick.startY,len=Math.hypot(dx,dy);if(len>5*state.scale){x+=dx/Math.max(55*state.scale,len);y+=dy/Math.max(55*state.scale,len)}}const len=Math.hypot(x,y);return len>0?{x:x/Math.max(1,len),y:y/Math.max(1,len)}:{x:0,y:0}}
   function nearestEnemy(){let best=null,bestD=Infinity;for(const e of state.enemies){const d=dist2(player.x,player.y,e.x,e.y);if(d<bestD){bestD=d;best=e}}return best}
-  function shoot(){const target=nearestEnemy();if(!target)return;const baseAngle=Math.atan2(target.y-player.y,target.x-player.x),count=player.multishot,style=selectedBullet();for(let i=0;i<count;i++){const offset=(i-(count-1)/2)*player.spread,a=baseAngle+offset,crit=Math.random()<player.crit,baseR=crit?5:4;state.projectiles.push({x:player.x,y:player.y,vx:Math.cos(a)*player.projectileSpeed,vy:Math.sin(a)*player.projectileSpeed,r:baseR*player.projectileScale,damage:player.damage*(state.activePowerups.damage>0?1.65:1)*(crit?player.critMult:1),life:1.5,pierce:player.pierce,hit:new Set(),crit,styleId:style.id})}sound.tone(510+Math.random()*45,.045,'triangle',.012)}
-  function addEnemyProjectile(e,a,speed=185,r=5,color='#ff78ec',damage=1,life=4){state.projectiles.push({enemy:true,x:e.x,y:e.y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,r,life,color,damage})}
+  function shoot(){const target=nearestEnemy();if(!target)return;const baseAngle=Math.atan2(target.y-player.y,target.x-player.x),count=player.multishot,style=selectedBullet();for(let i=0;i<count;i++){const offset=(i-(count-1)/2)*player.spread,a=baseAngle+offset,crit=Math.random()<player.crit,baseR=crit?5:4;state.projectiles.push({x:player.x,y:player.y,vx:Math.cos(a)*player.projectileSpeed,vy:Math.sin(a)*player.projectileSpeed,r:baseR*state.scale*player.projectileScale,damage:player.damage*(state.activePowerups.damage>0?1.65:1)*(crit?player.critMult:1),life:1.5,pierce:player.pierce,hit:new Set(),crit,styleId:style.id})}sound.tone(510+Math.random()*45,.045,'triangle',.012)}
+  function addEnemyProjectile(e,a,speed=185,r=5,color='#ff78ec',damage=1,life=4){const s=state.scale;state.projectiles.push({enemy:true,x:e.x,y:e.y,vx:Math.cos(a)*speed*s,vy:Math.sin(a)*speed*s,r:r*s,life,color,damage})}
   function enemyShoot(e,count=1,speed=185,spread=.22,color='#ff78ec'){const baseAngle=Math.atan2(player.y-e.y,player.x-e.x);for(let i=0;i<count;i++){const a=baseAngle+(i-(count-1)/2)*spread;addEnemyProjectile(e,a,speed,5,color)}}
   function radialEnemyShoot(e,count=8,speed=145,offset=0,color='#c87cff'){for(let i=0;i<count;i++)addEnemyProjectile(e,offset+i*Math.PI*2/count,speed,4.5,color)}
   function damagePlayer(amount=1){if(player.invuln>0||state.mode!=='game')return;if(state.activePowerups.shield>0){player.invuln=.18;return;}if(player.evasion>0&&Math.random()<player.evasion){player.invuln=.28;showToast(t('evaded'),700);sound.tone(930,.07,'sine',.02);burst(player.x,player.y,8,'shield');return}if(player.shield>0){player.shield--;player.invuln=.65;showToast(t('shieldSaved'),900);sound.tone(840,.12,'sine',.035);burst(player.x,player.y,14,'shield');updateHUD();return}player.hp-=amount;player.invuln=1.1;state.combo=0;state.comboClock=99;state.cameraShake=11;state.flash=.25;sound.tone(105,.18,'sawtooth',.05);burst(player.x,player.y,18,'damage');updateHUD();if(player.hp<=0)finishGame()}
-  function killEnemy(e){state.kills++;state.combo=state.comboClock<=state.comboGrace?state.combo+1:1;state.comboClock=0;state.bestCombo=Math.max(state.bestCombo,state.combo);const mult=Math.min(6,1+Math.floor(state.combo/4)),waveBonus=1+(state.wave-1)*.025;state.score+=Math.round(e.score*mult*waveBonus);if(e.type==='boss')state.score+=90*state.wave;updateQuestStat('kills',1,{mode:'add'});updateQuestStat('combo',state.combo);updateQuestStat('score',Math.floor(state.score));if(e.type==='boss')updateQuestStat('bosses',1,{mode:'add'});player.killsSinceRepair++;if(player.repairEvery<900&&player.killsSinceRepair>=player.repairEvery){player.killsSinceRepair=0;player.hp=Math.min(player.maxHp,player.hp+1)}burst(e.x,e.y,e.type==='boss'?42:12,e.type==='boss'?'boss':'enemy');sound.tone(e.type==='boss'?190:260+Math.min(420,state.combo*10),e.type==='boss'?.28:.07,'square',e.type==='boss'?.045:.018);if(e.type==='splitter')for(let i=0;i<2;i++)spawnEnemy('minion',{x:e.x+rand(-8,8),y:e.y+rand(-8,8)});if(e.type==='boss')player.hp=Math.min(player.maxHp,player.hp+1);updateHUD()}
-  function burst(x,y,count,kind){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=rand(30,kind==='boss'?230:150);state.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rand(.25,.7),max:.7,r:rand(1.5,4),kind})}}
+  function killEnemy(e){state.kills++;state.combo=state.comboClock<=state.comboGrace?state.combo+1:1;state.comboClock=0;state.bestCombo=Math.max(state.bestCombo,state.combo);const mult=Math.min(6,1+Math.floor(state.combo/4)),waveBonus=1+(state.wave-1)*.025;state.score+=Math.round(e.score*mult*waveBonus);if(e.type==='boss')state.score+=90*state.wave;updateQuestStat('kills',1,{mode:'add'});updateQuestStat('combo',state.combo);updateQuestStat('score',Math.floor(state.score));if(e.type==='boss')updateQuestStat('bosses',1,{mode:'add'});player.killsSinceRepair++;if(player.repairEvery<900&&player.killsSinceRepair>=player.repairEvery){player.killsSinceRepair=0;player.hp=Math.min(player.maxHp,player.hp+1)}burst(e.x,e.y,e.type==='boss'?42:12,e.type==='boss'?'boss':'enemy');sound.tone(e.type==='boss'?190:260+Math.min(420,state.combo*10),e.type==='boss'?.28:.07,'square',e.type==='boss'?.045:.018);if(e.type==='splitter')for(let i=0;i<2;i++)spawnEnemy('minion',{x:e.x+rand(-8*state.scale,8*state.scale),y:e.y+rand(-8*state.scale,8*state.scale)});if(e.type==='boss')player.hp=Math.min(player.maxHp,player.hp+1);updateHUD()}
+  function burst(x,y,count,kind){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=rand(30,kind==='boss'?230:150)*state.scale;state.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:rand(.25,.7),max:.7,r:rand(1.5,4)*state.scale,kind})}}
 
   function scheduleNextPowerup(){state.powerupSpawnClock=rand(11,24)}
   function spawnTempPowerup(){
     const type=TEMP_POWERUPS[Math.floor(Math.random()*TEMP_POWERUPS.length)];
-    const pad=Math.max(42,player.r+26),x=rand(pad,Math.max(pad+1,state.w-pad)),y=rand(Math.max(76,pad),Math.max(Math.max(76,pad)+1,state.h-pad));
-    state.powerupDrop={type,x,y,r:16,life:9,age:0};
+    const pad=Math.max(42*state.scale,player.r+26*state.scale),left=telegramInset('left')+pad,right=state.w-telegramInset('right')-pad,top=Math.max(telegramInset('top')+pad,76*state.scale),bottom=state.h-telegramInset('bottom')-pad,x=rand(Math.min(left,state.w/2),Math.max(state.w/2,right)),y=rand(Math.min(top,state.h/2),Math.max(state.h/2,bottom));
+    state.powerupDrop={type,x,y,r:16*state.scale,life:9,age:0};
   }
   function collectTempPowerup(drop){
     state.activePowerups[drop.type.id]=POWERUP_DURATION;state.powerupDrop=null;scheduleNextPowerup();
@@ -789,45 +1120,45 @@
   }
   function updateTempPowerups(dt){
     for(const id of ['speed','damage','shield'])state.activePowerups[id]=Math.max(0,state.activePowerups[id]-dt);
-    if(state.powerupDrop){const d=state.powerupDrop;d.age+=dt;d.life-=dt;if(dist2(player.x,player.y,d.x,d.y)<(player.r+d.r+5)**2){collectTempPowerup(d);return}if(d.life<=0){state.powerupDrop=null;scheduleNextPowerup()}}
+    if(state.powerupDrop){const d=state.powerupDrop;d.age+=dt;d.life-=dt;if(dist2(player.x,player.y,d.x,d.y)<(player.r+d.r+5*state.scale)**2){collectTempPowerup(d);return}if(d.life<=0){state.powerupDrop=null;scheduleNextPowerup()}}
     else{state.powerupSpawnClock-=dt;if(state.powerupSpawnClock<=0)spawnTempPowerup()}
   }
   function drawTempPowerups(now){
-    const d=state.powerupDrop;if(d){const pulse=1+Math.sin(now*.009)*.09;ctx.save();ctx.translate(d.x,d.y);ctx.globalCompositeOperation='screen';ctx.strokeStyle=hexAlpha(d.type.color,.65);ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,d.r*1.6*pulse,0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha(d.type.color,.18);ctx.beginPath();ctx.arc(0,0,d.r*1.25,0,Math.PI*2);ctx.fill();ctx.shadowBlur=20;ctx.shadowColor=d.type.color;ctx.fillStyle=d.type.color;ctx.beginPath();for(let i=0;i<6;i++){const a=-Math.PI/2+i*Math.PI/3,r=i%2?d.r*.62:d.r,x=Math.cos(a)*r,y=Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#06101a';ctx.font='900 15px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.type.icon,0,1);ctx.restore()}
-    const active=TEMP_POWERUPS.filter(p=>state.activePowerups[p.id]>0);if(active.length){ctx.save();ctx.font='800 11px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';const gap=10,width=118,total=active.length*width+(active.length-1)*gap,start=state.w/2-total/2;active.forEach((p,i)=>{const x=start+i*(width+gap),y=state.h-37,sec=Math.ceil(state.activePowerups[p.id]);ctx.fillStyle='rgba(4,10,22,.72)';ctx.strokeStyle=hexAlpha(p.color,.42);ctx.lineWidth=1;roundRectPath(x,y,width,26,9);ctx.fill();ctx.stroke();ctx.fillStyle=p.color;ctx.fillText(`${p.icon} ${t(p.nameKey)} ${sec}s`,x+width/2,y+13)});ctx.restore()}
+    const d=state.powerupDrop;if(d){const pulse=1+Math.sin(now*.009)*.09;ctx.save();ctx.translate(d.x,d.y);ctx.globalCompositeOperation='screen';ctx.strokeStyle=hexAlpha(d.type.color,.65);ctx.lineWidth=Math.max(1.5,2*state.scale);ctx.beginPath();ctx.arc(0,0,d.r*1.6*pulse,0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha(d.type.color,.18);ctx.beginPath();ctx.arc(0,0,d.r*1.25,0,Math.PI*2);ctx.fill();ctx.shadowBlur=20;ctx.shadowColor=d.type.color;ctx.fillStyle=d.type.color;ctx.beginPath();for(let i=0;i<6;i++){const a=-Math.PI/2+i*Math.PI/3,r=i%2?d.r*.62:d.r,x=Math.cos(a)*r,y=Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#06101a';ctx.font=`900 ${Math.max(12,15*state.scale)}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.type.icon,0,1);ctx.restore()}
+    const active=TEMP_POWERUPS.filter(p=>state.activePowerups[p.id]>0);if(active.length){const s=state.scale;ctx.save();ctx.font=`800 ${Math.max(9,11*s)}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';const gap=8*s,width=112*s,height=25*s,total=active.length*width+(active.length-1)*gap,start=state.w/2-total/2;active.forEach((p,i)=>{const x=start+i*(width+gap),y=state.h-telegramInset('bottom')-height-10*s,sec=Math.ceil(state.activePowerups[p.id]);ctx.fillStyle='rgba(4,10,22,.72)';ctx.strokeStyle=hexAlpha(p.color,.42);ctx.lineWidth=Math.max(1,s);roundRectPath(x,y,width,height,9*s);ctx.fill();ctx.stroke();ctx.fillStyle=p.color;ctx.fillText(`${p.icon} ${t(p.nameKey)} ${sec}s`,x+width/2,y+height/2)});ctx.restore()}
   }
   function roundRectPath(x,y,w,h,r){const rr=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+w,y,x+w,y+h,rr);ctx.arcTo(x+w,y+h,x,y+h,rr);ctx.arcTo(x,y+h,x,y,rr);ctx.arcTo(x,y,x+w,y,rr);ctx.closePath()}
 
   function nextWave(){state.wave++;state.waveClock=0;state.score+=state.wave*35;updateQuestStat('wave',state.wave);updateQuestStat('score',Math.floor(state.score));if(player.waveGuard<900&&state.wave%player.waveGuard===0)player.shield=Math.min(4,player.shield+1);state.bannerText=state.wave%5===0?t('bossIncoming',{wave:state.wave}):t('waveIncoming',{wave:state.wave});state.bannerClock=2;if(state.wave%5===0)spawnBoss();showUpgrades();updateHUD()}
   function showUpgrades(){if(state.mode!=='game')return;state.mode='upgrade';window.PlatformBridge?.gameplayStop?.();ui.upgradeChoices.innerHTML='';const pool=[...upgrades].sort(()=>Math.random()-.5).slice(0,3);pool.forEach(up=>{const rarity=weightedPick(UPGRADE_RARITIES),copy=up[lang]||up.ru,btn=document.createElement('button');btn.className=`upgrade-card rarity-${rarity.id}`;const powerLabel=rarity.power.toFixed(rarity.power%1?1:0);btn.innerHTML=`<span class="upgrade-icon">${up.icon}</span><h3>${copy[0]}</h3><p>${copy[1]}</p><span class="rarity-label">${t(RARITY[rarity.id].key)} · ${t('rarityPower',{power:powerLabel})}</span>`;btn.addEventListener('click',()=>{up.apply(rarity.power);panels.upgrade.classList.add('hidden');state.mode='game';updateHUD();sound.tone(rarity.id==='legendary'?980:720,.14,'sine',.038);window.PlatformBridge?.gameplayStart?.()},{once:true});ui.upgradeChoices.appendChild(btn)});panels.upgrade.classList.remove('hidden')}
 
-  async function finishGame(){if(state.mode==='game')window.PlatformBridge?.gameplayStop?.();updateQuestStat('games',1,{mode:'add'});updateQuestStat('score',Math.floor(state.score));updateQuestStat('wave',state.wave);state.mode='gameover';hud.classList.add('hidden');const final=Math.max(0,Math.floor(state.score)),isRecord=final>progress.bestScore;if(isRecord)progress.bestScore=final;progress.gamesPlayed++;progress.coins+=Math.min(120,20+Math.floor(state.wave*4));saveProgress();ui.finalScore.textContent=formatScore(final);ui.finalWave.textContent=state.wave;ui.finalKills.textContent=state.kills;ui.finalCombo.textContent=`×${Math.max(1,state.bestCombo)}`;ui.newRecord.classList.toggle('hidden',!isRecord);ui.rankLine.textContent=window.PlatformBridge?.authorized?'…':t('noRank');showPanel('gameover');if(window.PlatformBridge?.authorized){if(isRecord)await window.PlatformBridge.submitScore(final*LEADERBOARD_SCORE_SCALE,{wave:state.wave,kills:state.kills,durationMs:Math.round(state.gameTime*1000)});const entry=await window.PlatformBridge.getPlayerEntry();ui.rankLine.textContent=entry?.rank?t('rank',{rank:entry.rank}):''}}
+  async function finishGame(){if(state.mode==='game')window.PlatformBridge?.gameplayExit?.();setGameplayActive(false);updateQuestStat('games',1,{mode:'add'});updateQuestStat('score',Math.floor(state.score));updateQuestStat('wave',state.wave);state.mode='gameover';hud.classList.add('hidden');const final=Math.max(0,Math.floor(state.score)),isRecord=final>progress.bestScore;if(isRecord)progress.bestScore=final;progress.gamesPlayed++;progress.coins+=Math.min(120,20+Math.floor(state.wave*4));saveProgress();ui.finalScore.textContent=formatScore(final);ui.finalWave.textContent=state.wave;ui.finalKills.textContent=state.kills;ui.finalCombo.textContent=`×${Math.max(1,state.bestCombo)}`;ui.newRecord.classList.toggle('hidden',!isRecord);ui.rankLine.textContent=window.PlatformBridge?.authorized?'…':t('noRank');showPanel('gameover');if(window.PlatformBridge?.authorized){let scoreResult=null;if(final>0)scoreResult=await window.PlatformBridge.submitScore(final*LEADERBOARD_SCORE_SCALE,{wave:state.wave,kills:state.kills,durationMs:Math.round(state.gameTime*1000)});const gained=Math.max(0,Number(scoreResult?.passXpGained)||0);if(gained>0){seasonPassData=scoreResult?.pass||seasonPassData;showToast(t('passXpGained',{xp:formatScore(gained)}),2200)}const entry=await window.PlatformBridge.getPlayerEntry();ui.rankLine.textContent=entry?.rank?t('rank',{rank:entry.rank}):''}}
   function updateHUD(){hudScore.textContent=formatScore(state.score);hudWave.textContent=state.wave;hudCombo.textContent=`×${Math.min(10,1+Math.floor(state.combo/3))}`;hpBar.innerHTML='';for(let i=0;i<player.maxHp;i++){const pip=document.createElement('span');pip.className=`hp-pip${i>=player.hp?' empty':''}`;hpBar.appendChild(pip)}if(player.shield>0)hpBar.title=`Shield: ${player.shield}`}
 
-  function update(dt){if(state.mode!=='game')return;state.gameTime+=dt;state.waveClock+=dt;state.spawnClock-=dt;state.shootClock-=dt;state.comboClock+=dt;state.bannerClock=Math.max(0,state.bannerClock-dt);state.flash=Math.max(0,state.flash-dt);state.cameraShake*=Math.pow(.04,dt);player.invuln=Math.max(0,player.invuln-dt);updateTempPowerups(dt);if(state.waveClock>=state.waveLength){nextWave();return}const dir=playerDirection();const tempSpeed=state.activePowerups.speed>0?1.38:1;player.x=clamp(player.x+dir.x*player.speed*tempSpeed*dt,player.r+8,state.w-player.r-8);player.y=clamp(player.y+dir.y*player.speed*tempSpeed*dt,player.r+8,state.h-player.r-8);if(Math.abs(dir.x)+Math.abs(dir.y)>.05&&Math.random()<.8)player.trail.push({x:player.x,y:player.y,life:.28});player.trail.forEach(p=>p.life-=dt);player.trail=player.trail.filter(p=>p.life>0);const maxEnemies=Math.min(74,12+Math.floor(state.wave*3.15));if(state.spawnClock<=0&&state.enemies.length<maxEnemies){spawnEnemy();state.spawnClock=Math.max(.16,.76-state.wave*.032)*rand(.72,1.22)}if(state.shootClock<=0&&state.enemies.length){shoot();state.shootClock=player.fireRate}for(const e of state.enemies)updateEnemy(e,dt);updateProjectiles(dt);updateParticles(dt);if(state.combo>0&&state.comboClock>state.comboGrace){state.combo=0;updateHUD()}}
+  function update(dt){if(state.mode!=='game')return;state.gameTime+=dt;state.waveClock+=dt;state.spawnClock-=dt;state.shootClock-=dt;state.comboClock+=dt;state.bannerClock=Math.max(0,state.bannerClock-dt);state.flash=Math.max(0,state.flash-dt);state.cameraShake*=Math.pow(.04,dt);player.invuln=Math.max(0,player.invuln-dt);updateTempPowerups(dt);if(state.waveClock>=state.waveLength){nextWave();return}const dir=playerDirection();const tempSpeed=state.activePowerups.speed>0?1.38:1;const edge=8*state.scale,leftBound=telegramInset('left')+player.r+edge,rightBound=state.w-telegramInset('right')-player.r-edge,topBound=telegramInset('top')+player.r+edge,bottomBound=state.h-telegramInset('bottom')-player.r-edge;player.x=clamp(player.x+dir.x*player.speed*tempSpeed*dt,Math.min(leftBound,state.w/2),Math.max(state.w/2,rightBound));player.y=clamp(player.y+dir.y*player.speed*tempSpeed*dt,Math.min(topBound,state.h/2),Math.max(state.h/2,bottomBound));if(Math.abs(dir.x)+Math.abs(dir.y)>.05&&Math.random()<.8)player.trail.push({x:player.x,y:player.y,life:.28});player.trail.forEach(p=>p.life-=dt);player.trail=player.trail.filter(p=>p.life>0);const maxEnemies=Math.min(74,12+Math.floor(state.wave*3.15));if(state.spawnClock<=0&&state.enemies.length<maxEnemies){spawnEnemy();state.spawnClock=Math.max(.16,.76-state.wave*.032)*rand(.72,1.22)}if(state.shootClock<=0&&state.enemies.length){shoot();state.shootClock=player.fireRate}for(const e of state.enemies)updateEnemy(e,dt);updateProjectiles(dt);updateParticles(dt);if(state.combo>0&&state.comboClock>state.comboGrace){state.combo=0;updateHUD()}}
   function updateEnemy(e,dt){
     e.age+=dt;e.hitFlash=Math.max(0,e.hitFlash-dt);e.dashClock-=dt;e.shootClock-=dt;e.summonClock-=dt;
     let dx=player.x-e.x,dy=player.y-e.y,len=Math.max(1,Math.hypot(dx,dy));dx/=len;dy/=len;
     if(e.type==='dasher'){
-      if(e.dashTime>0){e.dashTime-=dt;e.x+=e.vx*dt;e.y+=e.vy*dt}else{e.x+=dx*e.speed*dt;e.y+=dy*e.speed*dt;if(e.dashClock<=0){e.vx=dx*350;e.vy=dy*350;e.dashTime=.29;e.dashClock=rand(1.35,2.15)}}
+      if(e.dashTime>0){e.dashTime-=dt;e.x+=e.vx*dt;e.y+=e.vy*dt}else{e.x+=dx*e.speed*dt;e.y+=dy*e.speed*dt;if(e.dashClock<=0){e.vx=dx*350*state.scale;e.vy=dy*350*state.scale;e.dashTime=.29;e.dashClock=rand(1.35,2.15)}}
     }else if(e.type==='shooter'){
-      const targetRange=260,move=len>targetRange+30?1:len<targetRange-50?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*28)*dt;e.y+=(dy*move*e.speed+py*28)*dt;if(e.shootClock<=0&&len<430){enemyShoot(e);e.shootClock=Math.max(.86,1.82-state.wave*.03)}
+      const targetRange=260*state.scale,move=len>targetRange+30*state.scale?1:len<targetRange-50*state.scale?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*28*state.scale)*dt;e.y+=(dy*move*e.speed+py*28*state.scale)*dt;if(e.shootClock<=0&&len<430*state.scale){enemyShoot(e);e.shootClock=Math.max(.86,1.82-state.wave*.03)}
     }else if(e.type==='orbiter'){
-      const targetRange=190,move=len>targetRange+28?1:len<targetRange-35?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*55)*dt;e.y+=(dy*move*e.speed+py*55)*dt;if(e.shootClock<=0&&len<390){enemyShoot(e,2,175,.16,'#ffb45b');e.shootClock=1.75}
+      const targetRange=190*state.scale,move=len>targetRange+28*state.scale?1:len<targetRange-35*state.scale?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*55*state.scale)*dt;e.y+=(dy*move*e.speed+py*55*state.scale)*dt;if(e.shootClock<=0&&len<390*state.scale){enemyShoot(e,2,175,.16,'#ffb45b');e.shootClock=1.75}
     }else if(e.type==='sniper'){
-      const targetRange=350,move=len>targetRange+45?1:len<targetRange-65?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*14)*dt;e.y+=(dy*move*e.speed+py*14)*dt;if(e.shootClock<=0&&len<540){enemyShoot(e,1,285,.1,'#ff91d7');e.shootClock=2.35}
+      const targetRange=350*state.scale,move=len>targetRange+45*state.scale?1:len<targetRange-65*state.scale?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*14*state.scale)*dt;e.y+=(dy*move*e.speed+py*14*state.scale)*dt;if(e.shootClock<=0&&len<540*state.scale){enemyShoot(e,1,285,.1,'#ff91d7');e.shootClock=2.35}
     }else if(e.type==='spinner'){
-      const targetRange=235,move=len>targetRange+35?1:len<targetRange-45?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*38)*dt;e.y+=(dy*move*e.speed+py*38)*dt;if(e.shootClock<=0&&len<410){radialEnemyShoot(e,6,132,e.age*.72,'#d487ff');e.shootClock=2.65}
+      const targetRange=235*state.scale,move=len>targetRange+35*state.scale?1:len<targetRange-45*state.scale?-1:0,px=-dy*e.orbit,py=dx*e.orbit;e.x+=(dx*move*e.speed+px*38*state.scale)*dt;e.y+=(dy*move*e.speed+py*38*state.scale)*dt;if(e.shootClock<=0&&len<410*state.scale){radialEnemyShoot(e,6,132,e.age*.72,'#d487ff');e.shootClock=2.65}
     }else if(e.type==='boss'){
       const px=-dy*e.orbit,py=dx*e.orbit;
       if(e.bossKind==='spiral'){
-        e.x+=(dx*e.speed*.58+px*38)*dt;e.y+=(dy*e.speed*.58+py*38)*dt;if(e.shootClock<=0){radialEnemyShoot(e,10,138,e.age*.85,'#c476ff');e.shootClock=1.62}
+        e.x+=(dx*e.speed*.58+px*38*state.scale)*dt;e.y+=(dy*e.speed*.58+py*38*state.scale)*dt;if(e.shootClock<=0){radialEnemyShoot(e,10,138,e.age*.85,'#c476ff');e.shootClock=1.62}
       }else if(e.bossKind==='charger'){
-        if(e.dashTime>0){e.dashTime-=dt;e.x+=e.vx*dt;e.y+=e.vy*dt}else{e.x+=(dx*e.speed+px*8)*dt;e.y+=(dy*e.speed+py*8)*dt;if(e.dashClock<=0){e.vx=dx*430;e.vy=dy*430;e.dashTime=.42;e.dashClock=2.25}}if(e.shootClock<=0){enemyShoot(e,3,205,.2,'#ff9b58');e.shootClock=2.05}
+        if(e.dashTime>0){e.dashTime-=dt;e.x+=e.vx*dt;e.y+=e.vy*dt}else{e.x+=(dx*e.speed+px*8*state.scale)*dt;e.y+=(dy*e.speed+py*8*state.scale)*dt;if(e.dashClock<=0){e.vx=dx*430*state.scale;e.vy=dy*430*state.scale;e.dashTime=.42;e.dashClock=2.25}}if(e.shootClock<=0){enemyShoot(e,3,205,.2,'#ff9b58');e.shootClock=2.05}
       }else if(e.bossKind==='summoner'){
-        const targetRange=260,move=len>targetRange+35?1:len<targetRange-45?-1:0;e.x+=(dx*move*e.speed+px*31)*dt;e.y+=(dy*move*e.speed+py*31)*dt;if(e.shootClock<=0){enemyShoot(e,3,178,.24,'#ff5bcf');e.shootClock=1.9}if(e.summonClock<=0&&state.enemies.length<68){for(let i=0;i<3;i++)spawnEnemy('minion',{x:e.x+Math.cos(i*Math.PI*2/3)*55,y:e.y+Math.sin(i*Math.PI*2/3)*55});e.summonClock=4.25}
+        const targetRange=260*state.scale,move=len>targetRange+35*state.scale?1:len<targetRange-45*state.scale?-1:0;e.x+=(dx*move*e.speed+px*31*state.scale)*dt;e.y+=(dy*move*e.speed+py*31*state.scale)*dt;if(e.shootClock<=0){enemyShoot(e,3,178,.24,'#ff5bcf');e.shootClock=1.9}if(e.summonClock<=0&&state.enemies.length<68){for(let i=0;i<3;i++)spawnEnemy('minion',{x:e.x+Math.cos(i*Math.PI*2/3)*55*state.scale,y:e.y+Math.sin(i*Math.PI*2/3)*55*state.scale});e.summonClock=4.25}
       }else{
-        e.x+=(dx*e.speed+px*24)*dt;e.y+=(dy*e.speed+py*24)*dt;if(e.shootClock<=0){enemyShoot(e,5,188,.22,'#ff5be7');e.shootClock=1.42}
+        e.x+=(dx*e.speed+px*24*state.scale)*dt;e.y+=(dy*e.speed+py*24*state.scale)*dt;if(e.shootClock<=0){enemyShoot(e,5,188,.22,'#ff5be7');e.shootClock=1.42}
       }
     }else{e.x+=dx*e.speed*dt;e.y+=dy*e.speed*dt}
     if(dist2(e.x,e.y,player.x,player.y)<(e.r+player.r)**2)damagePlayer(e.type==='boss'?2:1)
@@ -882,15 +1213,17 @@
     if(skin.effect==='nebula' || trail.effect==='stardust'){for(let i=0;i<22;i++){const x=(i*157+now*.02)%state.w,y=(i*79+now*.015)%state.h;ctx.fillStyle='rgba(255,255,255,.045)';ctx.beginPath();ctx.arc(x,y,1.4,0,Math.PI*2);ctx.fill()}}
     if(skin.effect==='tempest' || bullet.effect==='helix'){ctx.strokeStyle='rgba(99,168,255,.06)';ctx.lineWidth=1.2;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(player.x,player.y,38+i*16+Math.sin(now*.006+i)*3,0,Math.PI*2);ctx.stroke()}}
     if(trail.effect==='prismtrail'){const g=ctx.createLinearGradient(0,state.h, state.w,0);g.addColorStop(0,'rgba(255,91,231,.03)');g.addColorStop(.5,'rgba(105,246,255,.025)');g.addColorStop(1,'rgba(255,211,106,.03)');ctx.fillStyle=g;ctx.fillRect(0,0,state.w,state.h)}
-    if(skin.effect==='quantum'||skin.effect==='astral'||trail.effect==='galaxytrail'||trail.effect==='cosmicroyal'){const g=ctx.createRadialGradient(player.x,player.y,20,player.x,player.y,220);g.addColorStop(0,'rgba(105,246,255,.035)');g.addColorStop(.45,'rgba(255,130,248,.025)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,state.w,state.h)}
+    if(skin.effect==='quantum'||skin.effect==='astral'||skin.effect==='seraph'||skin.effect==='abyssal'||trail.effect==='galaxytrail'||trail.effect==='cosmicroyal'||trail.effect==='seraphtrail'||trail.effect==='voidstorm'){const g=ctx.createRadialGradient(player.x,player.y,20,player.x,player.y,220);g.addColorStop(0,'rgba(105,246,255,.04)');g.addColorStop(.45,'rgba(255,130,248,.03)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,state.w,state.h)}
     if(skin.effect==='phoenix'||trail.effect==='solartrail'){ctx.fillStyle='rgba(255,105,90,.035)';for(let i=0;i<5;i++){const a=now*.001+i*1.2,x=player.x+Math.cos(a)*(70+i*12),y=player.y+Math.sin(a)*(35+i*8);ctx.beginPath();ctx.arc(x,y,2+i*.4,0,Math.PI*2);ctx.fill()}}
+    if(skin.effect==='seraph'||trail.effect==='seraphtrail'){ctx.strokeStyle='rgba(255,255,255,.045)';ctx.lineWidth=1.2;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(player.x,player.y,50+i*24+Math.sin(now*.004+i)*3,Math.PI*.15*i,Math.PI*1.3+Math.PI*.15*i);ctx.stroke()}}
+    if(skin.effect==='abyssal'||bullet.effect==='blackstar'||trail.effect==='voidstorm'){ctx.fillStyle='rgba(177,77,255,.03)';for(let i=0;i<6;i++){const a=now*.0008+i*1.05,x=player.x+Math.cos(a)*(85+i*8),y=player.y+Math.sin(a)*(45+i*5);ctx.beginPath();ctx.arc(x,y,2+i*.35,0,Math.PI*2);ctx.fill()}}
     ctx.restore();
   }
   function drawGrid(now){const size=48,drift=(now*.008)%size;ctx.strokeStyle='rgba(91,150,255,.055)';ctx.lineWidth=1;ctx.beginPath();for(let x=-size+drift;x<state.w+size;x+=size){ctx.moveTo(x,0);ctx.lineTo(x,state.h)}for(let y=-size+drift*.55;y<state.h+size;y+=size){ctx.moveTo(0,y);ctx.lineTo(state.w,y)}ctx.stroke()}
   function drawStars(now){for(const s of state.stars){const a=s.a*(.7+.3*Math.sin(now*.002+s.p));ctx.fillStyle=`rgba(170,225,255,${a})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill()}}
-  function drawArenaBorder(){ctx.strokeStyle='rgba(105,246,255,.14)';ctx.lineWidth=2;ctx.strokeRect(7,7,state.w-14,state.h-14)}
+  function drawArenaBorder(){const s=state.scale,l=telegramInset('left')+7*s,t=telegramInset('top')+7*s,r=telegramInset('right')+7*s,b=telegramInset('bottom')+7*s;ctx.strokeStyle='rgba(105,246,255,.14)';ctx.lineWidth=Math.max(1.5,2*s);ctx.strokeRect(l,t,Math.max(1,state.w-l-r),Math.max(1,state.h-t-b))}
   function drawMenuAmbient(now){const cx=state.w*.5,cy=state.h*.46;for(let i=0;i<7;i++){const a=now*.00022*(i%2?1:-1)+i*.88,r=92+i*34,x=cx+Math.cos(a)*r,y=cy+Math.sin(a*.92)*r*.5;ctx.strokeStyle=`rgba(${i%2?'255,91,231':'105,246,255'},${.045+i*.007})`;ctx.lineWidth=1+i*.08;ctx.beginPath();ctx.arc(x,y,16+i*3,0,Math.PI*2);ctx.stroke()}for(let i=0;i<10;i++){const x=(state.w*.18)+(i*state.w*.07)+(Math.sin(now*.00075+i)*18),y=state.h*.22+Math.cos(now*.0009+i*1.7)*26;ctx.fillStyle=i%2?'rgba(255,211,106,.18)':'rgba(105,246,255,.16)';ctx.beginPath();ctx.arc(x,y,1.8+(i%3)*.5,0,Math.PI*2);ctx.fill()}}
-  function drawPlayerTrail(){const skin=selectedSkin(),trail=selectedTrail(),boost=trail.rarity==='legendary'?1.72:trail.rarity==='epic'?1.38:trail.rarity==='rare'?1.14:1;for(const p of player.trail){let alpha=p.life*.38*boost;if(skin.effect==='ghost')alpha*=1.55;if(skin.effect==='glitch')alpha*=.95;const t=trail.effect;if(t==='ribbon'){ctx.strokeStyle=hexAlpha(trail.primary,alpha*.95);ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(p.x-10,p.y+4);ctx.quadraticCurveTo(p.x,p.y-5,p.x+9,p.y+3);ctx.stroke()}else if(t==='embers'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.95);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.34),0,Math.PI*2);ctx.fill();ctx.fillStyle=hexAlpha(trail.secondary,alpha*.65);ctx.beginPath();ctx.arc(p.x+rand(-4,4),p.y+rand(-4,4),Math.max(1,player.r*.18),0,Math.PI*2);ctx.fill()}else if(t==='frost'){ctx.strokeStyle=hexAlpha(trail.primary,alpha*.9);ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.27),0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(p.x-5,p.y);ctx.lineTo(p.x+5,p.y);ctx.moveTo(p.x,p.y-5);ctx.lineTo(p.x,p.y+5);ctx.stroke()}else if(t==='glitchtrail'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.6);ctx.fillRect(p.x-9,p.y-2,18,4);ctx.fillStyle=hexAlpha(trail.secondary,alpha*.5);ctx.fillRect(p.x-5,p.y+4,12,3)}else if(t==='auroratrail'){const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,player.r*1.2);g.addColorStop(0,hexAlpha(trail.primary,alpha*.9));g.addColorStop(1,hexAlpha(trail.secondary,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.24),0,Math.PI*2);ctx.fill()}else if(t==='stardust'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.9);for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(p.x+Math.cos(i*2.1)*6,p.y+Math.sin(i*2.1)*6,1.6,0,Math.PI*2);ctx.fill()}}else if(t==='prismtrail'){ctx.strokeStyle=`hsla(${(performance.now()*.12+p.x)%360},90%,70%,${clamp(alpha*.9,0,1)})`;ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.26),0,Math.PI*2);ctx.stroke()}else if(t==='solartrail'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.95);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.28),0,Math.PI*2);ctx.fill();ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.7);ctx.beginPath();ctx.moveTo(p.x-6,p.y);ctx.lineTo(p.x+6,p.y);ctx.moveTo(p.x,p.y-6);ctx.lineTo(p.x,p.y+6);ctx.stroke()}else if(t==='eclipsetrail'){ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.75);ctx.lineWidth=1.7;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.23),Math.PI*.2,Math.PI*1.6);ctx.stroke();ctx.fillStyle=hexAlpha('#111318',alpha*.38);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.34),0,Math.PI*2);ctx.fill()}else if(t==='galaxytrail'){ctx.fillStyle=hexAlpha(trail.primary,alpha);for(let i=0;i<5;i++){const a=i*1.256+p.x*.01,rr=3+i*1.2;ctx.beginPath();ctx.arc(p.x+Math.cos(a)*rr,p.y+Math.sin(a)*rr,1.2+(i%2)*.7,0,Math.PI*2);ctx.fill()}ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.65);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.25),0,Math.PI*2);ctx.stroke()}else if(t==='lightningtrail'){ctx.strokeStyle=hexAlpha(trail.primary,alpha);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p.x-14,p.y);ctx.lineTo(p.x-8,p.y-5);ctx.lineTo(p.x-3,p.y+4);ctx.lineTo(p.x+4,p.y-3);ctx.lineTo(p.x+10,p.y+1);ctx.stroke()}else if(t==='cosmicroyal'){ctx.strokeStyle=`hsla(${(performance.now()*.08+p.x)%360},95%,75%,${clamp(alpha,0,1)})`;ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.22),0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha('#ffd36a',alpha*.8);ctx.beginPath();ctx.arc(p.x,p.y,2.2,0,Math.PI*2);ctx.fill()}else{ctx.fillStyle=hexAlpha(trail.primary||skin.primary,alpha);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.28),0,Math.PI*2);ctx.fill();if(t==='afterglow' || t==='pulse'){ctx.strokeStyle=hexAlpha(trail.secondary||skin.secondary,alpha*.6);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.23),0,Math.PI*2);ctx.stroke()}}if(trail.rarity==='epic'){ctx.fillStyle=hexAlpha(trail.secondary,alpha*.28);ctx.beginPath();ctx.arc(p.x+Math.sin(p.x*.08)*4,p.y+Math.cos(p.y*.07)*4,2.1,0,Math.PI*2);ctx.fill()}if(trail.rarity==='legendary'){ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.48);ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.20)+4,0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha(trail.primary,alpha*.34);for(let k=0;k<2;k++){const a=(p.x+p.y)*.02+k*Math.PI;ctx.beginPath();ctx.arc(p.x+Math.cos(a)*9,p.y+Math.sin(a)*9,1.8,0,Math.PI*2);ctx.fill()}}if(skin.effect==='ghost'){ctx.strokeStyle=hexAlpha(skin.secondary,alpha*.5);ctx.beginPath();ctx.arc(p.x-5,p.y+3,player.r*(p.life/.25),0,Math.PI*2);ctx.stroke()}}}
+  function drawPlayerTrail(){const skin=selectedSkin(),trail=selectedTrail(),boost=trail.rarity==='mythic'?1.95:trail.rarity==='legendary'?1.72:trail.rarity==='epic'?1.38:trail.rarity==='rare'?1.14:1;for(const p of player.trail){let alpha=p.life*.38*boost;if(skin.effect==='ghost')alpha*=1.55;if(skin.effect==='glitch')alpha*=.95;const t=trail.effect;if(t==='ribbon'){ctx.strokeStyle=hexAlpha(trail.primary,alpha*.95);ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(p.x-10,p.y+4);ctx.quadraticCurveTo(p.x,p.y-5,p.x+9,p.y+3);ctx.stroke()}else if(t==='embers'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.95);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.34),0,Math.PI*2);ctx.fill();ctx.fillStyle=hexAlpha(trail.secondary,alpha*.65);ctx.beginPath();ctx.arc(p.x+rand(-4,4),p.y+rand(-4,4),Math.max(1,player.r*.18),0,Math.PI*2);ctx.fill()}else if(t==='frost'){ctx.strokeStyle=hexAlpha(trail.primary,alpha*.9);ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.27),0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(p.x-5,p.y);ctx.lineTo(p.x+5,p.y);ctx.moveTo(p.x,p.y-5);ctx.lineTo(p.x,p.y+5);ctx.stroke()}else if(t==='glitchtrail'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.6);ctx.fillRect(p.x-9,p.y-2,18,4);ctx.fillStyle=hexAlpha(trail.secondary,alpha*.5);ctx.fillRect(p.x-5,p.y+4,12,3)}else if(t==='auroratrail'){const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,player.r*1.2);g.addColorStop(0,hexAlpha(trail.primary,alpha*.9));g.addColorStop(1,hexAlpha(trail.secondary,0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.24),0,Math.PI*2);ctx.fill()}else if(t==='stardust'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.9);for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(p.x+Math.cos(i*2.1)*6,p.y+Math.sin(i*2.1)*6,1.6,0,Math.PI*2);ctx.fill()}}else if(t==='prismtrail'){ctx.strokeStyle=`hsla(${(performance.now()*.12+p.x)%360},90%,70%,${clamp(alpha*.9,0,1)})`;ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.26),0,Math.PI*2);ctx.stroke()}else if(t==='solartrail'){ctx.fillStyle=hexAlpha(trail.primary,alpha*.95);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.28),0,Math.PI*2);ctx.fill();ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.7);ctx.beginPath();ctx.moveTo(p.x-6,p.y);ctx.lineTo(p.x+6,p.y);ctx.moveTo(p.x,p.y-6);ctx.lineTo(p.x,p.y+6);ctx.stroke()}else if(t==='eclipsetrail'){ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.75);ctx.lineWidth=1.7;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.23),Math.PI*.2,Math.PI*1.6);ctx.stroke();ctx.fillStyle=hexAlpha('#111318',alpha*.38);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.34),0,Math.PI*2);ctx.fill()}else if(t==='galaxytrail'){ctx.fillStyle=hexAlpha(trail.primary,alpha);for(let i=0;i<5;i++){const a=i*1.256+p.x*.01,rr=3+i*1.2;ctx.beginPath();ctx.arc(p.x+Math.cos(a)*rr,p.y+Math.sin(a)*rr,1.2+(i%2)*.7,0,Math.PI*2);ctx.fill()}ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.65);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.25),0,Math.PI*2);ctx.stroke()}else if(t==='lightningtrail'){ctx.strokeStyle=hexAlpha(trail.primary,alpha);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p.x-14,p.y);ctx.lineTo(p.x-8,p.y-5);ctx.lineTo(p.x-3,p.y+4);ctx.lineTo(p.x+4,p.y-3);ctx.lineTo(p.x+10,p.y+1);ctx.stroke()}else if(t==='cosmicroyal'){ctx.strokeStyle=`hsla(${(performance.now()*.08+p.x)%360},95%,75%,${clamp(alpha,0,1)})`;ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.22),0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha('#ffd36a',alpha*.8);ctx.beginPath();ctx.arc(p.x,p.y,2.2,0,Math.PI*2);ctx.fill()}else{ctx.fillStyle=hexAlpha(trail.primary||skin.primary,alpha);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.28),0,Math.PI*2);ctx.fill();if(t==='afterglow' || t==='pulse'){ctx.strokeStyle=hexAlpha(trail.secondary||skin.secondary,alpha*.6);ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.23),0,Math.PI*2);ctx.stroke()}}if(trail.rarity==='epic'){ctx.fillStyle=hexAlpha(trail.secondary,alpha*.28);ctx.beginPath();ctx.arc(p.x+Math.sin(p.x*.08)*4,p.y+Math.cos(p.y*.07)*4,2.1,0,Math.PI*2);ctx.fill()}if(trail.rarity==='legendary'){ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.48);ctx.lineWidth=1.3;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.20)+4,0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha(trail.primary,alpha*.34);for(let k=0;k<2;k++){const a=(p.x+p.y)*.02+k*Math.PI;ctx.beginPath();ctx.arc(p.x+Math.cos(a)*9,p.y+Math.sin(a)*9,1.8,0,Math.PI*2);ctx.fill()}}if(trail.rarity==='mythic'){ctx.strokeStyle=hexAlpha(trail.secondary,alpha*.62);ctx.lineWidth=1.9;ctx.beginPath();ctx.arc(p.x,p.y,player.r*(p.life/.18)+6,0,Math.PI*2);ctx.stroke();ctx.fillStyle=hexAlpha(trail.primary,alpha*.5);for(let k=0;k<3;k++){const a=(performance.now()*.004)+k*2.09;ctx.beginPath();ctx.arc(p.x+Math.cos(a)*11,p.y+Math.sin(a)*11,1.9,0,Math.PI*2);ctx.fill()}}if(skin.effect==='ghost'){ctx.strokeStyle=hexAlpha(skin.secondary,alpha*.5);ctx.beginPath();ctx.arc(p.x-5,p.y+3,player.r*(p.life/.25),0,Math.PI*2);ctx.stroke()}}}
   function hexAlpha(hex,a){const h=hex.replace('#','');const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16);return`rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${clamp(a,0,1)})`}
 
   function drawSkinBodyPath(skin, now, radius=player.r){
@@ -922,101 +1255,98 @@
     ctx.closePath();
   }
 
-  function drawPlayer(now){if(player.invuln>0&&Math.floor(now/70)%2===0)return;const skin=selectedSkin();ctx.save();ctx.translate(player.x,player.y);if(skin.effect==='ghost'){ctx.globalAlpha=.18;ctx.fillStyle=skin.secondary;for(const off of [-9,9]){ctx.beginPath();ctx.arc(off,3,player.r*.72,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}if(skin.effect==='royal'){ctx.strokeStyle='rgba(255,211,106,.65)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,player.r+8,0,Math.PI*2);ctx.stroke();for(let i=0;i<4;i++){const a=now*.0025+i*Math.PI/2;ctx.fillStyle='#ffd36a';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+11),Math.sin(a)*(player.r+11),1.8,0,Math.PI*2);ctx.fill()}}if(skin.effect==='glitch'){ctx.strokeStyle=`hsla(${(now*.11)%360},90%,70%,.75)`;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-player.r-5,-5);ctx.lineTo(player.r+6,-5);ctx.stroke();ctx.strokeStyle='rgba(105,246,255,.65)';ctx.beginPath();ctx.moveTo(-player.r-2,6);ctx.lineTo(player.r+4,6);ctx.stroke()}if(skin.effect==='aurora'){ctx.strokeStyle=`hsla(${(now*.05)%360},80%,72%,.75)`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+8+Math.sin(now*.006)*2,0,Math.PI*2);ctx.stroke()}if(skin.effect==='nova'){for(let i=0;i<3;i++){const a=now*.003+i*Math.PI*2/3;ctx.fillStyle='#ffd36a';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+10),Math.sin(a)*(player.r+10),2.2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='prism'){ctx.strokeStyle=`hsl(${(now*.09)%360},90%,70%)`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,player.r+7,0,Math.PI*2);ctx.stroke()}if(skin.effect==='eclipse'){ctx.strokeStyle='rgba(130,110,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+10,now*.002,now*.002+Math.PI*1.45);ctx.stroke();ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.arc(0,0,player.r+4,0,Math.PI*2);ctx.fill()}if(skin.effect==='bloom'){for(let i=0;i<6;i++){const a=now*.0018+i*Math.PI/3;ctx.strokeStyle='rgba(255,179,216,.65)';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+4),Math.sin(a)*(player.r+4),3.1,0,Math.PI*2);ctx.stroke()}}if(skin.effect==='matrix'){ctx.strokeStyle='rgba(140,255,177,.7)';ctx.lineWidth=1.5;for(let i=-1;i<=1;i++){ctx.beginPath();ctx.moveTo(i*6,-player.r-8);ctx.lineTo(i*6,player.r+8);ctx.stroke()}}if(skin.effect==='tempest'){ctx.strokeStyle='rgba(99,168,255,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+9+Math.sin(now*.01)*1.5,0,Math.PI*2);ctx.stroke();for(let i=0;i<2;i++){const a=now*.004+i*Math.PI;ctx.fillStyle='#b9fff6';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+11),Math.sin(a)*(player.r+11),2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='nebula'){ctx.strokeStyle='rgba(255,182,255,.75)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+7,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(122,99,255,.28)';ctx.beginPath();ctx.arc(-5,-3,player.r*.72,0,Math.PI*2);ctx.fill()}if(skin.effect==='quantum'){for(let i=0;i<4;i++){const a=now*.003+i*Math.PI/2;ctx.strokeStyle=i%2?'rgba(255,130,248,.8)':'rgba(167,255,255,.8)';ctx.beginPath();ctx.rect(Math.cos(a)*(player.r+9)-2,Math.sin(a)*(player.r+9)-2,4,4);ctx.stroke()}}if(skin.effect==='phoenix'){for(let i=0;i<5;i++){const a=now*.004+i*1.256;ctx.fillStyle=i%2?'#ff5f77':'#fff0a8';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+10),Math.sin(a)*(player.r+10),2.2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='astral'){ctx.strokeStyle=`hsla(${(now*.06)%360},90%,78%,.9)`;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,player.r+10,now*.002,now*.002+Math.PI*1.7);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.8)';for(let i=0;i<3;i++){const a=now*.0025+i*2.1;ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+13),Math.sin(a)*(player.r+13),1.8,0,Math.PI*2);ctx.fill()}}ctx.shadowBlur=22;ctx.shadowColor=skin.secondary;ctx.fillStyle=skin.primary;drawSkinBodyPath(skin,now,player.r);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=skin.core;drawSkinCorePath(skin,player.r);ctx.fill();if(player.shield>0){ctx.strokeStyle=`rgba(140,255,177,${.55+.25*Math.sin(now*.006)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+8,0,Math.PI*2);ctx.stroke()}if(state.activePowerups.shield>0){ctx.strokeStyle=`rgba(140,255,177,${.72+.22*Math.sin(now*.012)})`;ctx.lineWidth=3;ctx.shadowBlur=16;ctx.shadowColor='#8cffb1';ctx.beginPath();ctx.arc(0,0,player.r+12+Math.sin(now*.008)*2,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0}ctx.restore()}
+  function drawPlayer(now){if(player.invuln>0&&Math.floor(now/70)%2===0)return;const skin=selectedSkin();ctx.save();ctx.translate(player.x,player.y);if(skin.effect==='ghost'){ctx.globalAlpha=.18;ctx.fillStyle=skin.secondary;for(const off of [-9,9]){ctx.beginPath();ctx.arc(off,3,player.r*.72,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}if(skin.effect==='royal'){ctx.strokeStyle='rgba(255,211,106,.65)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,player.r+8,0,Math.PI*2);ctx.stroke();for(let i=0;i<4;i++){const a=now*.0025+i*Math.PI/2;ctx.fillStyle='#ffd36a';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+11),Math.sin(a)*(player.r+11),1.8,0,Math.PI*2);ctx.fill()}}if(skin.effect==='glitch'){ctx.strokeStyle=`hsla(${(now*.11)%360},90%,70%,.75)`;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-player.r-5,-5);ctx.lineTo(player.r+6,-5);ctx.stroke();ctx.strokeStyle='rgba(105,246,255,.65)';ctx.beginPath();ctx.moveTo(-player.r-2,6);ctx.lineTo(player.r+4,6);ctx.stroke()}if(skin.effect==='aurora'){ctx.strokeStyle=`hsla(${(now*.05)%360},80%,72%,.75)`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+8+Math.sin(now*.006)*2,0,Math.PI*2);ctx.stroke()}if(skin.effect==='nova'){for(let i=0;i<3;i++){const a=now*.003+i*Math.PI*2/3;ctx.fillStyle='#ffd36a';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+10),Math.sin(a)*(player.r+10),2.2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='prism'){ctx.strokeStyle=`hsl(${(now*.09)%360},90%,70%)`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,player.r+7,0,Math.PI*2);ctx.stroke()}if(skin.effect==='eclipse'){ctx.strokeStyle='rgba(130,110,255,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+10,now*.002,now*.002+Math.PI*1.45);ctx.stroke();ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.arc(0,0,player.r+4,0,Math.PI*2);ctx.fill()}if(skin.effect==='bloom'){for(let i=0;i<6;i++){const a=now*.0018+i*Math.PI/3;ctx.strokeStyle='rgba(255,179,216,.65)';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+4),Math.sin(a)*(player.r+4),3.1,0,Math.PI*2);ctx.stroke()}}if(skin.effect==='matrix'){ctx.strokeStyle='rgba(140,255,177,.7)';ctx.lineWidth=1.5;for(let i=-1;i<=1;i++){ctx.beginPath();ctx.moveTo(i*6,-player.r-8);ctx.lineTo(i*6,player.r+8);ctx.stroke()}}if(skin.effect==='tempest'){ctx.strokeStyle='rgba(99,168,255,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+9+Math.sin(now*.01)*1.5,0,Math.PI*2);ctx.stroke();for(let i=0;i<2;i++){const a=now*.004+i*Math.PI;ctx.fillStyle='#b9fff6';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+11),Math.sin(a)*(player.r+11),2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='nebula'){ctx.strokeStyle='rgba(255,182,255,.75)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+7,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(122,99,255,.28)';ctx.beginPath();ctx.arc(-5,-3,player.r*.72,0,Math.PI*2);ctx.fill()}if(skin.effect==='quantum'){for(let i=0;i<4;i++){const a=now*.003+i*Math.PI/2;ctx.strokeStyle=i%2?'rgba(255,130,248,.8)':'rgba(167,255,255,.8)';ctx.beginPath();ctx.rect(Math.cos(a)*(player.r+9)-2,Math.sin(a)*(player.r+9)-2,4,4);ctx.stroke()}}if(skin.effect==='phoenix'){for(let i=0;i<5;i++){const a=now*.004+i*1.256;ctx.fillStyle=i%2?'#ff5f77':'#fff0a8';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+10),Math.sin(a)*(player.r+10),2.2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='astral'){ctx.strokeStyle=`hsla(${(now*.06)%360},90%,78%,.9)`;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,player.r+10,now*.002,now*.002+Math.PI*1.7);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.8)';for(let i=0;i<3;i++){const a=now*.0025+i*2.1;ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+13),Math.sin(a)*(player.r+13),1.8,0,Math.PI*2);ctx.fill()}}if(skin.effect==='seraph'){ctx.strokeStyle='rgba(255,255,255,.88)';ctx.lineWidth=2;for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(0,0,player.r+8+i*4,Math.sin(now*.002+i)*.4,Math.PI*1.25+Math.sin(now*.002+i)*.4);ctx.stroke()}for(let i=0;i<4;i++){const a=now*.003+i*Math.PI/2;ctx.fillStyle=i%2?'#ffffff':'#69f6ff';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+14),Math.sin(a)*(player.r+14),2.2,0,Math.PI*2);ctx.fill()}}if(skin.effect==='abyssal'){ctx.strokeStyle='rgba(177,77,255,.9)';ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(0,0,player.r+10,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='rgba(242,229,255,.5)';ctx.beginPath();ctx.arc(0,0,player.r+15,now*.003,now*.003+Math.PI*1.35);ctx.stroke();for(let i=0;i<3;i++){const a=-now*.003+i*2.09;ctx.fillStyle=i===0?'#ffffff':'#b14dff';ctx.beginPath();ctx.arc(Math.cos(a)*(player.r+16),Math.sin(a)*(player.r+16),2.2,0,Math.PI*2);ctx.fill()}}ctx.shadowBlur=22;ctx.shadowColor=skin.secondary;ctx.fillStyle=skin.primary;drawSkinBodyPath(skin,now,player.r);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle=skin.core;drawSkinCorePath(skin,player.r);ctx.fill();if(player.shield>0){ctx.strokeStyle=`rgba(140,255,177,${.55+.25*Math.sin(now*.006)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,player.r+8,0,Math.PI*2);ctx.stroke()}if(state.activePowerups.shield>0){ctx.strokeStyle=`rgba(140,255,177,${.72+.22*Math.sin(now*.012)})`;ctx.lineWidth=3;ctx.shadowBlur=16;ctx.shadowColor='#8cffb1';ctx.beginPath();ctx.arc(0,0,player.r+12+Math.sin(now*.008)*2,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0}ctx.restore()}
   function bossColor(kind){return kind==='spiral'?'#b875ff':kind==='charger'?'#ff9a62':kind==='summoner'?'#ff5b9e':'#ff5be7'}
   function drawEnemies(){for(const e of state.enemies){ctx.save();ctx.translate(e.x,e.y);ctx.rotate(e.age*.45*e.orbit);const boss=e.type==='boss',color=boss?bossColor(e.bossKind):e.type==='shooter'?'#b47cff':e.type==='tank'?'#ff9a6a':e.type==='splitter'?'#ffd36a':e.type==='orbiter'?'#ffb45b':e.type==='sniper'?'#ff91d7':e.type==='spinner'?'#d487ff':'#ff647c';ctx.shadowBlur=boss?28:15;ctx.shadowColor=color;ctx.fillStyle=e.hitFlash>0?'#fff':color;if(boss)bossShapePath(e.bossKind,e.r);else shapePath(e.type,e.r);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#101326';ctx.beginPath();ctx.arc(0,0,Math.max(3,e.r*.28),0,Math.PI*2);ctx.fill();if(e.hp<e.maxHp||boss){const bw=e.r*2.1,pct=clamp(e.hp/e.maxHp,0,1);ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(-bw/2,e.r+7,bw,3);ctx.fillStyle=boss?color:'#69f6ff';ctx.fillRect(-bw/2,e.r+7,bw*pct,3)}ctx.restore()}}
   function bossShapePath(kind,r){ctx.beginPath();if(kind==='charger'){ctx.moveTo(r,0);ctx.lineTo(-r*.78,r*.76);ctx.lineTo(-r*.48,0);ctx.lineTo(-r*.78,-r*.76);ctx.closePath()}else if(kind==='summoner'){for(let i=0;i<12;i++){const a=-Math.PI/2+i*Math.PI/6,rr=i%2?r*.58:r,x=Math.cos(a)*rr,y=Math.sin(a)*rr;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath()}else if(kind==='spiral'){polygon(10,r);return}else{polygon(8,r);return}}
   function shapePath(type,r){ctx.beginPath();if(type==='chaser'){ctx.moveTo(0,-r);ctx.lineTo(r,0);ctx.lineTo(0,r);ctx.lineTo(-r,0)}else if(type==='dasher'){ctx.moveTo(r,0);ctx.lineTo(-r*.75,r*.72);ctx.lineTo(-r*.75,-r*.72)}else if(type==='tank'){polygon(6,r);return}else if(type==='shooter')ctx.rect(-r*.8,-r*.8,r*1.6,r*1.6);else if(type==='splitter'){polygon(5,r);return}else if(type==='orbiter'){polygon(4,r);return}else if(type==='sniper'){ctx.moveTo(r,0);ctx.lineTo(-r*.85,r*.55);ctx.lineTo(-r*.35,0);ctx.lineTo(-r*.85,-r*.55)}else if(type==='spinner'){polygon(7,r);return}else ctx.arc(0,0,r,0,Math.PI*2);ctx.closePath()}
   function polygon(n,r){ctx.beginPath();for(let i=0;i<n;i++){const a=-Math.PI/2+i*Math.PI*2/n,x=Math.cos(a)*r,y=Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath()}
-  function drawProjectiles(now){for(const p of state.projectiles){if(p.enemy){ctx.save();const c=p.color||'#ff78ec';ctx.shadowBlur=12;ctx.shadowColor=c;ctx.fillStyle=c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore();continue}const s=BULLET_STYLES.find(x=>x.id===p.styleId)||selectedBullet();ctx.save();ctx.translate(p.x,p.y);const angle=Math.atan2(p.vy,p.vx);ctx.rotate(angle);if(s.effect==='stars'){ctx.strokeStyle='rgba(255,211,106,.55)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-12,-4);ctx.lineTo(-7,1);ctx.moveTo(-12,4);ctx.lineTo(-7,-1);ctx.stroke()}if(s.effect==='wave'){ctx.strokeStyle='rgba(99,168,255,.48)';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(-7,0,p.r+4+Math.sin(now*.012)*2,-1.1,1.1);ctx.stroke()}if(s.effect==='echo'){ctx.strokeStyle='rgba(191,117,255,.5)';ctx.lineWidth=1.2;for(let i=1;i<=2;i++){ctx.beginPath();ctx.arc(-i*7,0,Math.max(2,p.r-i),0,Math.PI*2);ctx.stroke()}}if(s.effect==='flare'){ctx.strokeStyle='rgba(255,240,160,.7)';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-p.r*2.5,0);ctx.lineTo(p.r*2.5,0);ctx.moveTo(0,-p.r*2);ctx.lineTo(0,p.r*2);ctx.stroke()}if(s.effect==='rainbow'){ctx.strokeStyle=`hsl(${(now*.12+p.x)%360},95%,70%)`;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-18,0);ctx.lineTo(0,0);ctx.stroke()}if(s.effect==='gravity'){ctx.strokeStyle='rgba(205,165,255,.65)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,p.r+5+Math.sin(now*.01)*2,0,Math.PI*2);ctx.stroke()}if(s.effect==='chronos'){ctx.strokeStyle='rgba(185,255,246,.68)';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,p.r+5,now*.006,now*.006+Math.PI*1.35);ctx.stroke()}if(s.effect==='petals'){ctx.strokeStyle='rgba(255,196,220,.65)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-10,-4);ctx.quadraticCurveTo(-5,-9,0,-3);ctx.moveTo(-10,4);ctx.quadraticCurveTo(-5,9,0,3);ctx.stroke()}if(s.effect==='fractal'){ctx.strokeStyle='rgba(169,246,255,.6)';ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(-10,0);ctx.lineTo(-4,-5);ctx.lineTo(0,0);ctx.lineTo(-4,5);ctx.stroke()}if(s.effect==='helix'){ctx.strokeStyle='rgba(194,255,247,.65)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(-6,-2,p.r+2,0,Math.PI*2);ctx.arc(-11,2,p.r+2,0,Math.PI*2);ctx.stroke()}if(s.effect==='meteor'){ctx.strokeStyle='rgba(255,214,161,.72)';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(-16,0);ctx.lineTo(-4,0);ctx.stroke()}if(s.effect==='celestial'){ctx.strokeStyle='rgba(111,248,255,.85)';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-30,0);ctx.lineTo(-4,0);ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-12,0,1.5,0,Math.PI*2);ctx.fill()}if(s.effect==='dragon'){ctx.strokeStyle='rgba(255,95,119,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-28,0);ctx.lineTo(-21,-4);ctx.lineTo(-14,4);ctx.lineTo(-7,-2);ctx.lineTo(0,0);ctx.stroke()}if(s.effect==='voidlance'){ctx.strokeStyle='rgba(162,87,255,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-34,0);ctx.lineTo(1,0);ctx.stroke();ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-20,0);ctx.lineTo(4,0);ctx.stroke()}ctx.shadowBlur=14;ctx.shadowColor=p.crit?'#8cffb1':s.glow;ctx.fillStyle=p.crit?'#8cffb1':s.primary;drawBulletShape(s.shape,p.r,now);ctx.restore()}}
+  function drawProjectiles(now){for(const p of state.projectiles){if(p.enemy){ctx.save();const c=p.color||'#ff78ec';ctx.shadowBlur=12;ctx.shadowColor=c;ctx.fillStyle=c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore();continue}const s=BULLET_STYLES.find(x=>x.id===p.styleId)||selectedBullet();ctx.save();ctx.translate(p.x,p.y);const angle=Math.atan2(p.vy,p.vx);ctx.rotate(angle);if(s.effect==='stars'){ctx.strokeStyle='rgba(255,211,106,.55)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-12,-4);ctx.lineTo(-7,1);ctx.moveTo(-12,4);ctx.lineTo(-7,-1);ctx.stroke()}if(s.effect==='wave'){ctx.strokeStyle='rgba(99,168,255,.48)';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(-7,0,p.r+4+Math.sin(now*.012)*2,-1.1,1.1);ctx.stroke()}if(s.effect==='echo'){ctx.strokeStyle='rgba(191,117,255,.5)';ctx.lineWidth=1.2;for(let i=1;i<=2;i++){ctx.beginPath();ctx.arc(-i*7,0,Math.max(2,p.r-i),0,Math.PI*2);ctx.stroke()}}if(s.effect==='flare'){ctx.strokeStyle='rgba(255,240,160,.7)';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-p.r*2.5,0);ctx.lineTo(p.r*2.5,0);ctx.moveTo(0,-p.r*2);ctx.lineTo(0,p.r*2);ctx.stroke()}if(s.effect==='rainbow'){ctx.strokeStyle=`hsl(${(now*.12+p.x)%360},95%,70%)`;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-18,0);ctx.lineTo(0,0);ctx.stroke()}if(s.effect==='gravity'){ctx.strokeStyle='rgba(205,165,255,.65)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,p.r+5+Math.sin(now*.01)*2,0,Math.PI*2);ctx.stroke()}if(s.effect==='chronos'){ctx.strokeStyle='rgba(185,255,246,.68)';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,p.r+5,now*.006,now*.006+Math.PI*1.35);ctx.stroke()}if(s.effect==='petals'){ctx.strokeStyle='rgba(255,196,220,.65)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-10,-4);ctx.quadraticCurveTo(-5,-9,0,-3);ctx.moveTo(-10,4);ctx.quadraticCurveTo(-5,9,0,3);ctx.stroke()}if(s.effect==='fractal'){ctx.strokeStyle='rgba(169,246,255,.6)';ctx.lineWidth=1.1;ctx.beginPath();ctx.moveTo(-10,0);ctx.lineTo(-4,-5);ctx.lineTo(0,0);ctx.lineTo(-4,5);ctx.stroke()}if(s.effect==='helix'){ctx.strokeStyle='rgba(194,255,247,.65)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(-6,-2,p.r+2,0,Math.PI*2);ctx.arc(-11,2,p.r+2,0,Math.PI*2);ctx.stroke()}if(s.effect==='meteor'){ctx.strokeStyle='rgba(255,214,161,.72)';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(-16,0);ctx.lineTo(-4,0);ctx.stroke()}if(s.effect==='celestial'){ctx.strokeStyle='rgba(111,248,255,.85)';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-30,0);ctx.lineTo(-4,0);ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-12,0,1.5,0,Math.PI*2);ctx.fill()}if(s.effect==='dragon'){ctx.strokeStyle='rgba(255,95,119,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-28,0);ctx.lineTo(-21,-4);ctx.lineTo(-14,4);ctx.lineTo(-7,-2);ctx.lineTo(0,0);ctx.stroke()}if(s.effect==='voidlance'){ctx.strokeStyle='rgba(162,87,255,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-34,0);ctx.lineTo(1,0);ctx.stroke();ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-20,0);ctx.lineTo(4,0);ctx.stroke()}if(s.effect==='seraphic'){ctx.strokeStyle='rgba(255,255,255,.95)';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-30,0);ctx.lineTo(-4,0);ctx.stroke();ctx.strokeStyle='rgba(105,246,255,.85)';ctx.beginPath();ctx.moveTo(-20,-5);ctx.lineTo(-8,0);ctx.lineTo(-20,5);ctx.stroke()}if(s.effect==='blackstar'){ctx.strokeStyle='rgba(177,77,255,.9)';ctx.lineWidth=2.6;ctx.beginPath();ctx.arc(-8,0,p.r+4,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='rgba(248,232,255,.75)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-24,0);ctx.lineTo(-4,0);ctx.stroke()}ctx.shadowBlur=14;ctx.shadowColor=p.crit?'#8cffb1':s.glow;ctx.fillStyle=p.crit?'#8cffb1':s.primary;drawBulletShape(s.shape,p.r,now);ctx.restore()}}
   function drawBulletShape(shape,r,now){ctx.beginPath();if(shape==='bolt'){ctx.rect(-r*2,-r*.65,r*3.3,r*1.3);ctx.fill()}else if(shape==='diamond'){ctx.rotate(Math.PI/4);ctx.rect(-r,-r,r*2,r*2);ctx.fill()}else if(shape==='needle'){ctx.moveTo(r*2.4,0);ctx.lineTo(-r*1.8,r*.55);ctx.lineTo(-r*1.8,-r*.55);ctx.closePath();ctx.fill()}else if(shape==='spark'){for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?r*.6:r*1.55,x=Math.cos(a)*rr,y=Math.sin(a)*rr;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill()}else if(shape==='plasma'){ctx.arc(0,0,r*1.2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(-r*1.2,0,r*.65,0,Math.PI*2);ctx.fill()}else if(shape==='hex'){polygon(6,r*1.3);ctx.fill()}else if(shape==='echo'){ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.45;ctx.beginPath();ctx.arc(-r*1.7,0,r*.7,0,Math.PI*2);ctx.fill()}else if(shape==='flare'){for(let i=0;i<8;i++){const a=i*Math.PI/4,rr=i%2?r*.55:r*1.8,x=Math.cos(a)*rr,y=Math.sin(a)*rr;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill()}else if(shape==='chronos'){ctx.arc(0,0,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(0,0,r*1.8,0,Math.PI*1.45);ctx.stroke()}else if(shape==='comet'){ctx.arc(0,0,r*1.15,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.35;ctx.fillRect(-r*4,-1.5,r*4,3)}else if(shape==='pulse'){ctx.lineWidth=2.5;ctx.strokeStyle=ctx.fillStyle;ctx.arc(0,0,r*1.55,0,Math.PI*2);ctx.stroke()}else if(shape==='star'){for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.55:r*1.5,x=Math.cos(a)*rr,y=Math.sin(a)*rr;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.fill()}else if(shape==='wave'){ctx.lineWidth=3;ctx.strokeStyle=ctx.fillStyle;ctx.moveTo(-r*2,0);ctx.quadraticCurveTo(-r, -r*1.2,0,0);ctx.quadraticCurveTo(r,r*1.2,r*2,0);ctx.stroke()}else if(shape==='singularity'){ctx.arc(0,0,r*1.25,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.globalAlpha=.65;ctx.arc(0,0,r*2,0,Math.PI*1.4);ctx.stroke()}else if(shape==='rainbow'){ctx.arc(0,0,r*1.1,0,Math.PI*2);ctx.fill()}else{ctx.arc(0,0,r,0,Math.PI*2);ctx.fill()}}
   function drawParticles(){for(const p of state.particles){const alpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.kind==='shield'?`rgba(140,255,177,${alpha})`:p.kind==='boss'?`rgba(255,91,231,${alpha})`:p.kind==='damage'?`rgba(255,100,124,${alpha})`:`rgba(105,246,255,${alpha})`;ctx.beginPath();ctx.arc(p.x,p.y,p.r*alpha,0,Math.PI*2);ctx.fill()}}
-  function drawWaveProgress(){if(state.mode!=='game')return;const width=Math.min(260,state.w*.42),x=(state.w-width)/2,y=18,pct=clamp(state.waveClock/state.waveLength,0,1);ctx.fillStyle='rgba(255,255,255,.09)';ctx.fillRect(x,y,width,3);ctx.fillStyle='#69f6ff';ctx.fillRect(x,y,width*pct,3)}
-  function drawBanner(){const a=clamp(Math.min(state.bannerClock,2-state.bannerClock)*2,0,1);ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.font='800 13px system-ui';ctx.fillStyle='#eefdff';ctx.fillText(state.bannerText,state.w/2,68);ctx.restore()}
-  function drawJoystick(){const j=state.joystick,dx=j.x-j.startX,dy=j.y-j.startY,len=Math.hypot(dx,dy),max=48,scale=len>max?max/len:1;ctx.strokeStyle='rgba(105,246,255,.28)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(j.startX,j.startY,50,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(105,246,255,.20)';ctx.beginPath();ctx.arc(j.startX+dx*scale,j.startY+dy*scale,20,0,Math.PI*2);ctx.fill()}
+  function drawWaveProgress(){if(state.mode!=='game')return;const s=state.scale,width=Math.min(300*s,state.w*.34),x=(state.w-width)/2,y=telegramInset('top')+8*s,pct=clamp(state.waveClock/state.waveLength,0,1),bar=Math.max(2.5,3*s);ctx.fillStyle='rgba(255,255,255,.09)';ctx.fillRect(x,y,width,bar);ctx.fillStyle='#69f6ff';ctx.fillRect(x,y,width*pct,bar)}
+  function drawBanner(){const a=clamp(Math.min(state.bannerClock,2-state.bannerClock)*2,0,1),s=state.scale;ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.font=`800 ${Math.max(11,13*s)}px system-ui`;ctx.fillStyle='#eefdff';ctx.fillText(state.bannerText,state.w/2,telegramInset('top')+56*s);ctx.restore()}
+  function drawJoystick(){const j=state.joystick,s=state.scale,dx=j.x-j.startX,dy=j.y-j.startY,len=Math.hypot(dx,dy),max=48*s,scale=len>max?max/len:1;ctx.strokeStyle='rgba(105,246,255,.28)';ctx.lineWidth=Math.max(1.5,2*s);ctx.beginPath();ctx.arc(j.startX,j.startY,50*s,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(105,246,255,.20)';ctx.beginPath();ctx.arc(j.startX+dx*scale,j.startY+dy*scale,20*s,0,Math.PI*2);ctx.fill()}
   function loop(now){const dt=Math.min(.033,Math.max(0,(now-state.lastTime)/1000));state.lastTime=now;update(dt);draw(now);requestAnimationFrame(loop)}
 
+  let leaderboardSeasonData=null;
   let leaderboardPendingCrystalReward=null;
-  function top10CrystalAmount(rank){return TOP10_CRYSTAL_REWARDS[Math.floor(Number(rank)||0)]||0}
-  function prepareLeaderboardCrystalReward(rank){
+  function top10CrystalAmount(rank){const map=leaderboardSeasonData?.reward?.top10||TOP10_CRYSTAL_REWARDS;return map[Math.floor(Number(rank)||0)]||0}
+  function formatLongDuration(ms){const total=Math.max(0,Math.floor(ms/60000)),days=Math.floor(total/1440),hours=Math.floor((total%1440)/60),mins=total%60;if(days>0)return lang==='ru'?`${days} д. ${hours} ч.`:`${days}d ${hours}h`;if(hours>0)return lang==='ru'?`${hours} ч. ${mins} мин`:`${hours}h ${mins}m`;return lang==='ru'?`${mins} мин`:`${mins}m`}
+  function leaderboardSeasonResetText(season){if(!season?.resetAt)return'';const diff=Math.max(0,Number(season.resetAt)-Date.now());return lang==='ru'?`Сезон ${season.weekId} · сброс через ${formatLongDuration(diff)}`:`Season ${season.weekId} · resets in ${formatLongDuration(diff)}`}
+  function leaderboardSeasonSummary(data){const map=data?.reward?.top10||TOP10_CRYSTAL_REWARDS;const top1=map[1]||0,top10=map[10]||0;return lang==='ru'?`Текущий сезон обновляется каждую неделю. Топ-10 получает награду 1 раз за сезон: от ${top10} до ${top1} ◈.`:`The weekly season resets every week. Top 10 can claim one reward per season: from ${top10} to ${top1} ◈.`}
+  function prepareLeaderboardCrystalReward(rank,data=leaderboardSeasonData){
     leaderboardPendingCrystalReward=null;if(!ui.claimLeaderboardCrystalBtn||!ui.leaderboardCrystalRewardText)return;ui.claimLeaderboardCrystalBtn.disabled=true;ui.claimLeaderboardCrystalBtn.textContent=t('claim');
     if(!window.PlatformBridge?.authorized){ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardAuth');return}
-    const amount=top10CrystalAmount(rank),today=localDateKey();if(!amount){ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardNeed');return}
-    if(progress.lastTopCrystalRewardDate===today){ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardClaimed');ui.claimLeaderboardCrystalBtn.textContent=t('claimed');return}
-    leaderboardPendingCrystalReward={rank,amount};ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardReady',{rank,crystals:amount});ui.claimLeaderboardCrystalBtn.disabled=false;ui.claimLeaderboardCrystalBtn.textContent=t('crystalTopRewardClaim',{crystals:amount})
+    const amount=top10CrystalAmount(rank);if(!amount){ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardNeed');return}
+    if(data?.reward?.claimedWeek&&data.reward.claimedWeek===data?.season?.weekId){ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardClaimed');ui.claimLeaderboardCrystalBtn.textContent=t('claimed');return}
+    leaderboardPendingCrystalReward={rank,amount,weekId:data?.season?.weekId||''};ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardReady',{rank,crystals:amount});ui.claimLeaderboardCrystalBtn.disabled=false;ui.claimLeaderboardCrystalBtn.textContent=t('crystalTopRewardClaim',{crystals:amount})
   }
   async function claimLeaderboardCrystalReward(){
     const pending=leaderboardPendingCrystalReward;if(!pending)return;ui.claimLeaderboardCrystalBtn.disabled=true;
-    const result=await window.PlatformBridge?.claimTop10Reward?.();
-    if(!result?.ok){showToast(result?.reason==='claimed'?t('crystalTopRewardClaimed'):t('crystalPurchaseFailed'));prepareLeaderboardCrystalReward(pending.rank);return}
-    applyAuthoritativeCloud(result.progress);leaderboardPendingCrystalReward=null;ui.claimLeaderboardCrystalBtn.disabled=true;ui.claimLeaderboardCrystalBtn.textContent=t('claimed');ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardClaimed');showToast(t('crystalTopRewardReceived',{crystals:result.amount||pending.amount}))
+    const result=await window.PlatformBridge?.claimWeeklyLeaderboardReward?.();
+    if(!result?.ok){showToast(result?.reason==='claimed'?t('crystalTopRewardClaimed'):t('crystalPurchaseFailed'));prepareLeaderboardCrystalReward(pending.rank,leaderboardSeasonData);return}
+    applyAuthoritativeCloud(result.progress);if(leaderboardSeasonData?.reward)leaderboardSeasonData.reward.claimedWeek=result.weekId||pending.weekId;leaderboardPendingCrystalReward=null;ui.claimLeaderboardCrystalBtn.disabled=true;ui.claimLeaderboardCrystalBtn.textContent=t('claimed');ui.leaderboardCrystalRewardText.textContent=t('crystalTopRewardClaimed');showToast(t('crystalTopRewardReceived',{crystals:result.amount||pending.amount}))
   }
-  let leaderboardPendingReward=null;
-  function leaderboardTier(rank){return LEADERBOARD_TIERS.find(x=>rank>0&&rank<=x.maxRank)||null}
-  function isYesterday(previous,today=localDateKey()){const a=dateKeyToDay(previous),b=dateKeyToDay(today);return a!==null&&b!==null&&b-a===1}
-  function recordLeaderboardPresence(rank){const today=localDateKey();if(progress.leaderboardSeenDate===today)return;const tier=leaderboardTier(rank);progress.leaderboardHoldStreak=tier?(isYesterday(progress.leaderboardSeenDate,today)?Math.max(1,progress.leaderboardHoldStreak):1):0;progress.leaderboardSeenDate=today;progress.leaderboardSeenRank=Math.max(0,Math.floor(rank||0));saveProgress()}
-  function prepareLeaderboardReward(rank){
-    leaderboardPendingReward=null;ui.claimLeaderboardRewardBtn.disabled=true;ui.claimLeaderboardRewardBtn.textContent=t('claim');
-    if(!window.PlatformBridge?.authorized){ui.leaderboardRewardText.textContent=t('leaderboardRewardsAuth');return}
-    const tier=leaderboardTier(rank);if(!tier){ui.leaderboardRewardText.textContent=t('leaderboardRewardsNoEntry');recordLeaderboardPresence(rank||0);return}
-    const today=localDateKey(),milestone=!progress.leaderboardMilestones.includes(tier.id)?tier:null;
-    const holdEligible=isYesterday(progress.leaderboardSeenDate,today)&&progress.leaderboardSeenRank>0&&progress.leaderboardSeenRank<=1000&&progress.leaderboardHoldClaimDate!==today;
-    const holdAmount=holdEligible?tier.hold:0,streak=holdEligible?Math.max(2,progress.leaderboardHoldStreak+1):Math.max(1,progress.leaderboardHoldStreak);
-    const total=(milestone?.milestone||0)+holdAmount;
-    if(total>0){leaderboardPendingReward={rank,tier,milestone,holdAmount,streak,total};ui.claimLeaderboardRewardBtn.disabled=false;ui.claimLeaderboardRewardBtn.textContent=t('leaderboardRewardClaim',{coins:formatScore(total)});if(milestone&&holdAmount)ui.leaderboardRewardText.textContent=t('leaderboardBothReady',{coins:formatScore(total)});else if(milestone)ui.leaderboardRewardText.textContent=t('leaderboardMilestoneReady',{tier:tier.maxRank,coins:formatScore(milestone.milestone)});else ui.leaderboardRewardText.textContent=t('leaderboardHoldReady',{tier:tier.maxRank,coins:formatScore(holdAmount),streak});return}
-    if(progress.leaderboardSeenDate!==today){ui.leaderboardRewardText.textContent=t('leaderboardFirstDay');recordLeaderboardPresence(rank)}else ui.leaderboardRewardText.textContent=t('leaderboardRewardsNone');
+  function prepareLeaderboardReward(data){
+    ui.claimLeaderboardRewardBtn.classList.add('hidden');ui.claimLeaderboardRewardBtn.disabled=true;ui.claimLeaderboardRewardBtn.textContent=t('claim');
+    ui.leaderboardRewardText.textContent=data?leaderboardSeasonSummary(data):t('leaderboardRewardsChecking');
   }
-  function claimLeaderboardReward(){
-    const pending=leaderboardPendingReward;if(!pending)return;const today=localDateKey();progress.coins+=pending.total;
-    if(pending.milestone){for(const tier of LEADERBOARD_TIERS)if(tier.maxRank>=pending.milestone.maxRank&&!progress.leaderboardMilestones.includes(tier.id))progress.leaderboardMilestones.push(tier.id)}
-    if(pending.holdAmount>0){progress.leaderboardHoldClaimDate=today;progress.leaderboardHoldStreak=pending.streak}else if(!isYesterday(progress.leaderboardSeenDate,today))progress.leaderboardHoldStreak=1;
-    progress.leaderboardSeenDate=today;progress.leaderboardSeenRank=pending.rank;leaderboardPendingReward=null;saveProgress();renderShop();ui.claimLeaderboardRewardBtn.disabled=true;ui.claimLeaderboardRewardBtn.textContent=t('claimed');ui.leaderboardRewardText.textContent=t('leaderboardRewardClaimed');showToast(t('leaderboardRewardClaimed'));
-  }
+  function claimLeaderboardReward(){return}
   function leaderboardInitial(name){const clean=String(name||t('player')).trim();return (clean[0]||'N').toUpperCase()}
-  function podiumPlaceClass(rank){return rank===1?'first':rank===2?'second':'third'}
-  function podiumMedal(rank){return rank===1?'♛':rank===2?'◆':'◇'}
-  function renderLeaderboardPodium(entries,userRank){
-    const top=[1,2,3].map(rank=>entries.find(e=>Number(e.rank)===rank)).filter(Boolean);
-    ui.leaderboardPodium.innerHTML='';
-    if(!top.length){ui.leaderboardPodium.classList.add('hidden');return}
-    const order=[2,1,3];
-    order.forEach(rank=>{const entry=top.find(e=>Number(e.rank)===rank);if(!entry)return;const name=entry.player?.publicName||t('player'),card=document.createElement('article');card.className=`podium-card ${podiumPlaceClass(rank)}${Number(userRank)===rank?' me':''}`;card.innerHTML=`<span class="podium-medal">${podiumMedal(rank)}</span><div class="podium-avatar"></div><span class="podium-rank">#${rank}</span><strong class="podium-name"></strong><em>${formatScore(leaderboardVisibleScore(entry.score))} <small>${t('points')}</small></em>${rank===1?`<b>${t('topPlayer')}</b>`:''}`;card.querySelector('.podium-avatar').textContent=leaderboardInitial(name);card.querySelector('.podium-name').textContent=name;ui.leaderboardPodium.appendChild(card)});
-    ui.leaderboardPodium.classList.remove('hidden');
-  }
+  function leaderboardBadgeMarkup(rank){if(rank===1)return '<span class="lb-medal gold"><i>★</i><b>1</b></span>';if(rank===2)return '<span class="lb-medal silver"><i>★</i><b>2</b></span>';if(rank===3)return '<span class="lb-medal bronze"><i>★</i><b>3</b></span>';return `<span class="lb-rank-pill">#${rank}</span>`}
+  function leaderboardAvatarNode(player, extraClass=''){const wrap=document.createElement('span');wrap.className=`lb-avatar ${extraClass}`.trim();const photo=String(player?.photoUrl||'').trim(),name=player?.publicName||t('player');if(photo){const img=document.createElement('img');img.className='lb-avatar-img';img.alt=name;img.src=photo;img.loading='lazy';img.referrerPolicy='no-referrer';img.addEventListener('error',()=>{wrap.classList.remove('has-photo');wrap.textContent=leaderboardInitial(name)},{once:true});wrap.classList.add('has-photo');wrap.appendChild(img)}else wrap.textContent=leaderboardInitial(name);return wrap}
+  function renderLeaderboardPodium(){ui.leaderboardPodium.innerHTML='';ui.leaderboardPodium.classList.add('hidden')}
   function renderLeaderboardRows(entries,userRank){
     ui.leaderboardList.innerHTML='';
-    const seen=new Set();
-    entries.filter(e=>Number(e.rank)>3).sort((a,b)=>Number(a.rank)-Number(b.rank)).forEach(entry=>{const rank=Number(entry.rank);if(seen.has(rank))return;seen.add(rank);const row=document.createElement('div');row.className='lb-row'+(rank===Number(userRank)?' me':'');const name=entry.player?.publicName||t('player');row.innerHTML=`<span class="lb-rank"><i>${rank<=10?'◆':'#'}</i>${rank}</span><span class="lb-name-wrap"><span class="lb-avatar"></span><span class="lb-name"></span></span><span class="lb-score">${formatScore(leaderboardVisibleScore(entry.score))}</span>`;row.querySelector('.lb-avatar').textContent=leaderboardInitial(name);row.querySelector('.lb-name').textContent=name;ui.leaderboardList.appendChild(row)});
-    ui.leaderboardTableHead.classList.toggle('hidden',!ui.leaderboardList.children.length);
+    entries.sort((a,b)=>Number(a.rank)-Number(b.rank)).forEach(entry=>{const rank=Number(entry.rank),name=entry.player?.publicName||t('player'),reward=Number(entry.rewardCrystals)||0,row=document.createElement('div');row.className=`lb-row rank-${Math.min(rank,4)}${rank===Number(userRank)?' me':''}`;row.innerHTML=`<div class="lb-rank-wrap">${leaderboardBadgeMarkup(rank)}</div><div class="lb-name-wrap"><span class="lb-meta"><strong class="lb-name"></strong><small class="lb-sub"></small></span></div><div class="lb-side"><span class="lb-score"></span>${reward>0?`<span class="lb-reward">+${reward} ◈</span>`:''}</div>`;const nameWrap=row.querySelector('.lb-name-wrap');nameWrap.prepend(leaderboardAvatarNode(entry.player));row.querySelector('.lb-name').textContent=name;row.querySelector('.lb-sub').textContent=rank<=3?(lang==='ru'?'Пьедестал недели':'Weekly podium'):(lang==='ru'?'Игрок сезона':'Season contender');row.querySelector('.lb-score').textContent=formatScore(leaderboardVisibleScore(entry.score));ui.leaderboardList.appendChild(row)});
+    ui.leaderboardTableHead.classList.add('hidden');
   }
   function renderLeaderboardPlayer(entry){
     if(!entry||!Number(entry.rank)){ui.leaderboardPlayerCard.classList.add('hidden');return}
+    const avatarBox=document.getElementById('leaderboardPlayerAvatar');if(avatarBox){avatarBox.classList.remove('has-photo');avatarBox.innerHTML='';const avatar=leaderboardAvatarNode(entry.player,'mini');avatarBox.className='leaderboard-player-avatar';if(avatar.classList.contains('has-photo')){avatarBox.classList.add('has-photo');const img=avatar.querySelector('img');if(img)avatarBox.appendChild(img)}else avatarBox.textContent=leaderboardInitial(entry.player?.publicName||t('player'))}
     ui.leaderboardPlayerRank.textContent=`#${Number(entry.rank)}`;ui.leaderboardPlayerScore.textContent=`${formatScore(Number(entry.score)?leaderboardVisibleScore(entry.score):progress.bestScore)} ${t('points')}`;ui.leaderboardPlayerCard.classList.remove('hidden');
   }
   async function showLeaderboard(){
-    state.prevMode=state.mode;if(state.mode==='game')pauseGame(false);state.mode='leaderboard';hud.classList.add('hidden');hideAllPanels();panels.leaderboard.classList.remove('hidden');ui.leaderboardStatus.textContent=t('leaderboardLoading');ui.leaderboardList.innerHTML='';ui.leaderboardPodium.innerHTML='';ui.leaderboardPodium.classList.add('hidden');ui.leaderboardTableHead.classList.add('hidden');ui.leaderboardPlayerCard.classList.add('hidden');ui.leaderboardRewardText.textContent=t('leaderboardRewardsChecking');ui.claimLeaderboardRewardBtn.disabled=true;if(ui.leaderboardCrystalRewardText)ui.leaderboardCrystalRewardText.textContent=t('leaderboardRewardsChecking');if(ui.claimLeaderboardCrystalBtn)ui.claimLeaderboardCrystalBtn.disabled=true;
-    const data=await window.PlatformBridge?.getLeaderboard?.();if(!data?.entries){ui.leaderboardStatus.textContent=`${t('leaderboardUnavailable')} ${t('localBest')}: ${formatScore(progress.bestScore)}.`;prepareLeaderboardReward(0);prepareLeaderboardCrystalReward(0);return}
-    ui.leaderboardStatus.textContent='';if(!data.entries.length)ui.leaderboardStatus.textContent=t('leaderboardEmpty');renderLeaderboardPodium(data.entries,data.userRank);renderLeaderboardRows(data.entries,data.userRank);
-    if(window.PlatformBridge?.authorized){const entry=await window.PlatformBridge.getPlayerEntry();renderLeaderboardPlayer(entry);const rank=Number(entry?.rank)||0;prepareLeaderboardReward(rank);prepareLeaderboardCrystalReward(rank)}else{prepareLeaderboardReward(0);prepareLeaderboardCrystalReward(0)};
+    state.prevMode=state.mode;if(state.mode==='game')pauseGame(false);state.mode='leaderboard';hud.classList.add('hidden');hideAllPanels();panels.leaderboard.classList.remove('hidden');ui.leaderboardStatus.textContent=t('leaderboardLoading');ui.leaderboardList.innerHTML='';ui.leaderboardPodium.innerHTML='';ui.leaderboardPodium.classList.add('hidden');ui.leaderboardTableHead.classList.add('hidden');ui.leaderboardPlayerCard.classList.add('hidden');leaderboardSeasonData=null;prepareLeaderboardReward(null);if(ui.leaderboardCrystalRewardText)ui.leaderboardCrystalRewardText.textContent=t('leaderboardRewardsChecking');if(ui.claimLeaderboardCrystalBtn){ui.claimLeaderboardCrystalBtn.disabled=true;ui.claimLeaderboardCrystalBtn.textContent=t('claim')}
+    const data=await window.PlatformBridge?.getLeaderboard?.();if(!data?.entries){ui.leaderboardStatus.textContent=`${t('leaderboardUnavailable')} ${t('localBest')}: ${formatScore(progress.bestScore)}.`;prepareLeaderboardReward(null);prepareLeaderboardCrystalReward(0,null);return}
+    leaderboardSeasonData=data;ui.leaderboardStatus.textContent=leaderboardSeasonResetText(data.season);if(!data.entries.length)ui.leaderboardStatus.textContent=t('leaderboardEmpty');renderLeaderboardPodium();renderLeaderboardRows(data.entries,data.userRank);prepareLeaderboardReward(data);
+    if(window.PlatformBridge?.authorized){const entry=await window.PlatformBridge.getPlayerEntry();renderLeaderboardPlayer(entry);prepareLeaderboardCrystalReward(Number(entry?.rank)||0,data)}else{prepareLeaderboardCrystalReward(0,data)}
   }
-  function closeOverlay(panelName){if(panelName)panels[panelName].classList.add('hidden');state.mode='menu';showPanel('menu');refreshProgressUI()}
+  function closeOverlay(panelName){if(panelName)panels[panelName].classList.add('hidden');pendingLandscapeStart=false;rotateOverlay?.classList.add('hidden');setGameplayActive(false);window.PlatformBridge?.gameplayExit?.();state.mode='menu';showPanel('menu');refreshProgressUI()}
   async function login(){const result=await window.PlatformBridge.login();if(result.ok){mergeCloud(await window.PlatformBridge.loadCloudProgress());saveProgress();updateAuthUI();showToast(t('authSuccess'));if(progress.bestScore>0)await window.PlatformBridge.submitScore(progress.bestScore*LEADERBOARD_SCORE_SCALE);await loadCrystalCatalog();await recoverCrystalPurchases()}else showToast(t('authCancelled'))}
+
+  function pointerGamePoint(clientX,clientY){
+    const rect=canvas.getBoundingClientRect();return{x:clamp(clientX-rect.left,0,state.w),y:clamp(clientY-rect.top,0,state.h)}
+  }
+  function beginJoystick(clientX,clientY,pointerId){
+    if(state.mode!=='game')return false;
+    const p=pointerGamePoint(clientX,clientY),s=state.scale,margin=58*s,left=telegramInset('left')+margin,right=state.w-telegramInset('right')-margin,top=telegramInset('top')+margin,bottom=state.h-telegramInset('bottom')-margin,j=state.joystick;
+    j.active=true;j.pointerId=pointerId;j.rawStartX=p.x;j.rawStartY=p.y;j.startX=clamp(p.x,Math.min(left,state.w/2),Math.max(state.w/2,right));j.startY=clamp(p.y,Math.min(top,state.h/2),Math.max(state.h/2,bottom));j.x=j.startX;j.y=j.startY;sound.ensure();return true
+  }
+  function moveJoystick(clientX,clientY,pointerId){
+    const j=state.joystick;if(!j.active||pointerId!==j.pointerId)return false;const p=pointerGamePoint(clientX,clientY);j.x=j.startX+(p.x-j.rawStartX);j.y=j.startY+(p.y-j.rawStartY);return true
+  }
+  function handleViewportChange(){resize();syncPendingLandscapeStart()}
 
   window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();state.keys.add(e.code);if(e.code==='Escape'&&state.mode==='game')pauseGame(true);else if(e.code==='Escape'&&state.mode==='pause'&&state.manualPause)resumeGame(true)},{passive:false});
   window.addEventListener('keyup',e=>state.keys.delete(e.code));
-  canvas.addEventListener('pointerdown',e=>{if(state.mode!=='game')return;state.joystick.active=true;state.joystick.pointerId=e.pointerId;state.joystick.startX=e.clientX;state.joystick.startY=e.clientY;state.joystick.x=e.clientX;state.joystick.y=e.clientY;canvas.setPointerCapture?.(e.pointerId);sound.ensure();e.preventDefault()},{passive:false});
-  canvas.addEventListener('pointermove',e=>{if(state.joystick.active&&e.pointerId===state.joystick.pointerId){state.joystick.x=e.clientX;state.joystick.y=e.clientY;e.preventDefault()}},{passive:false});
+  canvas.addEventListener('pointerdown',e=>{if(!beginJoystick(e.clientX,e.clientY,e.pointerId))return;canvas.setPointerCapture?.(e.pointerId);e.preventDefault()},{passive:false});
+  canvas.addEventListener('pointermove',e=>{if(moveJoystick(e.clientX,e.clientY,e.pointerId))e.preventDefault()},{passive:false});
   const endPointer=e=>{if(e.pointerId===state.joystick.pointerId){state.joystick.active=false;state.joystick.pointerId=null}};canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);
   if(!('PointerEvent' in window)){
-    canvas.addEventListener('touchstart',e=>{if(state.mode!=='game'||!e.touches?.length)return;const p=e.touches[0];state.joystick.active=true;state.joystick.pointerId='touch';state.joystick.startX=p.clientX;state.joystick.startY=p.clientY;state.joystick.x=p.clientX;state.joystick.y=p.clientY;sound.ensure();e.preventDefault()},{passive:false});
-    canvas.addEventListener('touchmove',e=>{if(!state.joystick.active||!e.touches?.length)return;const p=e.touches[0];state.joystick.x=p.clientX;state.joystick.y=p.clientY;e.preventDefault()},{passive:false});
+    canvas.addEventListener('touchstart',e=>{if(!e.touches?.length)return;const p=e.touches[0];if(beginJoystick(p.clientX,p.clientY,'touch'))e.preventDefault()},{passive:false});
+    canvas.addEventListener('touchmove',e=>{if(!e.touches?.length)return;const p=e.touches[0];if(moveJoystick(p.clientX,p.clientY,'touch'))e.preventDefault()},{passive:false});
     const endTouch=e=>{state.joystick.active=false;state.joystick.pointerId=null;e.preventDefault()};canvas.addEventListener('touchend',endTouch,{passive:false});canvas.addEventListener('touchcancel',endTouch,{passive:false});
   }
+  rotateCancelBtn?.addEventListener('click',cancelLandscapeStart);
   document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('selectstart',e=>e.preventDefault());
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)platformPause();else if(state.suspendedByPlatform)platformResume();else sound.resume()});window.addEventListener('blur',()=>{if(state.mode==='game')platformPause()});window.addEventListener('focus',()=>{if(state.suspendedByPlatform)platformResume()});window.addEventListener('resize',resize);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)platformPause();else if(state.suspendedByPlatform)platformResume();else sound.resume()});window.addEventListener('blur',()=>{if(state.mode==='game')platformPause()});window.addEventListener('focus',()=>{if(state.suspendedByPlatform)platformResume()});
+  window.addEventListener('resize',handleViewportChange);window.addEventListener('orientationchange',()=>setTimeout(handleViewportChange,90));window.addEventListener('neon:telegramviewport',()=>requestAnimationFrame(handleViewportChange));
 
   document.getElementById('playBtn').addEventListener('click',startGame);document.getElementById('helpPlayBtn').addEventListener('click',startGame);document.getElementById('leaderboardBtn').addEventListener('click',showLeaderboard);document.getElementById('resultLeaderboardBtn').addEventListener('click',showLeaderboard);document.getElementById('closeLeaderboardBtn').addEventListener('click',()=>closeOverlay('leaderboard'));
-  document.getElementById('shopBtn').addEventListener('click',()=>{state.mode='shop';showPanel('shop');renderShop();refreshProgressUI()});document.getElementById('closeShopBtn').addEventListener('click',()=>closeOverlay('shop'));ui.shopPreviewPrev?.addEventListener('click',()=>stepShopPreview(-1));ui.shopPreviewNext?.addEventListener('click',()=>stepShopPreview(1));
+  document.getElementById('shopBtn').addEventListener('click',()=>{state.mode='shop';showPanel('shop');renderShop();refreshProgressUI()});document.getElementById('closeShopBtn').addEventListener('click',()=>closeOverlay('shop'));ui.shopPreviewPrev?.addEventListener('click',()=>stepShopPreview(-1));ui.shopPreviewNext?.addEventListener('click',()=>stepShopPreview(1));ui.mythicFeatureAction?.addEventListener('click',activateMythicFeature);
+  document.getElementById('seasonPassBtn')?.addEventListener('click',showSeasonPass);document.getElementById('closeSeasonPassBtn')?.addEventListener('click',()=>closeOverlay('seasonPass'));ui.buySeasonPassBtn?.addEventListener('click',buySeasonPass);
   document.getElementById('rewardsBtn').addEventListener('click',()=>{state.mode='rewards';showPanel('rewards');refreshProgressUI()});document.getElementById('closeRewardsBtn').addEventListener('click',()=>closeOverlay('rewards'));
   document.getElementById('helpBtn').addEventListener('click',()=>{state.mode='help';showPanel('help')});document.getElementById('closeHelpBtn').addEventListener('click',()=>closeOverlay('help'));
   document.getElementById('pauseBtn').addEventListener('click',()=>pauseGame(true));document.getElementById('resumeBtn').addEventListener('click',()=>resumeGame(true));document.getElementById('pauseMenuBtn').addEventListener('click',goMenu);document.getElementById('menuBtn').addEventListener('click',goMenu);document.getElementById('retryBtn').addEventListener('click',retryWithAd);ui.loginBtn.addEventListener('click',login);

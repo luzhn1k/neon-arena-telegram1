@@ -18,6 +18,16 @@
       <p id="bootText">Загрузка…</p>
     </section>
 
+    <section id="rotateOverlay" class="rotate-overlay hidden" aria-live="assertive" aria-modal="true" role="dialog">
+      <div class="rotate-card">
+        <div class="rotate-device" aria-hidden="true"><span></span><i></i></div>
+        <p class="eyebrow" data-i18n="rotateEyebrow">LANDSCAPE MODE</p>
+        <h2 data-i18n="rotateTitle">Поверните телефон</h2>
+        <p class="rotate-copy" data-i18n="rotateText">Для боя поверните устройство горизонтально. Игра запустится автоматически.</p>
+        <button id="rotateCancelBtn" class="btn" type="button" data-i18n="menu">Меню</button>
+      </div>
+    </section>
+
     <section id="hud" class="hud hidden" aria-live="polite">
       <div class="hud-group hud-left">
         <div class="hud-chip"><span data-i18n="score">Счёт</span><strong id="hudScore">0</strong></div>
@@ -49,13 +59,14 @@
         <button id="playBtn" class="btn btn-primary" data-i18n="play">Играть</button>
         <button id="leaderboardBtn" class="btn" data-i18n="leaderboard">Рейтинг</button>
         <button id="shopBtn" class="btn" data-i18n="shop">Магазин</button>
+        <button id="seasonPassBtn" class="btn btn-season" data-i18n="seasonPass">Season Pass</button>
         <button id="rewardsBtn" class="btn btn-daily" data-i18n="rewards">Награды</button>
         <button id="helpBtn" class="btn" data-i18n="howToPlay">Как играть</button>
       </div>
       <button id="loginBtn" class="btn btn-login hidden"></button>
       <p id="authHint" class="microcopy"></p>
       <p id="rewardStatus" class="microcopy daily-status"></p>
-      <p class="version">v1.5.11 · TELEGRAM</p>
+      <p class="version">v1.5.19 · TELEGRAM · SEASON PASS</p>
     </section>
 
     <section id="upgradePanel" class="panel panel-wide hidden">
@@ -85,18 +96,21 @@
 
     <section id="leaderboardPanel" class="panel panel-wide hidden">
       <div class="panel-head">
-        <div><p class="eyebrow">GLOBAL</p><h2 data-i18n="leaderboard">Рейтинг</h2></div>
+        <div><p class="eyebrow">WEEKLY</p><h2 data-i18n="leaderboard">Рейтинг</h2></div>
         <button id="closeLeaderboardBtn" class="icon-btn" aria-label="Закрыть">×</button>
       </div>
       <div class="leaderboard-intro">
-        <div>
-          <span class="leaderboard-kicker" data-i18n="globalBoard">ГЛОБАЛЬНЫЙ РЕЙТИНГ</span>
-          <p data-i18n="globalBoardHint">Лучшие результаты игроков Neon Arena</p>
+        <div class="leaderboard-hero">
+          <span class="leaderboard-kicker" data-i18n="globalBoard">НЕДЕЛЬНЫЙ РЕЙТИНГ</span>
+          <p data-i18n="globalBoardHint">Лучшие результаты игроков Neon Arena за текущую неделю</p>
         </div>
         <div id="leaderboardPlayerCard" class="leaderboard-player-card hidden">
-          <span data-i18n="yourPosition">ВАША ПОЗИЦИЯ</span>
-          <strong id="leaderboardPlayerRank">—</strong>
-          <em id="leaderboardPlayerScore">0</em>
+          <div class="leaderboard-player-avatar" id="leaderboardPlayerAvatar">N</div>
+          <div class="leaderboard-player-meta">
+            <span data-i18n="yourPosition">ВАША ПОЗИЦИЯ</span>
+            <strong id="leaderboardPlayerRank">—</strong>
+            <em id="leaderboardPlayerScore">0</em>
+          </div>
         </div>
       </div>
       <div id="leaderboardStatus" class="status-text"></div>
@@ -104,17 +118,23 @@
       <div id="leaderboardTableHead" class="leaderboard-table-head hidden">
         <span data-i18n="place">Место</span><span data-i18n="leaderboardPlayer">Игрок</span><span data-i18n="result">Результат</span>
       </div>
+      <div class="leaderboard-legend">
+        <span class="legend-chip gold">TOP 1</span>
+        <span class="legend-chip silver">TOP 2</span>
+        <span class="legend-chip bronze">TOP 3</span>
+        <span class="legend-chip reward">WEEKLY REWARD</span>
+      </div>
       <div id="leaderboardList" class="leaderboard-list"></div>
       <div id="leaderboardRewardBox" class="leaderboard-reward-box">
         <div>
           <span class="reward-tag" data-i18n="leaderboardRewardsTag">НАГРАДЫ РЕЙТИНГА</span>
-          <strong data-i18n="leaderboardRewardsTitle">За попадание и удержание</strong>
+          <strong data-i18n="leaderboardRewardsTitle">Награды сезона</strong>
           <p id="leaderboardRewardText"></p>
         </div>
         <button id="claimLeaderboardRewardBtn" class="btn btn-primary" disabled></button>
       </div>
       <div class="leaderboard-reward-box crystal-reward-box">
-        <div><span class="reward-tag" data-i18n="crystalShopTag">НЕО-КРИСТАЛЛЫ</span><strong data-i18n="crystalTopRewardTitle">Нео-кристаллы за топ-10</strong><p id="leaderboardCrystalRewardText"></p></div>
+        <div><span class="reward-tag" data-i18n="crystalShopTag">НЕО-КРИСТАЛЛЫ</span><strong data-i18n="crystalTopRewardTitle">Еженедельная награда топ-10</strong><p id="leaderboardCrystalRewardText"></p></div>
         <button id="claimLeaderboardCrystalBtn" class="btn btn-crystal" disabled></button>
       </div>
       <p class="microcopy" data-i18n="leaderboardNote">Глобальный результат привязан к вашему Telegram-аккаунту.</p>
@@ -148,12 +168,57 @@
         </div>
       </div>
 
+      <div class="mythic-vault">
+        <div class="shop-section-head mythic-vault-head">
+          <div>
+            <span class="eyebrow" data-i18n="mythicVaultTag">MYTHIC VAULT</span>
+            <h3 data-i18n="mythicVaultTitle">Магазин mythic-косметики</h3>
+          </div>
+          <span class="mythic-vault-hint" data-i18n="mythicVaultHint">Премиальная витрина самой редкой косметики за нео-кристаллы.</span>
+        </div>
+        <div class="mythic-vault-layout">
+          <article class="mythic-feature-card">
+            <div class="mythic-feature-copy">
+              <span class="reward-tag" data-i18n="mythicVaultFeatured">ПРЕМИАЛЬНАЯ ВИТРИНА</span>
+              <div class="mythic-feature-title"><strong id="mythicFeatureName">—</strong><span id="mythicFeatureKind">—</span></div>
+              <span id="mythicFeatureRarity" class="rarity-badge rarity-mythic">Мифическая</span>
+              <p id="mythicFeatureDesc" class="mythic-feature-desc"></p>
+              <div id="mythicFeaturePerks" class="mythic-feature-perks"></div>
+              <div class="mythic-feature-footer">
+                <div class="mythic-feature-price-box">
+                  <span data-i18n="mythicVaultPrice">Стоимость</span>
+                  <strong id="mythicFeaturePrice">0 ◈</strong>
+                </div>
+                <button id="mythicFeatureAction" class="btn btn-crystal mythic-feature-action" type="button">Купить</button>
+              </div>
+            </div>
+            <div id="mythicFeatureStage" class="mythic-feature-stage" aria-live="polite"></div>
+          </article>
+          <div class="mythic-grid-wrap">
+            <div class="mythic-grid-copy">
+              <strong data-i18n="mythicVaultGridTitle">Все mythic-предметы</strong>
+              <p data-i18n="mythicVaultGridHint">Выбери предмет, чтобы открыть подробный предпросмотр и купить его за нео-кристаллы.</p>
+            </div>
+            <div id="mythicShop" class="mythic-shop-grid"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="shop-section crystal-section">
         <div class="shop-section-head"><h3 data-i18n="crystalShopTitle">Мифическая коллекция</h3><span data-i18n="crystalShopHint">Эксклюзивная косметика за нео-кристаллы. Мифическая редкость выше легендарной.</span></div>
         <div class="crystal-shop-layout">
           <article class="crystal-ad-card"><div><span class="reward-tag" data-i18n="adReward">ЗА РЕКЛАМУ</span><h4 data-i18n="crystalAdTitle">10 нео-кристаллов</h4><p id="adCrystalsText"></p></div><button id="claimAdCrystalsBtn" class="btn btn-crystal"></button></article>
           <div id="crystalPacksWrap" class="crystal-packs hidden"><div class="crystal-pack-heading"><strong data-i18n="crystalPacksTitle">Пополнить нео-кристаллы</strong><span data-i18n="crystalPacksHint">Покупки проходят через Telegram Stars.</span></div><div id="crystalPackShop" class="crystal-pack-grid"></div></div>
         </div>
+      </div>
+      <div class="shop-section star-chests-section">
+        <div class="shop-section-head"><h3 data-i18n="starChestsTitle">Сундуки за Stars</h3><span data-i18n="starChestsHint">Премиальные сундуки за Telegram Stars. Внутри все редкости, включая mythic.</span></div>
+        <div id="starChestPity" class="star-chest-pity">
+          <div><span data-i18n="legendaryGuarantee">Гарант legendary</span><strong id="legendaryPityText">—</strong><i><b id="legendaryPityBar"></b></i></div>
+          <div><span data-i18n="mythicGuarantee">Гарант mythic</span><strong id="mythicPityText">—</strong><i><b id="mythicPityBar"></b></i></div>
+        </div>
+        <p class="microcopy" data-i18n="pitySharedHint">Гарант общий для всех сундуков за Stars. Legendary — максимум на 10-м открытии, mythic — максимум на 100-м.</p>
+        <div id="starChestShop" class="star-chest-grid"></div>
       </div>
       <div class="shop-section chest-section">
         <div class="shop-section-head"><h3 data-i18n="chestsTitle">Сундуки</h3><span data-i18n="chestsHint">Чем выше редкость сундука, тем выше шанс редкой косметики</span></div>
@@ -231,6 +296,35 @@
       </div>
     </section>
 
+    <section id="seasonPassPanel" class="panel panel-wide hidden">
+      <div class="panel-head">
+        <div><p class="eyebrow">SEASON PASS</p><h2 data-i18n="seasonPass">Season Pass</h2></div>
+        <button id="closeSeasonPassBtn" class="icon-btn" aria-label="Закрыть">×</button>
+      </div>
+      <div class="season-pass-hero">
+        <div class="season-pass-copy">
+          <span id="seasonPassId" class="season-pass-tag">—</span>
+          <h3 data-i18n="seasonPassTitle">Neon Season Pass</h3>
+          <p data-i18n="seasonPassHint">20 уровней на 28 дней. Баланс рассчитан примерно на 35–40 обычных забегов. Premium открывает второй трек наград.</p>
+          <div class="season-pass-level-line"><span data-i18n="seasonLevel">Уровень</span><strong id="seasonPassLevel">1 / 20</strong><em id="seasonPassTimer">—</em></div>
+          <div class="season-pass-xp"><b id="seasonPassXpBar"></b></div>
+          <small id="seasonPassXpText">0 / 800 XP</small>
+        </div>
+        <div class="season-pass-premium-card">
+          <span class="reward-tag" data-i18n="premiumTrack">PREMIUM TRACK</span>
+          <strong data-i18n="premiumPassTitle">Premium Season Pass</strong>
+          <p data-i18n="premiumPassHint">Дополнительные кристаллы и эксклюзивная сезонная косметика. Без боевых преимуществ.</p>
+          <div class="season-pass-price"><span data-i18n="price">Стоимость</span><b id="seasonPassPrice">149 ⭐</b></div>
+          <button id="buySeasonPassBtn" class="btn btn-primary" type="button" data-i18n="buyPremiumPass">Купить Premium</button>
+        </div>
+      </div>
+      <div class="season-pass-track-head">
+        <span data-i18n="freeTrack">FREE</span><span data-i18n="premiumTrack">PREMIUM TRACK</span>
+      </div>
+      <div id="seasonPassRewards" class="season-pass-rewards"></div>
+      <p class="microcopy" data-i18n="seasonPassNote">Награды детерминированы. Premium Pass и сезонная косметика не усиливают характеристики персонажа.</p>
+    </section>
+
     <section id="helpPanel" class="panel panel-wide hidden">
       <div class="panel-head">
         <div><p class="eyebrow" data-i18n="training">ТРЕНИРОВКА</p><h2 data-i18n="howToPlay">Как играть</h2></div>
@@ -252,10 +346,33 @@
 
 
     <section id="capsuleOverlay" class="capsule-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="capsuleTitle">
-      <div class="capsule-dialog">
+      <div id="capsuleDialog" class="capsule-dialog">
+        <div id="capsuleFXLayer" class="capsule-fx-layer" aria-hidden="true">
+          <span class="capsule-ray r1"></span><span class="capsule-ray r2"></span><span class="capsule-ray r3"></span><span class="capsule-ray r4"></span>
+          <span class="capsule-spark s1"></span><span class="capsule-spark s2"></span><span class="capsule-spark s3"></span><span class="capsule-spark s4"></span><span class="capsule-spark s5"></span><span class="capsule-spark s6"></span>
+        </div>
+        <div id="mythicBurst" class="mythic-burst hidden" aria-hidden="true">
+          <span class="mythic-burst-wave w1"></span><span class="mythic-burst-wave w2"></span><span class="mythic-burst-wave w3"></span>
+          <span class="mythic-burst-beam b1"></span><span class="mythic-burst-beam b2"></span><span class="mythic-burst-beam b3"></span><span class="mythic-burst-beam b4"></span>
+          <div class="mythic-burst-core">✦</div>
+          <div class="mythic-burst-copy">
+            <strong id="mythicBurstTitle">MYTHIC DROP!</strong>
+            <span id="mythicBurstHint">Exclusive cosmetic unlocked</span>
+          </div>
+        </div>
+        <div id="capsuleIntro" class="capsule-intro hidden" aria-hidden="true">
+          <div class="star-chest-showcase">
+            <div class="star-chest-showcase-glow"></div>
+            <div class="star-chest-showcase-core">✦</div>
+            <div class="star-chest-showcase-ring ring-a"></div>
+            <div class="star-chest-showcase-ring ring-b"></div>
+          </div>
+          <strong id="capsuleIntroTitle">STAR CHEST</strong>
+          <span id="capsuleIntroHint">Preparing premium reward...</span>
+        </div>
         <p class="eyebrow" data-i18n="capsuleOpening">ОТКРЫТИЕ КАПСУЛЫ</p>
         <h2 id="capsuleTitle" data-i18n="capsuleTitle">Косметическая капсула</h2>
-        <div class="capsule-reel-frame">
+        <div id="capsuleReelFrame" class="capsule-reel-frame">
           <div class="capsule-center-marker" aria-hidden="true"></div>
           <div id="capsuleReel" class="capsule-reel"></div>
         </div>
