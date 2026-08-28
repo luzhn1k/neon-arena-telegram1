@@ -1,0 +1,12 @@
+{
+  "name": "neon-arena-telegram",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Neon Arena v1.5.11 as a Telegram Mini App + bot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "DEV_MODE=true node server.js"
+  },
+  "engines": { "node": ">=22.5.0" }
+}
