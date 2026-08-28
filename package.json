@@ -1,8 +1,8 @@
 {
   "name": "neon-arena-telegram",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "private": true,
-  "description": "Neon Arena v1.5.20 - expanded arena, chaotic wave director, menu polish, referrals and Telegram monetization",
+  "description": "Neon Arena v1.5.22 - progressive difficulty balance with calmer early waves and escalating chaotic wave director",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
