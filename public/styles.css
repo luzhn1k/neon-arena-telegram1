@@ -1804,3 +1804,124 @@ html, body {
     margin-bottom:5px !important;
   }
 }
+
+
+/* v1.5.30 — mobile gem: explicit geometry, no transform scaling.
+   This overrides all older translated/scaled versions of the menu ornament. */
+@media (max-width:700px) and (orientation:portrait) {
+  #mainMenu .lead{
+    margin:7px auto 6px !important;
+  }
+
+  #mainMenu .menu-showcase{
+    position:relative !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:100% !important;
+    height:70px !important;
+    min-height:70px !important;
+    margin:0 auto 8px !important;
+    padding:0 !important;
+    transform:none !important;
+    overflow:visible !important;
+    z-index:2 !important;
+    pointer-events:none;
+  }
+
+  #mainMenu .menu-core-visual{
+    position:relative !important;
+    width:70px !important;
+    height:70px !important;
+    min-width:70px !important;
+    min-height:70px !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:none !important;
+    transform-origin:center !important;
+    inset:auto !important;
+  }
+
+  #mainMenu .menu-core-ring,
+  #mainMenu .menu-core-dot,
+  #mainMenu .menu-core-gem{
+    position:absolute !important;
+    left:50% !important;
+    top:50% !important;
+    transform:translate(-50%,-50%) !important;
+  }
+
+  #mainMenu .menu-core-ring.ring-a{
+    width:44px !important;
+    height:44px !important;
+  }
+
+  #mainMenu .menu-core-ring.ring-b{
+    width:60px !important;
+    height:60px !important;
+  }
+
+  #mainMenu .menu-core-gem{
+    width:29px !important;
+    height:29px !important;
+  }
+
+  #mainMenu .menu-core-dot{
+    width:4px !important;
+    height:4px !important;
+  }
+
+  #mainMenu .menu-core-dot.dot-a{
+    margin-left:27px !important;
+    margin-top:-9px !important;
+  }
+
+  #mainMenu .menu-core-dot.dot-b{
+    margin-left:-23px !important;
+    margin-top:12px !important;
+  }
+
+  #mainMenu .menu-stats{
+    position:relative !important;
+    z-index:5 !important;
+    margin:0 0 8px !important;
+  }
+}
+
+@media (max-width:430px) and (orientation:portrait){
+  #mainMenu .menu-showcase{
+    height:64px !important;
+    min-height:64px !important;
+    margin-bottom:7px !important;
+  }
+  #mainMenu .menu-core-visual{
+    width:64px !important;
+    height:64px !important;
+    min-width:64px !important;
+    min-height:64px !important;
+  }
+  #mainMenu .menu-core-ring.ring-a{width:40px !important;height:40px !important}
+  #mainMenu .menu-core-ring.ring-b{width:54px !important;height:54px !important}
+  #mainMenu .menu-core-gem{width:27px !important;height:27px !important}
+  #mainMenu .menu-core-dot.dot-a{margin-left:24px !important;margin-top:-8px !important}
+  #mainMenu .menu-core-dot.dot-b{margin-left:-21px !important;margin-top:11px !important}
+}
+
+@media (max-height:690px) and (orientation:portrait) and (max-width:700px){
+  #mainMenu .menu-showcase{
+    height:58px !important;
+    min-height:58px !important;
+    margin-bottom:6px !important;
+  }
+  #mainMenu .menu-core-visual{
+    width:58px !important;
+    height:58px !important;
+    min-width:58px !important;
+    min-height:58px !important;
+  }
+  #mainMenu .menu-core-ring.ring-a{width:36px !important;height:36px !important}
+  #mainMenu .menu-core-ring.ring-b{width:49px !important;height:49px !important}
+  #mainMenu .menu-core-gem{width:24px !important;height:24px !important}
+  #mainMenu .menu-core-dot.dot-a{margin-left:22px !important;margin-top:-7px !important}
+  #mainMenu .menu-core-dot.dot-b{margin-left:-19px !important;margin-top:10px !important}
+}
