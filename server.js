@@ -174,7 +174,6 @@ CREATE TABLE IF NOT EXISTS payment_events (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_users_leaderboard ON users(best_score DESC, best_score_at ASC, telegram_id ASC);
-CREATE INDEX IF NOT EXISTS idx_users_weekly_leaderboard ON users(weekly_best_week_id, weekly_best_score DESC, weekly_best_score_at ASC, telegram_id ASC);
 CREATE INDEX IF NOT EXISTS idx_purchases_user ON purchases(telegram_id, created_at DESC);
 `);
 
