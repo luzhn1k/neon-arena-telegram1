@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b16">
+  <title>Neon Arena</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+  <script defer src="loader.js"></script>
+</head>
+<body>
+  <main id="app" aria-label="Neon Arena">
+    <canvas id="gameCanvas" aria-label="Игровая арена"></canvas>
+    <section id="bootOverlay" class="boot-overlay" aria-live="polite">
+      <div class="boot-logo"><span></span><i></i></div>
+      <strong>NEON ARENA</strong>
+      <p id="bootText">Загрузка…</p>
+    </section>
+
+    <section id="hud" class="hud hidden" aria-live="polite">
+      <div class="hud-group hud-left">
+        <div class="hud-chip"><span data-i18n="score">Счёт</span><strong id="hudScore">0</strong></div>
+        <div class="hud-chip"><span data-i18n="wave">Волна</span><strong id="hudWave">1</strong></div>
+        <div class="hud-chip"><span data-i18n="combo">Комбо</span><strong id="hudCombo">×1</strong></div>
+      </div>
+      <div class="hud-group hud-right">
+        <div id="hpBar" class="hp-bar" aria-label="Здоровье"></div>
+        <button id="pauseBtn" class="icon-btn" aria-label="Пауза" title="Пауза">Ⅱ</button>
+      </div>
+    </section>
+
+    <section id="mainMenu" class="panel panel-center menu-shell hidden">
+      <div class="brand-mark" aria-hidden="true"><span></span><i></i></div>
+      <p class="eyebrow">RANKED SURVIVAL</p>
+      <h1>NEON ARENA</h1>
+      <p class="lead" data-i18n="tagline">Выживай. Собирай комбо. Поднимайся в рейтинге.</p>
+      <div class="menu-showcase" aria-hidden="true">
+        <div class="menu-core-visual">
+          <span class="menu-core-ring ring-a"></span><span class="menu-core-ring ring-b"></span><span class="menu-core-dot dot-a"></span><span class="menu-core-dot dot-b"></span><span class="menu-core-gem"></span>
+        </div>
+      </div>
+      <div class="menu-stats">
+        <div class="record-line"><span data-i18n="best">Рекорд</span><strong id="menuBest">0</strong></div>
+        <div class="currency-line"><span data-i18n="currency">Неон-кредиты</span><strong id="menuCoins">0</strong><i>◆</i></div>
+        <div class="currency-line crystal-currency"><span data-i18n="crystals">Нео-кристаллы</span><strong id="menuCrystals">0</strong><i>◈</i></div>
+      </div>
+      <div class="menu-actions">
+        <button id="playBtn" class="btn btn-primary" data-i18n="play">Играть</button>
+        <button id="leaderboardBtn" class="btn" data-i18n="leaderboard">Рейтинг</button>
+        <button id="shopBtn" class="btn" data-i18n="shop">Магазин</button>
+        <button id="rewardsBtn" class="btn btn-daily" data-i18n="rewards">Награды</button>
+        <button id="helpBtn" class="btn" data-i18n="howToPlay">Как играть</button>
+      </div>
+      <button id="loginBtn" class="btn btn-login hidden"></button>
+      <p id="authHint" class="microcopy"></p>
+      <p id="rewardStatus" class="microcopy daily-status"></p>
+      <p class="version">v1.5.11 · TELEGRAM</p>
+    </section>
+
+    <section id="upgradePanel" class="panel panel-wide hidden">
+      <p class="eyebrow" data-i18n="upgradeEyebrow">УСИЛЕНИЕ</p>
+      <h2 data-i18n="chooseUpgrade">Выбери улучшение</h2>
+      <p class="microcopy upgrade-hint" data-i18n="rarityHint">Редкость определяет силу эффекта.</p>
+      <div id="upgradeChoices" class="upgrade-grid"></div>
+    </section>
+
+    <section id="gameOverPanel" class="panel panel-center hidden">
+      <p class="eyebrow" data-i18n="runComplete">ЗАБЕГ ЗАВЕРШЁН</p>
+      <h2 data-i18n="gameOver">Арена окончена</h2>
+      <div class="result-grid">
+        <div><span data-i18n="score">Счёт</span><strong id="finalScore">0</strong></div>
+        <div><span data-i18n="wave">Волна</span><strong id="finalWave">1</strong></div>
+        <div><span data-i18n="kills">Побеждено</span><strong id="finalKills">0</strong></div>
+        <div><span data-i18n="bestCombo">Лучшее комбо</span><strong id="finalCombo">×1</strong></div>
+      </div>
+      <p id="newRecord" class="new-record hidden" data-i18n="newRecord">Новый рекорд!</p>
+      <p id="rankLine" class="rank-line"></p>
+      <div class="menu-actions">
+        <button id="retryBtn" class="btn btn-primary" data-i18n="again">Ещё раз</button>
+        <button id="resultLeaderboardBtn" class="btn" data-i18n="leaderboard">Рейтинг</button>
+        <button id="menuBtn" class="btn" data-i18n="menu">Меню</button>
+      </div>
+    </section>
+
+    <section id="leaderboardPanel" class="panel panel-wide hidden">
+      <div class="panel-head">
+        <div><p class="eyebrow">GLOBAL</p><h2 data-i18n="leaderboard">Рейтинг</h2></div>
+        <button id="closeLeaderboardBtn" class="icon-btn" aria-label="Закрыть">×</button>
+      </div>
+      <div class="leaderboard-intro">
+        <div>
+          <span class="leaderboard-kicker" data-i18n="globalBoard">ГЛОБАЛЬНЫЙ РЕЙТИНГ</span>
+          <p data-i18n="globalBoardHint">Лучшие результаты игроков Neon Arena</p>
+        </div>
+        <div id="leaderboardPlayerCard" class="leaderboard-player-card hidden">
+          <span data-i18n="yourPosition">ВАША ПОЗИЦИЯ</span>
+          <strong id="leaderboardPlayerRank">—</strong>
+          <em id="leaderboardPlayerScore">0</em>
+        </div>
+      </div>
+      <div id="leaderboardStatus" class="status-text"></div>
+      <div id="leaderboardPodium" class="leaderboard-podium hidden"></div>
+      <div id="leaderboardTableHead" class="leaderboard-table-head hidden">
+        <span data-i18n="place">Место</span><span data-i18n="leaderboardPlayer">Игрок</span><span data-i18n="result">Результат</span>
+      </div>
+      <div id="leaderboardList" class="leaderboard-list"></div>
+      <div id="leaderboardRewardBox" class="leaderboard-reward-box">
+        <div>
+          <span class="reward-tag" data-i18n="leaderboardRewardsTag">НАГРАДЫ РЕЙТИНГА</span>
+          <strong data-i18n="leaderboardRewardsTitle">За попадание и удержание</strong>
+          <p id="leaderboardRewardText"></p>
+        </div>
+        <button id="claimLeaderboardRewardBtn" class="btn btn-primary" disabled></button>
+      </div>
+      <div class="leaderboard-reward-box crystal-reward-box">
+        <div><span class="reward-tag" data-i18n="crystalShopTag">НЕО-КРИСТАЛЛЫ</span><strong data-i18n="crystalTopRewardTitle">Нео-кристаллы за топ-10</strong><p id="leaderboardCrystalRewardText"></p></div>
+        <button id="claimLeaderboardCrystalBtn" class="btn btn-crystal" disabled></button>
+      </div>
+      <p class="microcopy" data-i18n="leaderboardNote">Глобальный результат привязан к вашему Telegram-аккаунту.</p>
+    </section>
+
+    <section id="shopPanel" class="panel panel-wide hidden">
+      <div class="panel-head">
+        <div><p class="eyebrow" data-i18n="cosmetics">КОСМЕТИКА</p><h2 data-i18n="shop">Магазин</h2></div>
+        <button id="closeShopBtn" class="icon-btn" aria-label="Закрыть">×</button>
+      </div>
+      <div class="shop-wallets"><div class="shop-wallet"><span data-i18n="balance">Баланс</span><strong id="shopCoins">0</strong><i>◆</i></div><div class="shop-wallet crystal-wallet"><span data-i18n="crystals">Нео-кристаллы</span><strong id="shopCrystals">0</strong><i>◈</i></div></div>
+      <div class="rarity-legend">
+        <span class="rarity-common" data-i18n="rarityCommon">Обычная</span>
+        <span class="rarity-rare" data-i18n="rarityRare">Редкая</span>
+        <span class="rarity-epic" data-i18n="rarityEpic">Эпическая</span>
+        <span class="rarity-legendary" data-i18n="rarityLegendary">Легендарная</span>
+        <span class="rarity-mythic" data-i18n="rarityMythic">Мифическая</span>
+      </div>
+
+      <div class="shop-live-preview">
+        <div class="shop-live-copy">
+          <span class="eyebrow" data-i18n="livePreview">ЖИВОЙ ПРЕДПРОСМОТР</span>
+          <div class="shop-live-title"><strong id="shopPreviewName">—</strong><span id="shopPreviewKind">—</span></div>
+          <span id="shopPreviewRarity" class="rarity-badge rarity-common">—</span>
+          <p data-i18n="previewHint">Наведи на предмет или листай стрелками</p>
+        </div>
+        <div id="shopPreviewStage" class="shop-preview-stage" aria-live="polite"></div>
+        <div class="shop-preview-nav">
+          <button id="shopPreviewPrev" class="icon-btn" type="button" aria-label="Предыдущий">‹</button>
+          <button id="shopPreviewNext" class="icon-btn" type="button" aria-label="Следующий">›</button>
+        </div>
+      </div>
+
+      <div class="shop-section crystal-section">
+        <div class="shop-section-head"><h3 data-i18n="crystalShopTitle">Мифическая коллекция</h3><span data-i18n="crystalShopHint">Эксклюзивная косметика за нео-кристаллы. Мифическая редкость выше легендарной.</span></div>
+        <div class="crystal-shop-layout">
+          <article class="crystal-ad-card"><div><span class="reward-tag" data-i18n="adReward">ЗА РЕКЛАМУ</span><h4 data-i18n="crystalAdTitle">10 нео-кристаллов</h4><p id="adCrystalsText"></p></div><button id="claimAdCrystalsBtn" class="btn btn-crystal"></button></article>
+          <div id="crystalPacksWrap" class="crystal-packs hidden"><div class="crystal-pack-heading"><strong data-i18n="crystalPacksTitle">Пополнить нео-кристаллы</strong><span data-i18n="crystalPacksHint">Покупки проходят через Telegram Stars.</span></div><div id="crystalPackShop" class="crystal-pack-grid"></div></div>
+        </div>
+      </div>
+      <div class="shop-section chest-section">
+        <div class="shop-section-head"><h3 data-i18n="chestsTitle">Сундуки</h3><span data-i18n="chestsHint">Чем выше редкость сундука, тем выше шанс редкой косметики</span></div>
+        <div id="chestShop" class="chest-grid"></div>
+      </div>
+      <div class="shop-section">
+        <div class="shop-section-head"><h3 data-i18n="characterSkins">Скины персонажа</h3><span data-i18n="cosmeticOnly">Только внешний вид</span></div>
+        <div id="skinShop" class="shop-grid"></div>
+      </div>
+      <div class="shop-section">
+        <div class="shop-section-head"><h3 data-i18n="bulletStyles">Виды пуль</h3><span data-i18n="cosmeticOnly">Только внешний вид</span></div>
+        <div id="bulletShop" class="shop-grid"></div>
+      </div>
+      <div class="shop-section">
+        <div class="shop-section-head"><h3 data-i18n="characterTrails">Следы персонажа</h3><span data-i18n="cosmeticOnly">Только внешний вид</span></div>
+        <div id="trailShop" class="shop-grid"></div>
+      </div>
+    </section>
+
+    <section id="rewardsPanel" class="panel panel-wide hidden">
+      <div class="panel-head">
+        <div><p class="eyebrow" data-i18n="rewardCenter">ЦЕНТР НАГРАД</p><h2 data-i18n="rewards">Награды</h2></div>
+        <button id="closeRewardsBtn" class="icon-btn" aria-label="Закрыть">×</button>
+      </div>
+      <div class="reward-summary">
+        <div><span data-i18n="collection">Коллекция</span><strong id="collectionCount">0/0</strong></div>
+        <div><span data-i18n="weeklyProgress">Недельный прогресс</span><strong id="weeklyProgress">0/7</strong></div>
+      </div>
+      <div class="reward-grid">
+        <article class="reward-card">
+          <div class="reward-icon">◆</div>
+          <div><span class="reward-tag" data-i18n="dailyReward">ЕЖЕДНЕВНО</span><h3 data-i18n="dailyTitle">Ежедневный вход</h3><p id="dailyRewardText"></p></div>
+          <button id="claimDailyBtn" class="btn btn-primary"></button>
+        </article>
+        <article class="reward-card">
+          <div class="reward-icon">✦</div>
+          <div><span class="reward-tag" data-i18n="weeklyReward">ЕЖЕНЕДЕЛЬНО</span><h3 data-i18n="weeklyTitle">Недельная капсула</h3><p id="weeklyRewardText"></p></div>
+          <button id="claimWeeklyBtn" class="btn btn-primary"></button>
+        </article>
+        <article class="reward-card reward-ad">
+          <div class="reward-icon">◆</div>
+          <div><span class="reward-tag" data-i18n="adReward">ЗА РЕКЛАМУ</span><h3 data-i18n="adCreditsTitle">100 неон-кредитов</h3><p id="adCreditsText"></p></div>
+          <button id="claimAdCreditsBtn" class="btn"></button>
+        </article>
+        <article class="reward-card reward-ad">
+          <div class="reward-icon">✦</div>
+          <div><span class="reward-tag" data-i18n="adReward">ЗА РЕКЛАМУ</span><h3 data-i18n="adCapsuleTitle">Косметическая капсула</h3><p id="adCapsuleText"></p></div>
+          <button id="claimAdCapsuleBtn" class="btn"></button>
+        </article>
+      </div>
+      <section class="quest-section" aria-labelledby="dailyQuestsTitle">
+        <div class="quest-section-head">
+          <div>
+            <span class="reward-tag" data-i18n="dailyQuestsTag">ЕЖЕДНЕВНЫЕ КВЕСТЫ</span>
+            <h3 id="dailyQuestsTitle" data-i18n="dailyQuestsTitle">Задания дня</h3>
+          </div>
+          <span id="questResetText" class="quest-reset"></span>
+        </div>
+        <div id="dailyQuestList" class="quest-list"></div>
+        <div id="dailyQuestBonus" class="quest-bonus">
+          <div>
+            <span class="reward-tag" data-i18n="dailyQuestBonusTag">БОНУС ЗА ВСЕ КВЕСТЫ</span>
+            <strong data-i18n="dailyQuestBonusTitle">Закрой все задания дня</strong>
+            <p id="dailyQuestBonusText"></p>
+          </div>
+          <button id="claimQuestBonusBtn" class="btn btn-primary"></button>
+        </div>
+      </section>
+
+      <div class="odds-box">
+        <h3 data-i18n="dropChances">Шансы косметики</h3>
+        <div class="odds-row"><span class="rarity-common"><b>65%</b> <i data-i18n="rarityCommon">Обычная</i></span><span class="rarity-rare"><b>26%</b> <i data-i18n="rarityRare">Редкая</i></span><span class="rarity-epic"><b>8%</b> <i data-i18n="rarityEpic">Эпическая</i></span><span class="rarity-legendary"><b>1%</b> <i data-i18n="rarityLegendary">Легендарная</i></span></div>
+        <p class="microcopy" data-i18n="legendaryEffectNote">Эпическая и легендарная косметика добавляет визуальные эффекты на арену, но не усиливает персонажа.</p>
+        <p class="microcopy" data-i18n="duplicateNote">Повторный предмет из капсулы автоматически превращается в неон-кредиты.</p>
+      </div>
+    </section>
+
+    <section id="helpPanel" class="panel panel-wide hidden">
+      <div class="panel-head">
+        <div><p class="eyebrow" data-i18n="training">ТРЕНИРОВКА</p><h2 data-i18n="howToPlay">Как играть</h2></div>
+        <button id="closeHelpBtn" class="icon-btn" aria-label="Закрыть">×</button>
+      </div>
+      <div class="help-grid">
+        <article><b>01</b><h3 data-i18n="moveTitle">Двигайся</h3><p data-i18n="moveText">WASD/стрелки на ПК. На телефоне веди пальцем по арене.</p></article>
+        <article><b>02</b><h3 data-i18n="attackTitle">Атакуй</h3><p data-i18n="attackText">Оружие автоматически стреляет в ближайшего врага.</p></article>
+        <article><b>03</b><h3 data-i18n="comboTitle">Держи комбо</h3><p data-i18n="comboText">Быстрые победы увеличивают множитель очков. Получение урона сбрасывает комбо.</p></article>
+        <article><b>04</b><h3 data-i18n="upgradeTitle">Усиливайся</h3><p data-i18n="upgradeText">После каждой волны выбирай усиление. Редкость определяет его силу.</p></article>
+      </div>
+      <button id="helpPlayBtn" class="btn btn-primary" data-i18n="enterArena">На арену</button>
+    </section>
+
+    <section id="pausePanel" class="panel panel-center hidden">
+      <p class="eyebrow">PAUSE</p><h2 data-i18n="paused">Пауза</h2>
+      <div class="menu-actions"><button id="resumeBtn" class="btn btn-primary" data-i18n="continue">Продолжить</button><button id="pauseMenuBtn" class="btn" data-i18n="menu">Меню</button></div>
+    </section>
+
+
+    <section id="capsuleOverlay" class="capsule-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="capsuleTitle">
+      <div class="capsule-dialog">
+        <p class="eyebrow" data-i18n="capsuleOpening">ОТКРЫТИЕ КАПСУЛЫ</p>
+        <h2 id="capsuleTitle" data-i18n="capsuleTitle">Косметическая капсула</h2>
+        <div class="capsule-reel-frame">
+          <div class="capsule-center-marker" aria-hidden="true"></div>
+          <div id="capsuleReel" class="capsule-reel"></div>
+        </div>
+        <div id="capsuleResult" class="capsule-result hidden">
+          <div id="capsuleResultPreview" class="capsule-result-preview"></div>
+          <div>
+            <span id="capsuleResultRarity" class="rarity-badge"></span>
+            <h3 id="capsuleResultName"></h3>
+            <p id="capsuleResultNote" class="microcopy"></p>
+          </div>
+        </div>
+        <div class="capsule-actions">
+          <button id="capsuleAgainBtn" class="btn btn-primary hidden" data-i18n="openAgain">Открыть ещё</button>
+          <button id="capsuleCloseBtn" class="btn" data-i18n="close">Закрыть</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden" role="status"></div>
+  </main>
+</body>
+</html>
