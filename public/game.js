@@ -21,6 +21,7 @@
     shop: document.getElementById('shopPanel'),
     rewards: document.getElementById('rewardsPanel'),
     seasonPass: document.getElementById('seasonPassPanel'),
+    referral: document.getElementById('referralPanel'),
     help: document.getElementById('helpPanel'),
     pause: document.getElementById('pausePanel'),
   };
@@ -57,18 +58,6 @@
     mythicFeaturePrice: document.getElementById('mythicFeaturePrice'),
     mythicFeatureAction: document.getElementById('mythicFeatureAction'),
     starChestShop: document.getElementById('starChestShop'),
-    legendaryPityText: document.getElementById('legendaryPityText'),
-    legendaryPityBar: document.getElementById('legendaryPityBar'),
-    mythicPityText: document.getElementById('mythicPityText'),
-    mythicPityBar: document.getElementById('mythicPityBar'),
-    seasonPassId: document.getElementById('seasonPassId'),
-    seasonPassLevel: document.getElementById('seasonPassLevel'),
-    seasonPassTimer: document.getElementById('seasonPassTimer'),
-    seasonPassXpBar: document.getElementById('seasonPassXpBar'),
-    seasonPassXpText: document.getElementById('seasonPassXpText'),
-    seasonPassPrice: document.getElementById('seasonPassPrice'),
-    buySeasonPassBtn: document.getElementById('buySeasonPassBtn'),
-    seasonPassRewards: document.getElementById('seasonPassRewards'),
     loginBtn: document.getElementById('loginBtn'),
     authHint: document.getElementById('authHint'),
     upgradeChoices: document.getElementById('upgradeChoices'),
@@ -102,15 +91,6 @@
     leaderboardCrystalRewardText: document.getElementById('leaderboardCrystalRewardText'),
     claimLeaderboardCrystalBtn: document.getElementById('claimLeaderboardCrystalBtn'),
     capsuleOverlay: document.getElementById('capsuleOverlay'),
-    capsuleDialog: document.getElementById('capsuleDialog'),
-    capsuleFXLayer: document.getElementById('capsuleFXLayer'),
-    mythicBurst: document.getElementById('mythicBurst'),
-    mythicBurstTitle: document.getElementById('mythicBurstTitle'),
-    mythicBurstHint: document.getElementById('mythicBurstHint'),
-    capsuleIntro: document.getElementById('capsuleIntro'),
-    capsuleIntroTitle: document.getElementById('capsuleIntroTitle'),
-    capsuleIntroHint: document.getElementById('capsuleIntroHint'),
-    capsuleReelFrame: document.getElementById('capsuleReelFrame'),
     capsuleReel: document.getElementById('capsuleReel'),
     capsuleResult: document.getElementById('capsuleResult'),
     capsuleResultPreview: document.getElementById('capsuleResultPreview'),
@@ -124,6 +104,28 @@
     dailyQuestBonus: document.getElementById('dailyQuestBonus'),
     dailyQuestBonusText: document.getElementById('dailyQuestBonusText'),
     claimQuestBonusBtn: document.getElementById('claimQuestBonusBtn'),
+    seasonProgressLabel: document.getElementById('seasonProgressLabel'),
+    seasonLevelLabel: document.getElementById('seasonLevelLabel'),
+    seasonXpHint: document.getElementById('seasonXpHint'),
+    seasonProgressFill: document.getElementById('seasonProgressFill'),
+    seasonPassList: document.getElementById('seasonPassList'),
+    seasonNextReward: document.getElementById('seasonNextReward'),
+    seasonClaimedLabel: document.getElementById('seasonClaimedLabel'),
+    seasonTrackNote: document.getElementById('seasonTrackNote'),
+    seasonPassPrice: document.getElementById('seasonPassPrice'),
+    buySeasonPassBtn: document.getElementById('buySeasonPassBtn'),
+    seasonPassSupportText: document.getElementById('seasonPassSupportText'),
+    referralCode: document.getElementById('referralCode'),
+    referralActiveCount: document.getElementById('referralActiveCount'),
+    referralPendingCount: document.getElementById('referralPendingCount'),
+    referralWeeklyCount: document.getElementById('referralWeeklyCount'),
+    referralInviteStatus: document.getElementById('referralInviteStatus'),
+    referralMilestones: document.getElementById('referralMilestones'),
+    referralFriendsList: document.getElementById('referralFriendsList'),
+    referralWeeklyTop: document.getElementById('referralWeeklyTop'),
+    referralWeekLabel: document.getElementById('referralWeekLabel'),
+    shareReferralBtn: document.getElementById('shareReferralBtn'),
+    copyReferralBtn: document.getElementById('copyReferralBtn'),
   };
 
   const I18N = {
@@ -162,7 +164,9 @@
       commonChance:'65%', rareChance:'26%', epicChance:'8%', legendaryChance:'1%', testCapsuleTitle:'Тестовая капсула', testCapsuleText:'Открывай без ограничений. Лента прокрутит все предметы и остановится на выпавшем.', openTestCapsule:'Открыть тестовую капсулу', capsuleOpening:'ОТКРЫТИЕ КАПСУЛЫ', capsuleTitle:'Косметическая капсула', openAgain:'Открыть ещё', close:'Закрыть', newCosmetic:'Новый предмет добавлен в коллекцию.', testDrop:'Тестовый дроп — прогресс и коллекция не изменяются.',
 
       crystalShopTag:'НЕО-КРИСТАЛЛЫ', crystalShopTitle:'Мифическая коллекция', crystalShopHint:'Эксклюзивная косметика за нео-кристаллы. Мифическая редкость выше легендарной.', crystalTopRewardTitle:'Еженедельная награда топ-10', crystalTopRewardAuth:'Откройте игру через Telegram, чтобы участвовать в недельном рейтинге.', crystalTopRewardNeed:'Войдите в топ-10 недели, чтобы забрать награду.', crystalTopRewardReady:'Место #{rank}: награда недели +{crystals} ◈.', crystalTopRewardClaim:'Забрать +{crystals} ◈', crystalTopRewardClaimed:'Награда этой недели уже получена.', crystalTopRewardReceived:'Получено {crystals} нео-кристаллов!', crystalAdTitle:'10 нео-кристаллов', crystalAdReady:'Посмотреть рекламу и получить 10 ◈. Доступно раз в час.', crystalAdCooldown:'Следующие 10 ◈ через {time}.', crystalAdWatch:'Смотреть рекламу → 10 ◈', crystalAdReceived:'Получено 10 нео-кристаллов!', crystalPacksTitle:'Пополнить нео-кристаллы', crystalPacksHint:'Покупки проходят через Telegram Stars.', crystalPackBuy:'Купить', crystalPackUnavailable:'Покупки сейчас недоступны.', crystalLoginRequired:'Для покупки нео-кристаллов откройте игру как Telegram Mini App.', notEnoughCrystals:'Недостаточно нео-кристаллов.', crystalPurchaseFailed:'Покупка не завершена.', crystalPurchaseDone:'Получено {crystals} нео-кристаллов!', crystalPurchasePending:'Платёж подтверждается Telegram…', mythicOnly:'Только за нео-кристаллы',
-      starChestsTitle:'Сундуки за Stars', starChestsHint:'Премиальные сундуки за Telegram Stars. Внутри все редкости, включая mythic.', starChest10:'Сундук 10 Stars', starChest20:'Сундук 20 Stars', starChest30:'Сундук 30 Stars', starChestDesc10:'Базовый premium-дроп: mythic 1%, legendary 15%.', starChestDesc20:'Улучшенный сундук: mythic 1%, legendary 17%.', starChestDesc30:'Топовый сундук: mythic 1%, legendary 20%.', starChestBuy:'Открыть за {stars} ⭐', starChestOdds:'Шансы: {odds}', starChestOpened:'Премиальный сундук открыт!', starChestUnavailable:'Платёж за сундук сейчас недоступен.', starChestNeedTelegram:'Откройте игру как Telegram Mini App, чтобы купить сундук за Stars.', starChestPurchaseFailed:'Покупка сундука не завершена.', starChestOpeningHint:'Готовим премиальную награду…', mythicDrop:'МИФИЧЕСКИЙ ДРОП!', mythicDropHint:'Эксклюзивный косметический предмет с особыми визуальными эффектами.', chestTier10Hint:'Быстрый premium-ролл · повышенный шанс rare/epic.', chestTier20Hint:'Улучшенный сундук · больше epic и legendary наград.', chestTier30Hint:'Топовый сундук · максимальный premium-эффект и лучшие шансы.', mythicBurstHint:'Ультра-редкая награда активирована.', legendaryGuarantee:'Гарант legendary', mythicGuarantee:'Гарант mythic', pitySharedHint:'Гарант общий для всех сундуков за Stars. Legendary — максимум на 10-м открытии, mythic — максимум на 100-м.', pityRemaining:'До гаранта: {count}', pityReady:'Следующее открытие — гарант!', seasonPass:'Season Pass', seasonPassTitle:'Neon Season Pass', seasonPassHint:'20 уровней на 28 дней. Баланс рассчитан примерно на 35–40 обычных забегов. Premium открывает второй трек наград.', seasonLevel:'Уровень', premiumTrack:'PREMIUM TRACK', premiumPassTitle:'Premium Season Pass', premiumPassHint:'Дополнительные кристаллы и эксклюзивная сезонная косметика. Без боевых преимуществ.', price:'Стоимость', buyPremiumPass:'Купить Premium', premiumOwned:'Premium активирован', freeTrack:'FREE', seasonPassNote:'Награды детерминированы. Premium Pass и сезонная косметика не усиливают характеристики персонажа.', passExclusive:'SEASON PASS', passExclusiveHint:'Этот предмет можно получить только в Season Pass.', passClaim:'Забрать', passLocked:'Уровень не открыт', passPremiumRequired:'Нужен Premium Pass', passClaimed:'Получено', passPurchaseDone:'Premium Season Pass активирован!', passPurchaseFailed:'Покупка Season Pass не завершена.', passUnavailable:'Season Pass сейчас недоступен.', passEndsIn:'До конца сезона: {time}', passXp:'{xp} / {next} XP', passXpGained:'Season Pass: +{xp} XP', passRewardCredits:'{amount} ◆', passRewardCrystals:'{amount} ◈', passRewardCosmetic:'Сезонная косметика', skinSeasonFlux:'Сезонный импульс', skinSeasonCrown:'Неоновая корона', skinSeasonAscendant:'Вознесение', bulletSeasonPulse:'Сезонный разряд', bulletSeasonNova:'Сезонная нова', trailSeasonComet:'Сезонная комета', trailSeasonHalo:'Сезонное гало',
+      seasonPass:'Season Pass', seasonPassTag:'NEON PASS', seasonPremiumBadge:'PREMIUM TRACK', seasonHeroTitle:'Коллекционный пропуск сезона', seasonHeroText:'Открывай уровни, забирай награды и получай эксклюзивную косметику с премиальной подачей.', seasonPassBuy:'Купить Premium Pass', seasonPassOwned:'Premium Pass активен', seasonPassSupport:'Премиум-трек открывает дополнительные награды текущего сезона.', seasonXpTag:'СЕЗОННЫЙ ОПЫТ', seasonCurrentRewardTag:'СЛЕДУЮЩАЯ НАГРАДА', seasonProgressStat:'ПРОГРЕСС', seasonClaimedHint:'Наград получено', seasonFreeLane:'FREE TRACK', seasonPremiumLane:'PREMIUM TRACK', seasonFootnote:'Косметические награды не усиливают персонажа. Premium Pass открывает только дополнительные визуальные награды и валюту сезона.', seasonTierReady:'Можно забрать', seasonTierClaimed:'Получено', seasonTierLocked:'Осталось {xp} XP', seasonTrackLocked:'Купите Premium Pass', seasonXpToNext:'До следующего уровня: {xp} XP', seasonMaxLevel:'Максимальный уровень достигнут', seasonSeasonNote:'Премиум активен · все дополнительные награды сезона открыты.', seasonSeasonLocked:'Premium Pass добавляет ещё 20 наград, кристаллы и эксклюзивную косметику.', seasonRewardCoins:'{coins} неон-кредитов', seasonRewardCrystals:'{crystals} нео-кристаллов', seasonRewardCapsule:'Косметическая капсула', seasonRewardCosmetic:'Эксклюзивная косметика', seasonRewardReceived:'Награда сезона получена!', seasonXpEarned:'Сезонный опыт +{xp} XP', seasonPassNeedTelegram:'Откройте игру как Telegram Mini App, чтобы купить Premium Pass.', seasonPassUnavailable:'Покупка Premium Pass сейчас недоступна.', seasonPassPurchaseFailed:'Покупка Premium Pass не завершена.', seasonPassUnlocked:'Premium Pass активирован!',
+      referralMenu:'NEON CREW', referralTag:'NEON CREW', referralTitle:'Приглашай друзей', referralHeroKicker:'СОБЕРИ СВОЮ КОМАНДУ', referralHeroTitle:'Друзья играют — ты открываешь редкую косметику', referralHeroText:'Друг засчитывается после 3 полноценных забегов. Никаких наград за простой клик — только активные игроки.', referralShare:'Пригласить друзей', referralCopy:'Копировать ссылку', referralCopied:'Ссылка скопирована', referralCode:'Код', referralActive:'Активные друзья', referralPending:'На проверке', referralWeekly:'За неделю', referralPassTag:'REFERRAL PASS', referralPassTitle:'Награды за активных друзей', referralPassHint:'Эти награды нельзя получить за спам приглашениями: учитываются только квалифицированные игроки.', referralFriendsTag:'ТВОЯ КОМАНДА', referralFriendsTitle:'Приглашённые игроки', referralWeeklyTopTag:'НЕДЕЛЬНЫЙ ТОП', referralWeeklyTopTitle:'Лучшие рекрутеры', referralRulesTitle:'Как засчитывается друг', referralRulesText:'Игрок должен впервые открыть Mini App по вашей ссылке и завершить 3 забега минимум по 10 секунд. Саморефералы и повторная привязка не учитываются.', referralLoading:'Загружаем NEON CREW…', referralEmpty:'Пока никого нет. Отправь персональную ссылку другу.', referralTopEmpty:'На этой неделе ещё нет квалифицированных приглашений.', referralGames:'Забеги {games}/3', referralQualified:'Активен', referralInviteBound:'Ты пришёл по приглашению. Заверши ещё {runs} забега, чтобы оба получили бонус.', referralInviteQualified:'Реферальный бонус активирован!', referralWelcome:'За активацию: +200 ◆ и +10 ◈', referralClaim:'Забрать', referralClaimed:'Получено', referralLocked:'Нужно {count} друзей', referralMilestoneFriends:'{count} активных друзей', referralRewardCoins:'+{coins} ◆', referralRewardCrystals:'+{crystals} ◈', referralRewardCosmetic:'Эксклюзив: {name}', referralRewardCombo:'{a} · {b}', referralClaimedToast:'Реферальная награда получена!', referralBindSuccess:'Приглашение привязано. Сыграй 3 полноценных забега.', referralBindIgnored:'Реферальная ссылка не применена.', referralShareText:'Залетай в Neon Arena — выживай, собирай комбо и соревнуйся за недельный рейтинг ⚡', referralWeek:'Неделя {week}', referralExclusive:'ТОЛЬКО REFERRAL', skinReferralCommander:'Командир сети', skinReferralArchitect:'Архитектор', bulletReferralNetworkPulse:'Сетевой импульс', trailReferralSignal:'Сигнальный след',
+      starChestsTitle:'Сундуки за Stars', starChestsHint:'Премиальные сундуки за Telegram Stars. Внутри все редкости, включая mythic.', starChest10:'Сундук 10 Stars', starChest20:'Сундук 20 Stars', starChest30:'Сундук 30 Stars', starChestDesc10:'Базовый premium-дроп: mythic 1%, legendary 15%.', starChestDesc20:'Улучшенный сундук: mythic 1%, legendary 17%.', starChestDesc30:'Топовый сундук: mythic 1%, legendary 20%.', starChestBuy:'Открыть за {stars} ⭐', starChestOdds:'Шансы: {odds}', starChestOpened:'Премиальный сундук открыт!', starChestUnavailable:'Платёж за сундук сейчас недоступен.', starChestNeedTelegram:'Откройте игру как Telegram Mini App, чтобы купить сундук за Stars.', starChestPurchaseFailed:'Покупка сундука не завершена.',
       mythicVaultTag:'MYTHIC VAULT', mythicVaultTitle:'Магазин mythic-косметики', mythicVaultHint:'Премиальная витрина самой редкой косметики за нео-кристаллы.', mythicVaultFeatured:'ПРЕМИАЛЬНАЯ ВИТРИНА', mythicVaultPrice:'Стоимость', mythicVaultGridTitle:'Все mythic-предметы', mythicVaultGridHint:'Выбери предмет, чтобы открыть подробный предпросмотр и купить его за нео-кристаллы.',
       skinQuantum:'Квант', skinPhoenix:'Феникс', skinAstral:'Астрал', skinMint:'Мята', skinSunset:'Закат', skinThunder:'Гроза', skinJade:'Нефрит', skinVelvet:'Бархат', skinHolo:'Голограмма', skinMonarch:'Монарх', skinSupernova:'Сверхновая', skinSeraph:'Серафим', skinAbyssal:'Бездна', bulletCelestial:'Небесный импульс', bulletDragon:'Драконий импульс', bulletVoidLance:'Копьё пустоты', bulletBeamlet:'Луч', bulletGlimmer:'Искра', bulletVortex:'Вихрь', bulletEmberBolt:'Тлеющий болт', bulletBlossom:'Цветение', bulletOverclock:'Разгон', bulletCrownShot:'Корона', bulletStormCore:'Штормовое ядро', bulletSeraphic:'Серафический луч', bulletBlackstar:'Чёрная звезда', trailGalaxy:'Галактический след', trailLightning:'Разлом молнии', trailCosmicRoyal:'Королевский космос', trailShimmer:'Мерцание', trailDrift:'Дрифт', trailSparkline:'Искролиния', trailMist:'Туманность', trailVelvet:'Бархатный след', trailPixel:'Пиксельный след', trailComet:'Кометный след', trailHalo:'Гало', trailSeraph:'След серафима', trailVoidStorm:'Шторм пустоты',
       skinAqua:'Аква', skinMagenta:'Маджента', skinLime:'Лайм', skinSolar:'Солар', skinVoid:'Войд', skinIce:'Лёд', skinEmber:'Эмбер', skinGhost:'Фантом', skinRoyal:'Роял', skinNova:'Нова', skinPrism:'Призма',
@@ -196,7 +200,9 @@
       dailyQuestBonusReady:'All quests complete: +200 ◆ and 1 cosmetic capsule.', dailyQuestBonusNeed:'Quests complete: {done}/{total}.', questClaim:'Claim', questClaimed:'Claimed', questRewardCredits:'+{coins} ◆', questRewardCapsule:'Cosmetic capsule', questKills:'Defeat {target} enemies', questScore:'Score {target} in one run', questCombo:'Build a ×{target} combo', questWave:'Reach wave {target}', questGames:'Finish {target} runs', questBoss:'Defeat a boss', duplicateNote:'Duplicate capsule drops automatically convert into neon credits.', commonChance:'65%', rareChance:'26%', epicChance:'8%', legendaryChance:'1%', testCapsuleTitle:'Test capsule', testCapsuleText:'Open without limits. The reel scrolls through every item and stops on the drop.', openTestCapsule:'Open test capsule', capsuleOpening:'CAPSULE OPENING', capsuleTitle:'Cosmetic capsule', openAgain:'Open again', close:'Close', newCosmetic:'New item added to your collection.', testDrop:'Test drop — progress and collection are not changed.',
 
       crystalShopTag:'NEO CRYSTALS', crystalShopTitle:'Mythic collection', crystalShopHint:'Exclusive cosmetics for Neo Crystals. Mythic rarity is above Legendary.', crystalTopRewardTitle:'Weekly top-10 reward', crystalTopRewardAuth:'Open the game through Telegram to join the weekly leaderboard.', crystalTopRewardNeed:'Reach the weekly top 10 to earn Neo Crystals.', crystalTopRewardReady:'Rank #{rank}: weekly reward +{crystals} ◈.', crystalTopRewardClaim:'Claim +{crystals} ◈', crystalTopRewardClaimed:'This week’s reward has already been claimed.', crystalTopRewardReceived:'Received {crystals} Neo Crystals!', crystalAdTitle:'10 Neo Crystals', crystalAdReady:'Watch a rewarded ad and get 10 ◈. Available once per hour.', crystalAdCooldown:'Next 10 ◈ in {time}.', crystalAdWatch:'Watch ad → 10 ◈', crystalAdReceived:'Received 10 Neo Crystals!', crystalPacksTitle:'Get Neo Crystals', crystalPacksHint:'Purchases are processed through Telegram Stars.', crystalPackBuy:'Buy', crystalPackUnavailable:'Purchases are currently unavailable.', crystalLoginRequired:'Open the game as a Telegram Mini App before buying Neo Crystals.', notEnoughCrystals:'Not enough Neo Crystals.', crystalPurchaseFailed:'Purchase was not completed.', crystalPurchaseDone:'Received {crystals} Neo Crystals!', crystalPurchasePending:'Telegram is confirming the payment…', mythicOnly:'Neo Crystals only',
-      starChestsTitle:'Stars chests', starChestsHint:'Premium chests for Telegram Stars. They can drop every rarity, including mythic.', starChest10:'10 Stars chest', starChest20:'20 Stars chest', starChest30:'30 Stars chest', starChestDesc10:'Base premium drop: mythic 1%, legendary 15%.', starChestDesc20:'Upgraded chest: mythic 1%, legendary 17%.', starChestDesc30:'Top chest: mythic 1%, legendary 20%.', starChestBuy:'Open for {stars} ⭐', starChestOdds:'Odds: {odds}', starChestOpened:'Premium chest opened!', starChestUnavailable:'Chest payment is currently unavailable.', starChestNeedTelegram:'Open the game as a Telegram Mini App to buy a Stars chest.', starChestPurchaseFailed:'Chest purchase was not completed.', starChestOpeningHint:'Preparing your premium reward…', mythicDrop:'MYTHIC DROP!', mythicDropHint:'Exclusive cosmetic item with special visual effects.', chestTier10Hint:'Fast premium roll · improved rare/epic chances.', chestTier20Hint:'Upgraded chest · more epic and legendary rewards.', chestTier30Hint:'Top chest · maximum premium effect and best odds.', mythicBurstHint:'Ultra-rare reward sequence activated.', legendaryGuarantee:'Legendary guarantee', mythicGuarantee:'Mythic guarantee', pitySharedHint:'Guarantee is shared across all Stars chests. Legendary is guaranteed by the 10th opening, mythic by the 100th.', pityRemaining:'Guarantee in {count}', pityReady:'Next opening is guaranteed!', seasonPass:'Season Pass', seasonPassTitle:'Neon Season Pass', seasonPassHint:'20 levels over 28 days. Balance is tuned for roughly 35–40 normal runs. Premium unlocks the second reward track.', seasonLevel:'Level', premiumTrack:'PREMIUM TRACK', premiumPassTitle:'Premium Season Pass', premiumPassHint:'Extra crystals and exclusive seasonal cosmetics. No combat advantage.', price:'Price', buyPremiumPass:'Buy Premium', premiumOwned:'Premium active', freeTrack:'FREE', seasonPassNote:'Rewards are deterministic. Premium Pass and seasonal cosmetics do not increase combat power.', passExclusive:'SEASON PASS', passExclusiveHint:'This item is exclusive to the Season Pass.', passClaim:'Claim', passLocked:'Level locked', passPremiumRequired:'Premium Pass required', passClaimed:'Claimed', passPurchaseDone:'Premium Season Pass activated!', passPurchaseFailed:'Season Pass purchase was not completed.', passUnavailable:'Season Pass is currently unavailable.', passEndsIn:'Season ends in {time}', passXp:'{xp} / {next} XP', passXpGained:'Season Pass: +{xp} XP', passRewardCredits:'{amount} ◆', passRewardCrystals:'{amount} ◈', passRewardCosmetic:'Season cosmetic', skinSeasonFlux:'Season Flux', skinSeasonCrown:'Neon Crown', skinSeasonAscendant:'Ascendant', bulletSeasonPulse:'Season Pulse', bulletSeasonNova:'Season Nova', trailSeasonComet:'Season Comet', trailSeasonHalo:'Season Halo',
+      seasonPass:'Season Pass', seasonPassTag:'NEON PASS', seasonPremiumBadge:'PREMIUM TRACK', seasonHeroTitle:'Collector season pass', seasonHeroText:'Unlock levels, claim rewards and earn exclusive cosmetics with a premium presentation.', seasonPassBuy:'Buy Premium Pass', seasonPassOwned:'Premium Pass active', seasonPassSupport:'The premium track unlocks extra rewards for the current season.', seasonXpTag:'SEASON XP', seasonCurrentRewardTag:'NEXT REWARD', seasonProgressStat:'PROGRESS', seasonClaimedHint:'Rewards claimed', seasonFreeLane:'FREE TRACK', seasonPremiumLane:'PREMIUM TRACK', seasonFootnote:'Cosmetic rewards do not buff your character. Premium Pass unlocks only additional visual rewards and season currency.', seasonTierReady:'Claim now', seasonTierClaimed:'Claimed', seasonTierLocked:'{xp} XP left', seasonTrackLocked:'Buy Premium Pass', seasonXpToNext:'XP to next level: {xp}', seasonMaxLevel:'Max level reached', seasonSeasonNote:'Premium active · every extra season reward is unlocked.', seasonSeasonLocked:'Premium Pass adds 20 extra rewards, crystals and exclusive cosmetics.', seasonRewardCoins:'{coins} neon credits', seasonRewardCrystals:'{crystals} Neo Crystals', seasonRewardCapsule:'Cosmetic capsule', seasonRewardCosmetic:'Exclusive cosmetic', seasonRewardReceived:'Season reward claimed!', seasonXpEarned:'Season XP +{xp}', seasonPassNeedTelegram:'Open the game as a Telegram Mini App to buy the Premium Pass.', seasonPassUnavailable:'Premium Pass purchase is currently unavailable.', seasonPassPurchaseFailed:'Premium Pass purchase was not completed.', seasonPassUnlocked:'Premium Pass activated!',
+      referralMenu:'NEON CREW', referralTag:'NEON CREW', referralTitle:'Invite friends', referralHeroKicker:'BUILD YOUR CREW', referralHeroTitle:'Friends play — you unlock rare cosmetics', referralHeroText:'A friend counts after 3 full runs. No rewards for a simple click — only active players qualify.', referralShare:'Invite friends', referralCopy:'Copy link', referralCopied:'Link copied', referralCode:'Code', referralActive:'Active friends', referralPending:'Pending', referralWeekly:'This week', referralPassTag:'REFERRAL PASS', referralPassTitle:'Rewards for active friends', referralPassHint:'Spam does not unlock these rewards: only qualified players count.', referralFriendsTag:'YOUR CREW', referralFriendsTitle:'Invited players', referralWeeklyTopTag:'WEEKLY TOP', referralWeeklyTopTitle:'Top recruiters', referralRulesTitle:'How a friend qualifies', referralRulesText:'The player must open the Mini App through your link for the first time and finish 3 runs of at least 10 seconds. Self-referrals and re-binding do not count.', referralLoading:'Loading NEON CREW…', referralEmpty:'No crew yet. Share your personal link with a friend.', referralTopEmpty:'No qualified referrals this week yet.', referralGames:'Runs {games}/3', referralQualified:'Active', referralInviteBound:'You joined through an invite. Finish {runs} more runs so both sides receive the bonus.', referralInviteQualified:'Referral bonus activated!', referralWelcome:'Activation bonus: +200 ◆ and +10 ◈', referralClaim:'Claim', referralClaimed:'Claimed', referralLocked:'Need {count} friends', referralMilestoneFriends:'{count} active friends', referralRewardCoins:'+{coins} ◆', referralRewardCrystals:'+{crystals} ◈', referralRewardCosmetic:'Exclusive: {name}', referralRewardCombo:'{a} · {b}', referralClaimedToast:'Referral reward claimed!', referralBindSuccess:'Invite linked. Finish 3 full runs.', referralBindIgnored:'Referral link was not applied.', referralShareText:'Jump into Neon Arena — survive, build combos and fight for the weekly leaderboard ⚡', referralWeek:'Week {week}', referralExclusive:'REFERRAL ONLY', skinReferralCommander:'Network Commander', skinReferralArchitect:'Architect', bulletReferralNetworkPulse:'Network Pulse', trailReferralSignal:'Signal Trail',
+      starChestsTitle:'Stars chests', starChestsHint:'Premium chests for Telegram Stars. They can drop every rarity, including mythic.', starChest10:'10 Stars chest', starChest20:'20 Stars chest', starChest30:'30 Stars chest', starChestDesc10:'Base premium drop: mythic 1%, legendary 15%.', starChestDesc20:'Upgraded chest: mythic 1%, legendary 17%.', starChestDesc30:'Top chest: mythic 1%, legendary 20%.', starChestBuy:'Open for {stars} ⭐', starChestOdds:'Odds: {odds}', starChestOpened:'Premium chest opened!', starChestUnavailable:'Chest payment is currently unavailable.', starChestNeedTelegram:'Open the game as a Telegram Mini App to buy a Stars chest.', starChestPurchaseFailed:'Chest purchase was not completed.',
       mythicVaultTag:'MYTHIC VAULT', mythicVaultTitle:'Mythic cosmetics store', mythicVaultHint:'A premium storefront for the rarest cosmetics, priced in Neo Crystals.', mythicVaultFeatured:'PREMIUM SHOWCASE', mythicVaultPrice:'Price', mythicVaultGridTitle:'All mythic items', mythicVaultGridHint:'Select an item to inspect it in detail and buy it with Neo Crystals.',
       skinQuantum:'Quantum', skinPhoenix:'Phoenix', skinAstral:'Astral', skinMint:'Mint', skinSunset:'Sunset', skinThunder:'Thunder', skinJade:'Jade', skinVelvet:'Velvet', skinHolo:'Holo', skinMonarch:'Monarch', skinSupernova:'Supernova', skinSeraph:'Seraph', skinAbyssal:'Abyssal', bulletCelestial:'Celestial pulse', bulletDragon:'Dragon pulse', bulletVoidLance:'Void lance', bulletBeamlet:'Beamlet', bulletGlimmer:'Glimmer', bulletVortex:'Vortex', bulletEmberBolt:'Ember bolt', bulletBlossom:'Blossom', bulletOverclock:'Overclock', bulletCrownShot:'Crown shot', bulletStormCore:'Storm core', bulletSeraphic:'Seraphic beam', bulletBlackstar:'Black star', trailGalaxy:'Galaxy wake', trailLightning:'Lightning rift', trailCosmicRoyal:'Royal cosmos', trailShimmer:'Shimmer', trailDrift:'Drift', trailSparkline:'Sparkline', trailMist:'Mist veil', trailVelvet:'Velvet wake', trailPixel:'Pixel trail', trailComet:'Comet wake', trailHalo:'Halo wake', trailSeraph:'Seraph wake', trailVoidStorm:'Void storm',
       skinAqua:'Aqua', skinMagenta:'Magenta', skinLime:'Lime', skinSolar:'Solar', skinVoid:'Void', skinIce:'Ice', skinEmber:'Ember', skinGhost:'Phantom', skinRoyal:'Royal', skinNova:'Nova', skinPrism:'Prism',
@@ -303,9 +309,8 @@
     {id:'supernova',nameKey:'skinSupernova',rarity:'legendary',price:2960,primary:'#fff7bf',secondary:'#6ee2ff',core:'#09111b',effect:'nova'},
     {id:'seraph',nameKey:'skinSeraph',rarity:'mythic',crystalPrice:900,primary:'#ffffff',secondary:'#69f6ff',core:'#050b13',effect:'seraph'},
     {id:'abyssal',nameKey:'skinAbyssal',rarity:'mythic',crystalPrice:980,primary:'#eed6ff',secondary:'#b14dff',core:'#04020a',effect:'abyssal'},
-    {id:'seasonFlux',nameKey:'skinSeasonFlux',rarity:'epic',exclusive:'pass',primary:'#82f7ff',secondary:'#8f73ff',core:'#07121f',effect:'aurora'},
-    {id:'seasonCrown',nameKey:'skinSeasonCrown',rarity:'legendary',exclusive:'pass',primary:'#ffe29b',secondary:'#ff75e5',core:'#170a13',effect:'royal'},
-    {id:'seasonAscendant',nameKey:'skinSeasonAscendant',rarity:'mythic',exclusive:'pass',primary:'#ffffff',secondary:'#8af7ff',core:'#050a14',effect:'seraph'},
+    {id:'referralCommander',nameKey:'skinReferralCommander',rarity:'legendary',primary:'#d9f8ff',secondary:'#5fe6ff',core:'#07111d',effect:'royal',referralExclusive:true},
+    {id:'referralArchitect',nameKey:'skinReferralArchitect',rarity:'mythic',primary:'#ffffff',secondary:'#ff78e7',core:'#040712',effect:'seraph',referralExclusive:true},
   ];
   const BULLET_STYLES = [
     {id:'orb',nameKey:'bulletOrb',rarity:'common',price:0,shape:'orb',primary:'#b9fbff',glow:'#69f6ff'},
@@ -343,8 +348,7 @@
     {id:'stormCore',nameKey:'bulletStormCore',rarity:'legendary',price:2990,shape:'chronos',primary:'#d7fbff',glow:'#67baff',effect:'chronos'},
     {id:'seraphic',nameKey:'bulletSeraphic',rarity:'mythic',crystalPrice:900,shape:'star',primary:'#ffffff',glow:'#69f6ff',effect:'seraphic'},
     {id:'blackstar',nameKey:'bulletBlackstar',rarity:'mythic',crystalPrice:980,shape:'singularity',primary:'#f8e8ff',glow:'#b14dff',effect:'blackstar'},
-    {id:'seasonPulse',nameKey:'bulletSeasonPulse',rarity:'epic',exclusive:'pass',shape:'pulse',primary:'#8cf7ff',glow:'#8e78ff',effect:'wave'},
-    {id:'seasonNova',nameKey:'bulletSeasonNova',rarity:'legendary',exclusive:'pass',shape:'star',primary:'#fff1a8',glow:'#ff73e6',effect:'rainbow'},
+    {id:'referralNetworkPulse',nameKey:'bulletReferralNetworkPulse',rarity:'legendary',shape:'pulse',primary:'#d8ffff',glow:'#63a8ff',effect:'rainbow',referralExclusive:true},
   ];
   const TRAIL_STYLES = [
     {id:'pulseLine',nameKey:'trailPulseLine',rarity:'common',price:0,primary:'#69f6ff',secondary:'#5c7cff',effect:'pulse'},
@@ -371,23 +375,49 @@
     {id:'haloTrail',nameKey:'trailHalo',rarity:'legendary',price:2920,primary:'#effcff',secondary:'#77cbff',effect:'prismtrail'},
     {id:'seraphTrail',nameKey:'trailSeraph',rarity:'mythic',crystalPrice:900,primary:'#ffffff',secondary:'#69f6ff',effect:'seraphtrail'},
     {id:'voidStormTrail',nameKey:'trailVoidStorm',rarity:'mythic',crystalPrice:980,primary:'#f2e5ff',secondary:'#b14dff',effect:'voidstorm'},
-    {id:'seasonComet',nameKey:'trailSeasonComet',rarity:'epic',exclusive:'pass',primary:'#9cf7ff',secondary:'#8976ff',effect:'stardust'},
-    {id:'seasonHalo',nameKey:'trailSeasonHalo',rarity:'legendary',exclusive:'pass',primary:'#fff5bd',secondary:'#ff78e6',effect:'prismtrail'},
+    {id:'referralSignalTrail',nameKey:'trailReferralSignal',rarity:'epic',primary:'#69f6ff',secondary:'#ff78e7',effect:'glitchtrail',referralExclusive:true},
   ];
+  const SEASON_PASS_PRODUCT_ID = 'season_pass_premium';
+  const SEASON_PASS_DEFAULT_PRICE = '35 ⭐';
+  const SEASON_PASS_TIERS = [
+    {level:1,xp:0,free:{type:'coins',amount:150},premium:{type:'crystals',amount:10}},
+    {level:2,xp:120,free:{type:'coins',amount:220},premium:{type:'coins',amount:280}},
+    {level:3,xp:260,free:{type:'capsule'},premium:{type:'cosmetic',kind:'bullet',id:'pulse'}},
+    {level:4,xp:420,free:{type:'crystals',amount:10},premium:{type:'coins',amount:340}},
+    {level:5,xp:600,free:{type:'coins',amount:300},premium:{type:'cosmetic',kind:'trail',id:'auroraTrail'}},
+    {level:6,xp:800,free:{type:'capsule'},premium:{type:'crystals',amount:15}},
+    {level:7,xp:1020,free:{type:'coins',amount:360},premium:{type:'cosmetic',kind:'bullet',id:'crownShot'}},
+    {level:8,xp:1260,free:{type:'coins',amount:420},premium:{type:'capsule'}},
+    {level:9,xp:1520,free:{type:'crystals',amount:15},premium:{type:'cosmetic',kind:'skin',id:'bloom'}},
+    {level:10,xp:1800,free:{type:'capsule'},premium:{type:'coins',amount:520}},
+    {level:11,xp:2100,free:{type:'coins',amount:500},premium:{type:'crystals',amount:20}},
+    {level:12,xp:2420,free:{type:'coins',amount:560},premium:{type:'cosmetic',kind:'bullet',id:'meteor'}},
+    {level:13,xp:2760,free:{type:'crystals',amount:20},premium:{type:'capsule'}},
+    {level:14,xp:3120,free:{type:'coins',amount:620},premium:{type:'cosmetic',kind:'skin',id:'monarch'}},
+    {level:15,xp:3500,free:{type:'cosmetic',kind:'trail',id:'cometTrail'},premium:{type:'cosmetic',kind:'trail',id:'haloTrail'}},
+    {level:16,xp:3900,free:{type:'coins',amount:700},premium:{type:'crystals',amount:25}},
+    {level:17,xp:4320,free:{type:'capsule'},premium:{type:'cosmetic',kind:'bullet',id:'stormCore'}},
+    {level:18,xp:4760,free:{type:'coins',amount:800},premium:{type:'capsule'}},
+    {level:19,xp:5220,free:{type:'crystals',amount:30},premium:{type:'cosmetic',kind:'skin',id:'supernova'}},
+    {level:20,xp:5700,free:{type:'cosmetic',kind:'bullet',id:'celestial'},premium:{type:'cosmetic',kind:'skin',id:'seraph'}},
+  ];
+  const SEASON_PASS_MAX_XP = SEASON_PASS_TIERS[SEASON_PASS_TIERS.length-1].xp;
   const ALL_COSMETICS = [
     ...SKINS.map(x=>({...x,kind:'skin'})), ...BULLET_STYLES.map(x=>({...x,kind:'bullet'})), ...TRAIL_STYLES.map(x=>({...x,kind:'trail'}))
   ];
-  const DROPPABLE_COSMETICS = ALL_COSMETICS.filter(x=>x.rarity!=='mythic');
+  const REFERRAL_EXCLUSIVE_KEYS = new Set(ALL_COSMETICS.filter(x=>x.referralExclusive).map(x=>`${x.kind}:${x.id}`));
+  const DROPPABLE_COSMETICS = ALL_COSMETICS.filter(x=>x.rarity!=='mythic'&&!x.referralExclusive);
 
-  const STORAGE_KEY = 'neon_arena_progress_v7';
-  const OLD_STORAGE_KEY = 'neon_arena_progress_v6';
+  const STORAGE_KEY = 'neon_arena_progress_v8';
+  const OLD_STORAGE_KEY = 'neon_arena_progress_v7';
   const LEADERBOARD_SCORE_SCALE = 5;
   const defaultQuestStats = () => ({kills:0,score:0,combo:0,wave:1,games:0,bosses:0});
   const defaultProgress = () => ({
-    schemaVersion:8, updatedAt:0, syncRevision:0, bestScore:0, gamesPlayed:0, coins:0, crystals:0, ownedSkins:['aqua'], ownedBullets:['orb'], ownedTrails:['pulseLine'], selectedSkin:'aqua', selectedBullet:'orb', selectedTrail:'pulseLine',
+    schemaVersion:9, updatedAt:0, syncRevision:0, bestScore:0, gamesPlayed:0, coins:0, crystals:0, ownedSkins:['aqua'], ownedBullets:['orb'], ownedTrails:['pulseLine'], selectedSkin:'aqua', selectedBullet:'orb', selectedTrail:'pulseLine',
     lastDailyDate:'', dailyStreak:0, weeklyProgress:0, lastAdCreditsAt:0, lastAdCapsuleAt:0, lastAdCrystalsAt:0,
     dailyQuestDate:'', dailyQuestStats:defaultQuestStats(), dailyQuestClaims:[], dailyQuestBonusClaimed:false,
-    leaderboardMilestones:[], leaderboardSeenDate:'', leaderboardSeenRank:0, leaderboardHoldClaimDate:'', leaderboardHoldStreak:0, lastTopCrystalRewardDate:'', lastTopCrystalRewardRank:0, handledPurchaseTokens:[]
+    leaderboardMilestones:[], leaderboardSeenDate:'', leaderboardSeenRank:0, leaderboardHoldClaimDate:'', leaderboardHoldStreak:0, lastTopCrystalRewardDate:'', lastTopCrystalRewardRank:0, handledPurchaseTokens:[],
+    seasonPassSeasonId:'', seasonPassXp:0, seasonPassPremiumOwned:false, seasonPassClaimedFree:[], seasonPassClaimedPremium:[]
   });
 
   function uniqueStrings(v, fallback) {
@@ -396,7 +426,7 @@
   function normalizeProgress(raw={}) {
     const p = defaultProgress();
     const incomingSchema=Math.max(0,Math.floor(Number(raw.schemaVersion)||0));
-    p.schemaVersion = 8;
+    p.schemaVersion = 9;
     p.updatedAt = Math.max(0, Number(raw.updatedAt)||0);
     p.syncRevision = Math.max(0, Math.floor(Number(raw.syncRevision)||0));
     p.bestScore = Math.max(0, Math.floor(Number(raw.bestScore)||0));
@@ -436,6 +466,11 @@
     p.lastTopCrystalRewardDate = typeof raw.lastTopCrystalRewardDate==='string' ? raw.lastTopCrystalRewardDate : '';
     p.lastTopCrystalRewardRank = Math.max(0,Math.floor(Number(raw.lastTopCrystalRewardRank)||0));
     p.handledPurchaseTokens = uniqueStrings(raw.handledPurchaseTokens, []).slice(-50);
+    p.seasonPassSeasonId = typeof raw.seasonPassSeasonId==='string' ? raw.seasonPassSeasonId : '';
+    p.seasonPassXp = Math.max(0, Math.floor(Number(raw.seasonPassXp)||0));
+    p.seasonPassPremiumOwned = !!raw.seasonPassPremiumOwned;
+    p.seasonPassClaimedFree = uniqueStrings(raw.seasonPassClaimedFree, []).slice(-50);
+    p.seasonPassClaimedPremium = uniqueStrings(raw.seasonPassClaimedPremium, []).slice(-50);
     return p;
   }
   function loadProgress() {
@@ -555,7 +590,7 @@
   function previewKindLabel(kind){return kind==='skin'?t('previewSkin'):kind==='bullet'?t('previewBullet'):t('previewTrail')}
   function cosmeticOwned(item){return (item.kind==='skin'?progress.ownedSkins:item.kind==='bullet'?progress.ownedBullets:progress.ownedTrails).includes(item.id)}
   function cosmeticEquipped(item){return (item.kind==='skin'?progress.selectedSkin:item.kind==='bullet'?progress.selectedBullet:progress.selectedTrail)===item.id}
-  function mythicCollection(){return ALL_COSMETICS.filter(item=>item.rarity==='mythic'&&!item.exclusive)}
+  function mythicCollection(){return ALL_COSMETICS.filter(item=>item.rarity==='mythic')}
   function mythicItemKey(item){return `${item.kind}:${item.id}`}
   function findCosmetic(kind,id){return ALL_COSMETICS.find(item=>item.kind===kind&&item.id===id)||null}
   function mythicToneLabel(item){
@@ -717,6 +752,228 @@
   }
   function anyQuestRewardReady(){ensureDailyQuestDate();return DAILY_QUESTS.some(q=>questComplete(q)&&!progress.dailyQuestClaims.includes(q.id))||(!progress.dailyQuestBonusClaimed&&DAILY_QUESTS.every(q=>progress.dailyQuestClaims.includes(q.id)))}
 
+  function currentSeasonPassId(ts=Date.now()){const d=new Date(ts);return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;}
+  function ensureSeasonPassState(){
+    const seasonId=currentSeasonPassId();
+    if(progress.seasonPassSeasonId!==seasonId){
+      progress.seasonPassSeasonId=seasonId;
+      progress.seasonPassXp=0;
+      progress.seasonPassPremiumOwned=false;
+      progress.seasonPassClaimedFree=[];
+      progress.seasonPassClaimedPremium=[];
+      persistLocalProgress();
+    }
+  }
+  function seasonPassCurrentLevel(){ensureSeasonPassState();let lvl=1;for(const tier of SEASON_PASS_TIERS){if(progress.seasonPassXp>=tier.xp)lvl=tier.level;else break}return lvl}
+  function seasonPassNextTier(){ensureSeasonPassState();return SEASON_PASS_TIERS.find(t=>progress.seasonPassXp<t.xp)||null}
+  function seasonPassXpToNext(){const next=seasonPassNextTier();return next?Math.max(0,next.xp-progress.seasonPassXp):0}
+  function seasonTierReached(tier){return progress.seasonPassXp>=tier.xp}
+  function seasonTierClaimed(level,lane){const arr=lane==='premium'?progress.seasonPassClaimedPremium:progress.seasonPassClaimedFree;return arr.includes(String(level))}
+  function seasonTierClaimable(tier,lane){return seasonTierReached(tier) && !seasonTierClaimed(tier.level,lane) && (lane!=='premium' || progress.seasonPassPremiumOwned)}
+  function seasonTierRemainingXp(tier){return Math.max(0,tier.xp-progress.seasonPassXp)}
+  function seasonPassEarnedRewardsCount(){return progress.seasonPassClaimedFree.length + progress.seasonPassClaimedPremium.length}
+  function rewardRarity(reward){if(reward.type!=='cosmetic')return reward.type==='crystals'?'mythic':reward.type==='capsule'?'epic':'rare';const item=findCosmetic(reward.kind,reward.id);return item?.rarity||'epic'}
+  function rewardTitle(reward){
+    if(reward.type==='coins')return `+${formatScore(reward.amount)} ◆`;
+    if(reward.type==='crystals')return `+${formatScore(reward.amount)} ◈`;
+    if(reward.type==='capsule')return t('seasonRewardCapsule');
+    const item=findCosmetic(reward.kind,reward.id);return item?t(item.nameKey):t('seasonRewardCosmetic');
+  }
+  function rewardDescription(reward){
+    if(reward.type==='coins')return t('seasonRewardCoins',{coins:formatScore(reward.amount)});
+    if(reward.type==='crystals')return t('seasonRewardCrystals',{crystals:formatScore(reward.amount)});
+    if(reward.type==='capsule')return lang==='ru'?'Случайная косметика любой доступной редкости.':'Random cosmetic from the available pool.';
+    const item=findCosmetic(reward.kind,reward.id);
+    if(!item)return t('seasonRewardCosmetic');
+    const rarity=t(RARITY[item.rarity].key);
+    const kind=previewKindLabel(item.kind);
+    return `${kind} · ${rarity}`;
+  }
+  function rewardIconMarkup(reward){
+    if(reward.type==='coins')return `<span class="reward-shape">◆</span>`;
+    if(reward.type==='crystals')return `<span class="reward-shape">◈</span>`;
+    if(reward.type==='capsule')return `<span class="reward-shape">✦</span>`;
+    const item=findCosmetic(reward.kind,reward.id);
+    return item?cosmeticPreviewMarkup(item):`<span class="reward-shape">✦</span>`;
+  }
+  function grantSpecificCosmetic(kind,id){
+    const item=findCosmetic(kind,id);if(!item)return null;
+    const listKey=kind==='skin'?'ownedSkins':kind==='bullet'?'ownedBullets':'ownedTrails';
+    const list=progress[listKey];
+    if(list.includes(id)){const coins=duplicateComp(item.rarity);progress.coins+=coins;return {item,duplicate:true,coins};}
+    list.push(id);return {item,duplicate:false,coins:0};
+  }
+  function renderSeasonNextReward(){
+    if(!ui.seasonNextReward)return;
+    ensureSeasonPassState();
+    let candidate=null;
+    for(const tier of SEASON_PASS_TIERS){
+      if(!seasonTierClaimed(tier.level,'free')){candidate={tier,lane:'free',reward:tier.free};break}
+      if(progress.seasonPassPremiumOwned && !seasonTierClaimed(tier.level,'premium')){candidate={tier,lane:'premium',reward:tier.premium};break}
+    }
+    if(!candidate){
+      ui.seasonNextReward.innerHTML=`<div class="season-reward-icon"><span class="reward-shape">★</span></div><div class="season-reward-main"><strong>${lang==='ru'?'Все награды сезона получены':'All season rewards claimed'}</strong><small>${t('seasonMaxLevel')}</small></div>`;
+      return;
+    }
+    const left=seasonTierRemainingXp(candidate.tier);
+    const meta=seasonTierClaimable(candidate.tier,candidate.lane)?t('seasonTierReady'):left>0?t('seasonTierLocked',{xp:formatScore(left)}):(candidate.lane==='premium'&&!progress.seasonPassPremiumOwned?t('seasonTrackLocked'):t('seasonTierReady'));
+    ui.seasonNextReward.innerHTML=`<div class="season-reward-icon rarity-${rewardRarity(candidate.reward)}">${rewardIconMarkup(candidate.reward)}</div><div class="season-reward-main season-reward-copy"><strong>${rewardTitle(candidate.reward)}</strong><small>${rewardDescription(candidate.reward)}</small><div class="season-reward-meta"><span class="season-pill ${left>0?'locked':'ready'}">LVL ${candidate.tier.level}</span><span class="season-pill ${left>0?'locked':'ready'}">${meta}</span></div></div>`;
+  }
+  async function claimSeasonReward(level,lane){
+    ensureSeasonPassState();
+    const tier=SEASON_PASS_TIERS.find(t=>t.level===level);if(!tier)return;
+    if(lane==='premium' && !progress.seasonPassPremiumOwned){showToast(t('seasonTrackLocked'));return}
+    if(!seasonTierReached(tier) || seasonTierClaimed(level,lane))return;
+    const reward=tier[lane];
+    const key=lane==='premium'?'seasonPassClaimedPremium':'seasonPassClaimedFree';
+    progress[key].push(String(level));
+    let toastMsg=t('seasonRewardReceived');
+    let capsuleResult=null;
+    if(reward.type==='coins'){progress.coins+=reward.amount;toastMsg=`${t('seasonRewardReceived')} +${formatScore(reward.amount)} ◆`;}
+    else if(reward.type==='crystals'){progress.crystals+=reward.amount;toastMsg=`${t('seasonRewardReceived')} +${formatScore(reward.amount)} ◈`;}
+    else if(reward.type==='capsule'){capsuleResult=grantCosmeticRoll();toastMsg=`${t('seasonRewardReceived')} ${rewardResultText(capsuleResult)}`;}
+    else if(reward.type==='cosmetic'){const granted=grantSpecificCosmetic(reward.kind,reward.id);if(granted)toastMsg=granted.duplicate?`${t('seasonRewardReceived')} ${t('duplicateReward',{item:`${t(granted.item.nameKey)} · ${t(RARITY[granted.item.rarity].key)}`,coins:granted.coins})}`:`${t('seasonRewardReceived')} ${t(granted.item.nameKey)}`;}
+    saveProgress();renderShop();renderSeasonPass();
+    if(capsuleResult)await openCapsuleAnimation(capsuleResult,{test:false,allowAgain:false});
+    else showToast(toastMsg,2400);
+  }
+  function renderSeasonLane(tier,lane){
+    const reward=tier[lane],claimed=seasonTierClaimed(tier.level,lane),ready=seasonTierClaimable(tier,lane),remaining=seasonTierRemainingXp(tier);
+    const laneTag=lane==='premium'?t('seasonPremiumLane'):t('seasonFreeLane');
+    const note=claimed?t('seasonTierClaimed'):ready?t('seasonTierReady'):(lane==='premium'&&!progress.seasonPassPremiumOwned?t('seasonTrackLocked'):t('seasonTierLocked',{xp:formatScore(remaining)}));
+    const article=document.createElement('section');article.className=`season-reward-lane ${lane}${claimed?' claimed':''}`;
+    article.innerHTML=`<div class="season-lane-tag"><span>${laneTag}</span><em>${note}</em></div><div class="season-lane-body"><div class="season-reward-icon rarity-${rewardRarity(reward)}">${rewardIconMarkup(reward)}</div><div class="season-reward-copy"><strong>${rewardTitle(reward)}</strong><small>${rewardDescription(reward)}</small><div class="season-reward-meta"><span class="season-pill ${claimed?'':'ready'}">${t(RARITY[rewardRarity(reward)].key)}</span>${remaining>0&&!claimed?`<span class="season-pill locked">${t('seasonTierLocked',{xp:formatScore(remaining)})}</span>`:''}</div></div></div>`;
+    const btn=document.createElement('button');btn.className='btn btn-primary season-claim';btn.disabled=claimed || !ready;btn.textContent=claimed?t('seasonTierClaimed'):ready?t('seasonTierReady'):(lane==='premium'&&!progress.seasonPassPremiumOwned?t('seasonTrackLocked'):t('seasonTierLocked',{xp:formatScore(remaining)}));
+    if(!btn.disabled)btn.addEventListener('click',()=>claimSeasonReward(tier.level,lane));
+    article.appendChild(btn);
+    return article;
+  }
+  function renderSeasonPass(){
+    if(!ui.seasonPassList)return;
+    ensureSeasonPassState();
+    const currentLevel=seasonPassCurrentLevel(),xp=progress.seasonPassXp,nextLeft=seasonPassXpToNext(),claimed=seasonPassEarnedRewardsCount();
+    ui.seasonProgressLabel.textContent=`${formatScore(xp)} / ${formatScore(SEASON_PASS_MAX_XP)} XP`;
+    ui.seasonLevelLabel.textContent=`LVL ${currentLevel}`;
+    ui.seasonXpHint.textContent=nextLeft>0?t('seasonXpToNext',{xp:formatScore(nextLeft)}):t('seasonMaxLevel');
+    ui.seasonClaimedLabel.textContent=`${claimed} / ${SEASON_PASS_TIERS.length*2}`;
+    ui.seasonTrackNote.textContent=progress.seasonPassPremiumOwned?t('seasonSeasonNote'):t('seasonSeasonLocked');
+    ui.seasonProgressFill.style.width=`${clamp(xp/SEASON_PASS_MAX_XP,0,1)*100}%`;
+    if(ui.buySeasonPassBtn){ui.buySeasonPassBtn.disabled=progress.seasonPassPremiumOwned;ui.buySeasonPassBtn.textContent=progress.seasonPassPremiumOwned?t('seasonPassOwned'):t('seasonPassBuy');}
+    if(ui.seasonPassSupportText)ui.seasonPassSupportText.textContent=progress.seasonPassPremiumOwned?t('seasonSeasonNote'):t('seasonPassSupport');
+    renderSeasonNextReward();
+    ui.seasonPassList.innerHTML='';
+    SEASON_PASS_TIERS.forEach(tier=>{
+      const row=document.createElement('article');
+      const anyClaimable=seasonTierClaimable(tier,'free')||seasonTierClaimable(tier,'premium');
+      const fullyClaimed=seasonTierClaimed(tier.level,'free') && (!progress.seasonPassPremiumOwned || seasonTierClaimed(tier.level,'premium'));
+      row.className=`season-tier-card${anyClaimable?' claimable':''}${fullyClaimed?' claimed':''}`;
+      row.innerHTML=`<div class="season-tier-lvl"><span>LVL</span><b>${tier.level}</b><small>${formatScore(tier.xp)} XP</small></div>`;
+      row.appendChild(renderSeasonLane(tier,'free'));
+      row.appendChild(renderSeasonLane(tier,'premium'));
+      ui.seasonPassList.appendChild(row);
+    });
+    const btn=document.getElementById('seasonPassBtn');if(btn)btn.classList.toggle('ready',SEASON_PASS_TIERS.some(t=>seasonTierClaimable(t,'free')||seasonTierClaimable(t,'premium')));
+  }
+  function awardSeasonPassXp(finalScore,wave,kills){
+    ensureSeasonPassState();
+    const gained=Math.max(24,Math.min(220,20+Math.floor(finalScore/70)+wave*12+Math.floor(kills*.8)));
+    if(gained<=0)return 0;
+    progress.seasonPassXp=Math.min(SEASON_PASS_MAX_XP,progress.seasonPassXp+gained);
+    return gained;
+  }
+
+
+  let referralData=null;
+  function referralCosmeticName(cosmetic){
+    if(!cosmetic)return'';
+    const item=findCosmetic(cosmetic.kind,cosmetic.id);
+    return item?t(item.nameKey):cosmetic.id;
+  }
+  function referralRewardParts(reward){
+    const parts=[];
+    if(Number(reward?.coins)>0)parts.push(t('referralRewardCoins',{coins:formatScore(reward.coins)}));
+    if(Number(reward?.crystals)>0)parts.push(t('referralRewardCrystals',{crystals:formatScore(reward.crystals)}));
+    if(reward?.cosmetic)parts.push(t('referralRewardCosmetic',{name:referralCosmeticName(reward.cosmetic)}));
+    return parts;
+  }
+  function referralRewardIcon(reward){
+    if(reward?.cosmetic){const item=findCosmetic(reward.cosmetic.kind,reward.cosmetic.id);if(item)return cosmeticPreviewMarkup(item)}
+    if(Number(reward?.crystals)>0)return '<span class="referral-reward-glyph crystal">◈</span>';
+    return '<span class="referral-reward-glyph">◆</span>';
+  }
+  function renderReferralMilestones(data){
+    if(!ui.referralMilestones)return;ui.referralMilestones.innerHTML='';
+    (data?.milestones||[]).forEach(m=>{
+      const card=document.createElement('article');
+      card.className=`referral-milestone${m.claimable?' claimable':''}${m.claimed?' claimed':''}`;
+      const parts=referralRewardParts(m.reward),cosmetic=m.reward?.cosmetic;
+      const rarity=cosmetic?.rarity||((m.count>=25)?'legendary':m.count>=5?'epic':'rare');
+      card.innerHTML=`<div class="referral-milestone-top"><span class="referral-count-badge">${m.count}</span><span class="rarity-badge rarity-${rarity}">${cosmetic?t(RARITY[rarity]?.key||'rarityEpic'):t('referralMilestoneFriends',{count:m.count})}</span></div><div class="referral-reward-icon rarity-${rarity}">${referralRewardIcon(m.reward)}</div><div class="referral-milestone-copy"><strong>${t('referralMilestoneFriends',{count:m.count})}</strong><small>${parts.join(' · ')}</small>${cosmetic?`<em>${t('referralExclusive')}</em>`:''}</div>`;
+      const btn=document.createElement('button');btn.className='btn btn-primary referral-claim';btn.disabled=!m.claimable;btn.textContent=m.claimed?t('referralClaimed'):m.claimable?t('referralClaim'):t('referralLocked',{count:m.count});
+      if(m.claimable)btn.addEventListener('click',()=>claimReferralMilestone(m.count));
+      card.appendChild(btn);ui.referralMilestones.appendChild(card);
+    });
+  }
+  function makeReferralAvatar(name,photoUrl){
+    const el=document.createElement('span');el.className='referral-avatar';
+    if(photoUrl){const img=document.createElement('img');img.src=photoUrl;img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';img.addEventListener('error',()=>{el.innerHTML='';el.textContent=(String(name||'N').trim()[0]||'N').toUpperCase()},{once:true});el.appendChild(img)}
+    else el.textContent=(String(name||'N').trim()[0]||'N').toUpperCase();
+    return el;
+  }
+  function renderReferralFriends(data){
+    if(!ui.referralFriendsList)return;ui.referralFriendsList.innerHTML='';
+    const items=data?.friends||[];
+    if(!items.length){ui.referralFriendsList.innerHTML=`<p class="referral-empty">${t('referralEmpty')}</p>`;return}
+    items.forEach(friend=>{const row=document.createElement('div');row.className=`referral-friend${friend.qualified?' qualified':''}`;const body=document.createElement('div');body.className='referral-friend-body';body.appendChild(makeReferralAvatar(friend.name,friend.photoUrl));const copy=document.createElement('span');copy.className='referral-friend-copy';copy.innerHTML=`<strong></strong><small>${friend.qualified?t('referralQualified'):t('referralGames',{games:friend.games})}</small>`;copy.querySelector('strong').textContent=friend.name;body.appendChild(copy);row.appendChild(body);const badge=document.createElement('span');badge.className=`referral-status-pill ${friend.qualified?'active':'pending'}`;badge.textContent=friend.qualified?'✓':`${friend.games}/3`;row.appendChild(badge);ui.referralFriendsList.appendChild(row)})
+  }
+  function renderReferralWeeklyTop(data){
+    if(!ui.referralWeeklyTop)return;ui.referralWeeklyTop.innerHTML='';
+    const items=data?.weeklyTop||[];
+    if(ui.referralWeekLabel)ui.referralWeekLabel.textContent=data?.week?.weekId||'';
+    if(!items.length){ui.referralWeeklyTop.innerHTML=`<p class="referral-empty">${t('referralTopEmpty')}</p>`;return}
+    items.forEach(item=>{const row=document.createElement('div');row.className=`referral-top-row${item.mine?' mine':''}`;row.innerHTML=`<span class="referral-top-rank">#${item.rank}</span><span class="referral-top-name"></span><strong>${item.referrals}</strong>`;const name=row.querySelector('.referral-top-name');name.appendChild(makeReferralAvatar(item.name,item.photoUrl));const label=document.createElement('span');label.textContent=item.name;name.appendChild(label);ui.referralWeeklyTop.appendChild(row)})
+  }
+  function renderReferral(data){
+    referralData=data||referralData;if(!referralData)return;
+    ui.referralCode.textContent=referralData.code||'—';ui.referralActiveCount.textContent=formatScore(referralData.active||0);ui.referralPendingCount.textContent=formatScore(referralData.pending||0);ui.referralWeeklyCount.textContent=formatScore(referralData.weekly||0);
+    if(ui.referralInviteStatus){
+      if(referralData.referredBy){ui.referralInviteStatus.classList.remove('hidden');if(referralData.myQualified)ui.referralInviteStatus.innerHTML=`<strong>✓ ${t('referralInviteQualified')}</strong><span>${t('referralWelcome')}</span>`;else{const runs=Math.max(0,(referralData.qualifyRuns||3)-(referralData.myReferralGames||0));ui.referralInviteStatus.innerHTML=`<strong>${t('referralInviteBound',{runs})}</strong><span>${t('referralWelcome')}</span>`}}else ui.referralInviteStatus.classList.add('hidden');
+    }
+    renderReferralMilestones(referralData);renderReferralFriends(referralData);renderReferralWeeklyTop(referralData);
+    const btn=document.getElementById('referralBtn');if(btn)btn.classList.toggle('ready',(referralData.milestones||[]).some(x=>x.claimable));
+  }
+  async function loadReferral(){
+    if(!window.PlatformBridge?.authorized){referralData=null;return null}
+    const data=await window.PlatformBridge.getReferral?.();if(data){referralData=data;renderReferral(data)}return data;
+  }
+  async function showReferral(){
+    if(!window.PlatformBridge?.authorized){showToast(t('loginBenefit'));return}
+    state.mode='referral';showPanel('referral');
+    if(ui.referralFriendsList)ui.referralFriendsList.innerHTML=`<p class="referral-empty">${t('referralLoading')}</p>`;
+    await loadReferral();
+  }
+  async function claimReferralMilestone(count){
+    const result=await window.PlatformBridge?.claimReferralMilestone?.(count);
+    if(!result?.ok){await loadReferral();return}
+    if(result.progress)applyAuthoritativeCloud(result.progress);if(result.referral)referralData=result.referral;renderShop();renderReferral(referralData);refreshProgressUI();showToast(t('referralClaimedToast'),2400)
+  }
+  async function shareReferral(){
+    if(!referralData)await loadReferral();if(!referralData?.inviteUrl)return;
+    const ok=window.PlatformBridge?.shareReferral?.(referralData.inviteUrl,t('referralShareText'));if(!ok)await copyReferralLink();
+  }
+  async function copyReferralLink(){
+    if(!referralData)await loadReferral();const url=referralData?.inviteUrl;if(!url)return;
+    try{await navigator.clipboard.writeText(url)}catch(_){const area=document.createElement('textarea');area.value=url;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();try{document.execCommand('copy')}catch(__){}area.remove()}
+    showToast(t('referralCopied'));
+  }
+  async function bindReferralFromStartParam(){
+    const startParam=String(window.PlatformBridge?.startParam||'');if(!/^ref_[a-z0-9]+$/i.test(startParam)||!window.PlatformBridge?.authorized)return null;
+    const result=await window.PlatformBridge.bindReferral?.(startParam);
+    if(result?.ok&&result?.bound)showToast(t('referralBindSuccess'),2600);
+    if(result?.referral){referralData=result.referral;renderReferral(referralData)}
+    return result;
+  }
+
   const AD_CREDITS_COOLDOWN=15*60*1000,AD_CAPSULE_COOLDOWN=30*60*1000,AD_CRYSTALS_COOLDOWN=60*60*1000;
   function adCreditsRemaining(){return Math.max(0,AD_CREDITS_COOLDOWN-(Date.now()-progress.lastAdCreditsAt))}
   function adCapsuleRemaining(){return Math.max(0,AD_CAPSULE_COOLDOWN-(Date.now()-progress.lastAdCapsuleAt))}
@@ -744,6 +1001,7 @@
       else{ui.adCrystalsText.textContent=t('crystalAdCooldown',{time:formatDuration(crystalRem)});ui.claimAdCrystalsBtn.disabled=true;ui.claimAdCrystalsBtn.textContent=formatDuration(crystalRem)}
     }
     renderDailyQuests();
+    renderSeasonPass();
     ui.rewardStatus.textContent=anyRewardReady()?t('rewardReadyShort'):t('rewardWaitShort');
     const rewardsBtn=document.getElementById('rewardsBtn');rewardsBtn.classList.toggle('ready',anyRewardReady());
   }
@@ -752,7 +1010,7 @@
   function duplicateComp(rarity){return{common:35,rare:90,epic:260,legendary:900,mythic:2500}[rarity]||35}
   function grantCosmeticRoll(odds=COSMETIC_ODDS){
     const rarity=rollRarity(odds);
-    const pool=ALL_COSMETICS.filter(x=>x.rarity===rarity&&!x.exclusive);
+    const pool=DROPPABLE_COSMETICS.filter(x=>x.rarity===rarity);
     const item=pool[Math.floor(Math.random()*pool.length)];
     const owned=item.kind==='skin'?progress.ownedSkins:item.kind==='bullet'?progress.ownedBullets:progress.ownedTrails;
     if(owned.includes(item.id)){const coins=duplicateComp(rarity);progress.coins+=coins;return{item,duplicate:true,coins}}
@@ -770,75 +1028,20 @@
     return `<div class="capsule-reel-item rarity-${item.rarity}${target?' target':''}" data-item="${item.kind}:${item.id}"><div class="capsule-reel-preview">${cosmeticPreviewMarkup(item)}</div><span class="rarity-badge rarity-${item.rarity}">${t(RARITY[item.rarity].key)}</span><b>${t(item.nameKey)}</b></div>`;
   }
   let capsuleAnimating=false;
-  function chestTierClass(chest){const stars=Number(chest?.stars||0);if(stars>=30)return'tier-30';if(stars>=20)return'tier-20';return'tier-10'}
-  function chestTierHint(chest){const stars=Number(chest?.stars||0);return t(stars>=30?'chestTier30Hint':stars>=20?'chestTier20Hint':'chestTier10Hint')}
-  function playToneSequence(notes,step=110,type='triangle',gain=.03){notes.forEach((freq,i)=>setTimeout(()=>sound.tone(freq,Math.max(.08,step/1000*1.15),type,gain),i*step))}
-  function playChestIntroSound(chest){const stars=Number(chest?.stars||0);if(stars>=30)playToneSequence([540,680,860,1080],90,'triangle',.035);else if(stars>=20)playToneSequence([520,660,820],95,'triangle',.032);else playToneSequence([500,620],110,'triangle',.028)}
-  function playChestSpinSound(chest){const stars=Number(chest?.stars||0);if(stars>=30)playToneSequence([520,610,720,840],120,'sine',.022);else if(stars>=20)playToneSequence([500,620,760],130,'sine',.02);else playToneSequence([480,590],140,'sine',.018)}
-  function playChestStopSound(result,chest){if(result.item.rarity==='mythic')return;const stars=Number(chest?.stars||0);if(stars>=30)playToneSequence([780,940,1100],85,'triangle',.03);else if(stars>=20)playToneSequence([760,900],95,'triangle',.028);else playToneSequence([700],110,'triangle',.024)}
-  function playMythicBurstSound(){playToneSequence([720,880,1060,1320,1580],80,'triangle',.034);setTimeout(()=>playToneSequence([1320,1580,1890],70,'sine',.022),160)}
-  function resetCapsuleVisualState(){
-    const tierClasses=['tier-10','tier-20','tier-30'];
-    ui.capsuleOverlay?.classList.remove('star-chest-mode',...tierClasses);
-    ui.capsuleDialog?.classList.remove('star-chest-mode','mythic-win',...tierClasses);
-    ui.capsuleReelFrame?.classList.remove('star-chest-mode',...tierClasses);
-    ui.capsuleFXLayer?.classList.remove('active');
-    ui.capsuleIntro?.classList.remove('show');
-    ui.capsuleIntro?.classList.add('hidden');
-    ui.mythicBurst?.classList.remove('show');
-    ui.mythicBurst?.classList.add('hidden');
-  }
-  function closeCapsule(){if(capsuleAnimating)return;ui.capsuleOverlay.classList.add('hidden');ui.capsuleAgainBtn.classList.add('hidden');resetCapsuleVisualState()}
+  function closeCapsule(){if(capsuleAnimating)return;ui.capsuleOverlay.classList.add('hidden');ui.capsuleAgainBtn.classList.add('hidden')}
   function easeOutQuint(x){return 1-Math.pow(1-x,5)}
-  async function showStarChestIntro(chest){
-    if(!ui.capsuleIntro)return;
-    ui.capsuleIntroTitle.textContent=t(chest?.nameKey||'starChestsTitle');
-    ui.capsuleIntroHint.textContent=chestTierHint(chest);
-    ui.capsuleIntro.classList.remove('hidden');
-    ui.capsuleIntro.classList.remove('show');
-    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-    ui.capsuleIntro.classList.add('show');
-    playChestIntroSound(chest);
-    await new Promise(r=>setTimeout(r,Number(chest?.stars||0)>=30?1080:Number(chest?.stars||0)>=20?960:860));
-    ui.capsuleIntro.classList.remove('show');
-    await new Promise(r=>setTimeout(r,180));
-    ui.capsuleIntro.classList.add('hidden');
-  }
-  async function showMythicBurst(item){
-    if(!ui.mythicBurst)return;
-    ui.mythicBurstTitle.textContent=t('mythicDrop');
-    ui.mythicBurstHint.textContent=`${t(item.nameKey)} · ${t('mythicBurstHint')}`;
-    ui.mythicBurst.classList.remove('hidden');
-    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
-    ui.mythicBurst.classList.add('show');
-    playMythicBurstSound();
-    await new Promise(r=>setTimeout(r,1550));
-    ui.mythicBurst.classList.remove('show');
-    await new Promise(r=>setTimeout(r,220));
-    ui.mythicBurst.classList.add('hidden');
-  }
-  async function openCapsuleAnimation(result,{test=false,allowAgain=false,source='capsule',chest=null}={}){
+  async function openCapsuleAnimation(result,{test=false,allowAgain=false}={}){
     if(capsuleAnimating)return;
     capsuleAnimating=true;
     sound.ensure();
-    const starMode=source==='star';
-    const mythicMode=result?.item?.rarity==='mythic';
-    const tierClass=starMode?chestTierClass(chest):'';
     ui.capsuleOverlay.classList.remove('hidden');
-    resetCapsuleVisualState();
-    if(starMode){
-      ui.capsuleOverlay?.classList.add('star-chest-mode',tierClass);
-      ui.capsuleDialog?.classList.add('star-chest-mode',tierClass);
-      ui.capsuleReelFrame?.classList.add('star-chest-mode',tierClass);
-      ui.capsuleFXLayer?.classList.add('active');
-    }
     ui.capsuleResult.classList.add('hidden');
     ui.capsuleAgainBtn.classList.add('hidden');
     ui.capsuleCloseBtn.disabled=true;
     ui.capsuleReel.innerHTML='';
-    if(starMode) await showStarChestIntro(chest);
 
-    const base=ALL_COSMETICS.filter(x=>!x.exclusive);
+    // Every full cycle contains every cosmetic item. The final target is injected near the end.
+    const base=[...DROPPABLE_COSMETICS];
     const sequence=[];
     for(let cycle=0;cycle<5;cycle++) sequence.push(...base);
     const targetIndex=sequence.length-6;
@@ -853,43 +1056,25 @@
     const targetCenter=target.offsetLeft+target.offsetWidth/2;
     const frameCenter=frame.clientWidth/2;
     const finalX=frameCenter-targetCenter;
-    const stars=Number(chest?.stars||0);
-    const duration=starMode?(stars>=30?4700:stars>=20?4250:3850):3600;
-    const wobbleSize=starMode?(stars>=30?10:stars>=20?8.7:7.8):7;
-    if(starMode) playChestSpinSound(chest);
-    const start=performance.now();
+    const start=performance.now(),duration=3600;
     await new Promise(resolve=>{
       const step=now=>{
         const p=Math.min(1,(now-start)/duration),e=easeOutQuint(p);
-        const wobble=(1-p)*Math.sin(p*(starMode?(stars>=30?68:stars>=20?61:57):55))*wobbleSize;
+        const wobble=(1-p)*Math.sin(p*55)*7;
         ui.capsuleReel.style.transform=`translate3d(${finalX*e+wobble}px,0,0)`;
         if(p<1)requestAnimationFrame(step);else resolve();
       };
       requestAnimationFrame(step);
     });
     target.classList.add('won');
-    if(mythicMode){
-      ui.capsuleDialog?.classList.add('mythic-win');
-      ui.capsuleFXLayer?.classList.add('active');
-      await showMythicBurst(result.item);
-    }else if(starMode){
-      playChestStopSound(result,chest);
-    }
     const rar=RARITY[result.item.rarity];
-    const resultCopy=ui.capsuleResult.children[1];const oldTag=resultCopy?.querySelector('.reward-tag');if(oldTag)oldTag.remove();
     ui.capsuleResultPreview.innerHTML=cosmeticPreviewMarkup(result.item);
     ui.capsuleResultRarity.className=`rarity-badge rarity-${result.item.rarity}`;
     ui.capsuleResultRarity.textContent=t(rar.key);
     ui.capsuleResultName.textContent=t(result.item.nameKey);
-    ui.capsuleResultNote.textContent=(mythicMode&&!result.duplicate)?t('mythicDropHint'):(result.duplicate?t('duplicateReward',{item:t(result.item.nameKey),coins:result.coins}):(test?t('testDrop'):t('newCosmetic')));
+    ui.capsuleResultNote.textContent=result.duplicate?t('duplicateReward',{item:t(result.item.nameKey),coins:result.coins}):(test?t('testDrop'):t('newCosmetic'));
     ui.capsuleResult.className=`capsule-result rarity-${result.item.rarity}`;
     ui.capsuleResult.classList.remove('hidden');
-    if(mythicMode){
-      const hint=document.createElement('span');
-      hint.className='reward-tag';
-      hint.textContent=t('mythicDrop');
-      ui.capsuleResult.querySelector('div:last-child')?.prepend(hint);
-    }
     ui.capsuleCloseBtn.disabled=false;
     if(allowAgain)ui.capsuleAgainBtn.classList.remove('hidden');
     sound.tone(result.item.rarity==='mythic'?1240:result.item.rarity==='legendary'?1100:result.item.rarity==='epic'?900:result.item.rarity==='rare'?760:620,.24,'triangle',.045);
@@ -914,28 +1099,18 @@
     progress.lastAdCapsuleAt=Date.now();const drop=grantCosmeticRoll();saveProgress();renderShop();showToast(`${t('adCapsuleReceived')} ${rewardResultText(drop)}`,2600);await openCapsuleAnimation(drop,{test:false,allowAgain:false})
   }
 
-  let crystalCatalog=new Map(), starChestCatalog=new Map(), starChestPityState=null, seasonPassData=null;
+  let crystalCatalog=new Map(), starChestCatalog=new Map(), seasonPassProduct=null;
   function productCurrencyIcon(product){try{return typeof product?.getPriceCurrencyImage==='function'?product.getPriceCurrencyImage('small'):''}catch(_){return''}}
   function renderCrystalPacks(){
     if(!ui.crystalPackShop)return;ui.crystalPackShop.innerHTML='';let visible=0;
     CRYSTAL_PACKS.forEach(pack=>{const product=crystalCatalog.get(pack.id);if(!product)return;visible++;const card=document.createElement('article');card.className='crystal-pack-card';const icon=productCurrencyIcon(product);const title=String(product.title||`${formatScore(pack.amount)} ◈`),desc=String(product.description||`${formatScore(pack.amount)} ◈`),price=String(product.price||'');card.innerHTML=`<span class="crystal-pack-icon">◈</span><strong class="crystal-product-title"></strong><small class="crystal-product-amount">+${formatScore(pack.amount)} ◈</small><span class="crystal-product-desc"></span><em class="crystal-product-price"></em><button class="btn btn-primary" type="button">${t('crystalPackBuy')}</button>`;if(product.imageURI){const productImg=document.createElement('img');productImg.src=product.imageURI;productImg.alt='';productImg.className='crystal-product-image';card.querySelector('.crystal-pack-icon').replaceWith(productImg)}card.querySelector('.crystal-product-title').textContent=title;card.querySelector('.crystal-product-desc').textContent=desc;const priceEl=card.querySelector('.crystal-product-price');if(icon){const img=document.createElement('img');img.src=icon;img.alt='';img.className='portal-currency-icon';priceEl.appendChild(img)}const priceText=document.createElement('span');priceText.textContent=price;priceEl.appendChild(priceText);const btn=card.querySelector('button');btn.addEventListener('click',()=>purchaseCrystalPack(pack));ui.crystalPackShop.appendChild(card)});
     ui.crystalPacksWrap?.classList.toggle('hidden',visible===0);
   }
-  function renderPityStatus(){
-    if(!ui.legendaryPityText||!ui.mythicPityText)return;
-    const legendary=starChestPityState?.legendary,mythic=starChestPityState?.mythic;
-    if(!legendary||!mythic){ui.legendaryPityText.textContent='—';ui.mythicPityText.textContent='—';return}
-    ui.legendaryPityText.textContent=legendary.remaining<=1?t('pityReady'):t('pityRemaining',{count:legendary.remaining});
-    ui.mythicPityText.textContent=mythic.remaining<=1?t('pityReady'):t('pityRemaining',{count:mythic.remaining});
-    if(ui.legendaryPityBar)ui.legendaryPityBar.style.width=`${clamp((legendary.count/legendary.guaranteedAt)*100,0,100)}%`;
-    if(ui.mythicPityBar)ui.mythicPityBar.style.width=`${clamp((mythic.count/mythic.guaranteedAt)*100,0,100)}%`;
-  }
   function renderStarChests(){
     if(!ui.starChestShop)return;ui.starChestShop.innerHTML='';
     STAR_CHESTS.forEach(chest=>{const product=starChestCatalog.get(chest.id);const card=document.createElement('article');card.className=`star-chest-card rarity-${chest.rarity}${product?'':' disabled'}`;const icon=product?productCurrencyIcon(product):'';const price=(product&&product.price)||`${chest.stars} ⭐`;card.innerHTML=`<div class="star-chest-top"><span class="rarity-badge rarity-${chest.rarity}">${t(RARITY[chest.rarity].key)}</span><span class="star-chest-price"></span></div><div class="star-chest-icon">✦</div><strong>${t(chest.nameKey)}</strong><p>${t(chest.descKey)}</p><small>${t('starChestOdds',{odds:chestOddsText(chest)})}</small><button class="btn btn-primary" type="button">${t('starChestBuy',{stars:chest.stars})}</button>`;const priceEl=card.querySelector('.star-chest-price');if(icon){const img=document.createElement('img');img.src=icon;img.alt='';img.className='portal-currency-icon';priceEl.appendChild(img)}const span=document.createElement('span');span.textContent=price;priceEl.appendChild(span);const btn=card.querySelector('button');btn.disabled=!product;btn.addEventListener('click',()=>purchaseStarChest(chest));ui.starChestShop.appendChild(card)})
-    renderPityStatus();
   }
-  async function loadCrystalCatalog(){const products=await window.PlatformBridge?.getPaymentsCatalog?.();const all=Array.isArray(products)?products:[];const crystalSupported=new Set(CRYSTAL_PACKS.map(x=>x.id));const starSupported=new Set(STAR_CHESTS.map(x=>x.id));crystalCatalog=new Map(all.filter(p=>p&&crystalSupported.has(p.id)).map(p=>[p.id,p]));starChestCatalog=new Map(all.filter(p=>p&&starSupported.has(p.id)).map(p=>[p.id,p]));starChestPityState=await window.PlatformBridge?.getStarChestStatus?.()||starChestPityState;renderCrystalPacks();renderStarChests()}
+  async function loadCrystalCatalog(){const products=await window.PlatformBridge?.getPaymentsCatalog?.();const all=Array.isArray(products)?products:[];const crystalSupported=new Set(CRYSTAL_PACKS.map(x=>x.id));const starSupported=new Set(STAR_CHESTS.map(x=>x.id));crystalCatalog=new Map(all.filter(p=>p&&crystalSupported.has(p.id)).map(p=>[p.id,p]));starChestCatalog=new Map(all.filter(p=>p&&starSupported.has(p.id)).map(p=>[p.id,p]));seasonPassProduct=all.find(p=>p&&p.id===SEASON_PASS_PRODUCT_ID)||null;if(ui.seasonPassPrice)ui.seasonPassPrice.textContent=seasonPassProduct?.price||SEASON_PASS_DEFAULT_PRICE;renderCrystalPacks();renderStarChests();renderSeasonPass()}
   async function applyCrystalPurchase(){return false}
   async function purchaseCrystalPack(pack){
     if(!window.PlatformBridge?.platformAvailable||!crystalCatalog.has(pack.id)){showToast(t('crystalPackUnavailable'));return}
@@ -945,6 +1120,17 @@
     const cloud=purchase.progress||await window.PlatformBridge.loadCloudProgress();applyAuthoritativeCloud(cloud);
     showToast(t('crystalPurchaseDone',{crystals:pack.amount}));sound.tone(920,.18,'triangle',.04)
   }
+  async function purchaseSeasonPass(){
+    ensureSeasonPassState();
+    if(progress.seasonPassPremiumOwned){showToast(t('seasonPassOwned'));return}
+    if(!window.PlatformBridge?.authorized){showToast(t('seasonPassNeedTelegram'));return}
+    if(!seasonPassProduct){showToast(t('seasonPassUnavailable'));return}
+    ui.buySeasonPassBtn.disabled=true;ui.buySeasonPassBtn.textContent=t('crystalPurchasePending');
+    const purchase=await window.PlatformBridge.purchaseProduct(SEASON_PASS_PRODUCT_ID);
+    if(!purchase?.paid){ui.buySeasonPassBtn.disabled=false;ui.buySeasonPassBtn.textContent=t('seasonPassBuy');if(purchase?.status!=='cancelled')showToast(t('seasonPassPurchaseFailed'));return}
+    const cloud=purchase.progress||await window.PlatformBridge.loadCloudProgress();applyAuthoritativeCloud(cloud);ensureSeasonPassState();progress.seasonPassPremiumOwned=true;saveProgress();renderSeasonPass();showToast(t('seasonPassUnlocked'),2600)
+  }
+
   async function purchaseStarChest(chest){
     if(capsuleAnimating)return;
     if(!window.PlatformBridge?.platformAvailable||!starChestCatalog.has(chest.id)){showToast(t('starChestUnavailable'));return}
@@ -953,60 +1139,17 @@
     if(!purchase?.paid){if(purchase?.status!=='cancelled')showToast(t('starChestPurchaseFailed'));return}
     const cloud=purchase.progress||await window.PlatformBridge.loadCloudProgress();applyAuthoritativeCloud(cloud);
     const reward=purchase.reward||purchase.fulfillment||null;
-    if(reward?.pity)starChestPityState=reward.pity;else starChestPityState=await window.PlatformBridge?.getStarChestStatus?.()||starChestPityState;
     const itemData=reward?.item?findCosmetic(reward.item.kind,reward.item.id):null;
     if(itemData){
       const result={item:itemData,duplicate:!!reward.duplicate,coins:Math.max(0,Number(reward.coins)||0)};
       showToast(`${t('starChestOpened')} ${rewardResultText(result)}`,2600);
-      await openCapsuleAnimation(result,{test:false,allowAgain:false,source:'star',chest});
+      await openCapsuleAnimation(result,{test:false,allowAgain:false});
       renderShop();
     }else showToast(t('starChestOpened'));
     sound.tone(980,.18,'triangle',.04)
   }
   async function recoverCrystalPurchases(){
     if(!window.PlatformBridge?.authorized)return;const cloud=await window.PlatformBridge.loadCloudProgress();if(cloud)applyAuthoritativeCloud(cloud)
-  }
-  function passRewardItem(reward){return reward?.type==='cosmetic'?findCosmetic(reward.cosmetic?.kind,reward.cosmetic?.id):null}
-  function passRewardLabel(reward){
-    if(!reward)return'—';
-    if(reward.type==='credits')return t('passRewardCredits',{amount:formatScore(reward.amount||0)});
-    if(reward.type==='crystals')return t('passRewardCrystals',{amount:formatScore(reward.amount||0)});
-    const item=passRewardItem(reward);return item?t(item.nameKey):t('passRewardCosmetic');
-  }
-  function passRewardPreview(reward){
-    if(!reward)return'<span class="pass-reward-icon">•</span>';
-    if(reward.type==='credits')return'<span class="pass-reward-icon credits">◆</span>';
-    if(reward.type==='crystals')return'<span class="pass-reward-icon crystals">◈</span>';
-    const item=passRewardItem(reward);return item?`<span class="pass-cosmetic-preview">${cosmeticPreviewMarkup(item)}</span>`:'<span class="pass-reward-icon">✦</span>';
-  }
-  function renderSeasonPass(){
-    const data=seasonPassData;if(!data||!ui.seasonPassRewards)return;
-    const season=data.season||{},level=Math.max(1,Number(data.level)||1),xp=Math.max(0,Number(data.xp)||0),xpPer=Math.max(1,Number(season.xpPerLevel)||800),levels=Math.max(1,Number(season.levels)||20);
-    ui.seasonPassId.textContent=season.seasonId||'SEASON';ui.seasonPassLevel.textContent=`${level} / ${levels}`;
-    ui.seasonPassTimer.textContent=t('passEndsIn',{time:formatLongDuration(Math.max(0,Number(season.resetAt||0)-Date.now()))});
-    const xpInLevel=level>=levels?xpPer:xp%xpPer,pct=level>=levels?100:clamp((xpInLevel/xpPer)*100,0,100);ui.seasonPassXpBar.style.width=`${pct}%`;ui.seasonPassXpText.textContent=t('passXp',{xp:formatScore(xpInLevel),next:formatScore(xpPer)});
-    ui.seasonPassPrice.textContent=`${Number(data.priceStars)||149} ⭐`;
-    ui.buySeasonPassBtn.disabled=!!data.premium||!window.PlatformBridge?.authorized;ui.buySeasonPassBtn.textContent=data.premium?t('premiumOwned'):t('buyPremiumPass');
-    ui.seasonPassRewards.innerHTML='';
-    for(let i=1;i<=levels;i++){
-      const free=data.rewards?.free?.[i-1],premium=data.rewards?.premium?.[i-1],unlocked=i<=level,freeClaimed=data.claims?.free?.includes(i),premiumClaimed=data.claims?.premium?.includes(i);
-      const row=document.createElement('article');row.className=`season-level-row${unlocked?' unlocked':' locked'}${i===level?' current':''}`;
-      const levelBox=document.createElement('div');levelBox.className='season-level-index';levelBox.innerHTML=`<span>LVL</span><strong>${i}</strong>`;row.appendChild(levelBox);
-      const makeReward=(track,reward,claimed,isPremium)=>{const card=document.createElement('button');card.type='button';card.className=`season-reward-card ${track}${claimed?' claimed':''}${!unlocked?' locked':''}`;const item=passRewardItem(reward);card.innerHTML=`<div class="season-reward-preview">${passRewardPreview(reward)}</div><div class="season-reward-copy"><small>${isPremium?t('premiumTrack'):t('freeTrack')}</small><strong></strong><span></span></div>`;card.querySelector('strong').textContent=passRewardLabel(reward);const status=card.querySelector('span');if(claimed)status.textContent=t('passClaimed');else if(!unlocked)status.textContent=t('passLocked');else if(isPremium&&!data.premium)status.textContent=t('passPremiumRequired');else status.textContent=t('passClaim');if(item)card.classList.add(`rarity-${item.rarity}`);card.disabled=claimed||!unlocked||(isPremium&&!data.premium);card.addEventListener('click',()=>claimSeasonPassReward(track,i));return card};
-      row.appendChild(makeReward('free',free,freeClaimed,false));row.appendChild(makeReward('premium',premium,premiumClaimed,true));ui.seasonPassRewards.appendChild(row)
-    }
-  }
-  async function loadSeasonPass(){seasonPassData=await window.PlatformBridge?.getSeasonPass?.();if(seasonPassData)renderSeasonPass();return seasonPassData}
-  async function showSeasonPass(){state.mode='seasonPass';showPanel('seasonPass');if(!window.PlatformBridge?.authorized){showToast(t('passUnavailable'));return}await loadSeasonPass()}
-  async function claimSeasonPassReward(track,level){
-    const result=await window.PlatformBridge?.claimPassReward?.(track,level);if(!result?.ok){showToast(result?.reason==='premium'?t('passPremiumRequired'):result?.reason==='locked'?t('passLocked'):t('passClaimed'));return}
-    if(result.progress)applyAuthoritativeCloud(result.progress);seasonPassData=result.pass||seasonPassData;renderSeasonPass();showToast(t('passClaimed'));sound.tone(880,.15,'triangle',.03)
-  }
-  async function buySeasonPass(){
-    if(!window.PlatformBridge?.authorized){showToast(t('passUnavailable'));return}
-    ui.buySeasonPassBtn.disabled=true;const purchase=await window.PlatformBridge.purchaseProduct('season_pass');
-    if(!purchase?.paid){ui.buySeasonPassBtn.disabled=false;if(purchase?.status!=='cancelled')showToast(t('passPurchaseFailed'));return}
-    if(purchase.progress)applyAuthoritativeCloud(purchase.progress);await loadSeasonPass();showToast(t('passPurchaseDone'));sound.tone(1040,.18,'triangle',.04)
   }
   async function claimAdCrystals(){
     if(adCrystalsRemaining()>0||!window.PlatformBridge?.supportsRewarded)return;ui.claimAdCrystalsBtn.disabled=true;const rewarded=await window.PlatformBridge.showRewarded();
@@ -1015,7 +1158,7 @@
 
   function renderShop(){
     if(!ui.skinShop||!ui.bulletShop||!ui.trailShop)return;ui.skinShop.innerHTML='';ui.bulletShop.innerHTML='';ui.trailShop.innerHTML='';if(ui.chestShop){ui.chestShop.innerHTML='';CHESTS.forEach(chest=>ui.chestShop.appendChild(chestCard(chest)))}
-    SKINS.forEach(item=>ui.skinShop.appendChild(shopCard(item,'skin')));BULLET_STYLES.forEach(item=>ui.bulletShop.appendChild(shopCard(item,'bullet')));TRAIL_STYLES.forEach(item=>ui.trailShop.appendChild(shopCard(item,'trail')));
+    SKINS.filter(item=>!item.referralExclusive).forEach(item=>ui.skinShop.appendChild(shopCard(item,'skin')));BULLET_STYLES.filter(item=>!item.referralExclusive).forEach(item=>ui.bulletShop.appendChild(shopCard(item,'bullet')));TRAIL_STYLES.filter(item=>!item.referralExclusive).forEach(item=>ui.trailShop.appendChild(shopCard(item,'trail')));
     renderCrystalPacks();renderStarChests();renderMythicShop();if(!ui.shopPreviewStage?.firstChild)setShopPreview({...selectedTrail(),kind:'trail'});
   }
   function chestOddsText(chest){return chest.odds.map(x=>`${Math.round(x.chance*100)}% ${t(RARITY[x.id].key)}`).join(' · ')}
@@ -1032,7 +1175,7 @@
     const owned=(kind==='skin'?progress.ownedSkins:kind==='bullet'?progress.ownedBullets:progress.ownedTrails).includes(item.id);const equipped=(kind==='skin'?progress.selectedSkin:kind==='bullet'?progress.selectedBullet:progress.selectedTrail)===item.id;const rar=RARITY[item.rarity];
     const btn=document.createElement('button');btn.className=`shop-item rarity-${item.rarity}${equipped?' equipped':''}${owned?'':' locked'}`;
     const preview=cosmeticPreviewMarkup({...item,kind});
-    const passExclusive=item.exclusive==='pass',premium=Number(item.crystalPrice)>0;const status=equipped?t('equipped'):owned?t('equip'):passExclusive?t('passExclusive'):premium?`${formatScore(item.crystalPrice)} ◈`:`${formatScore(item.price)} ◆`;
+    const premium=Number(item.crystalPrice)>0;const status=equipped?t('equipped'):owned?t('equip'):premium?`${formatScore(item.crystalPrice)} ◈`:`${formatScore(item.price)} ◆`;
     btn.innerHTML=`<div class="shop-preview">${preview}</div><div><span class="rarity-badge rarity-${item.rarity}">${t(rar.key)}</span><h4>${t(item.nameKey)}</h4></div><div class="shop-meta"><span>${item.rarity==='legendary'?'✦ FX':item.rarity==='epic'?'◆ FX':'COSMETIC'}</span><span class="${owned?'shop-state':'shop-price'}">${status}</span></div>`;
     const previewItem={...item,kind};
     btn.addEventListener('pointerenter',()=>setShopPreview(previewItem));
@@ -1042,7 +1185,6 @@
   async function handleShopItem(item,kind){
     const list=kind==='skin'?progress.ownedSkins:kind==='bullet'?progress.ownedBullets:progress.ownedTrails;const owned=list.includes(item.id);const selectedKey=kind==='skin'?'selectedSkin':kind==='bullet'?'selectedBullet':'selectedTrail';
     if(!owned){
-      if(item.exclusive==='pass'){showToast(t('passExclusiveHint'));return}
       const premium=Number(item.crystalPrice)>0;
       if(premium){
         if(progress.crystals<item.crystalPrice){showToast(t('notEnoughCrystals'));return}
@@ -1132,7 +1274,7 @@
   function nextWave(){state.wave++;state.waveClock=0;state.score+=state.wave*35;updateQuestStat('wave',state.wave);updateQuestStat('score',Math.floor(state.score));if(player.waveGuard<900&&state.wave%player.waveGuard===0)player.shield=Math.min(4,player.shield+1);state.bannerText=state.wave%5===0?t('bossIncoming',{wave:state.wave}):t('waveIncoming',{wave:state.wave});state.bannerClock=2;if(state.wave%5===0)spawnBoss();showUpgrades();updateHUD()}
   function showUpgrades(){if(state.mode!=='game')return;state.mode='upgrade';window.PlatformBridge?.gameplayStop?.();ui.upgradeChoices.innerHTML='';const pool=[...upgrades].sort(()=>Math.random()-.5).slice(0,3);pool.forEach(up=>{const rarity=weightedPick(UPGRADE_RARITIES),copy=up[lang]||up.ru,btn=document.createElement('button');btn.className=`upgrade-card rarity-${rarity.id}`;const powerLabel=rarity.power.toFixed(rarity.power%1?1:0);btn.innerHTML=`<span class="upgrade-icon">${up.icon}</span><h3>${copy[0]}</h3><p>${copy[1]}</p><span class="rarity-label">${t(RARITY[rarity.id].key)} · ${t('rarityPower',{power:powerLabel})}</span>`;btn.addEventListener('click',()=>{up.apply(rarity.power);panels.upgrade.classList.add('hidden');state.mode='game';updateHUD();sound.tone(rarity.id==='legendary'?980:720,.14,'sine',.038);window.PlatformBridge?.gameplayStart?.()},{once:true});ui.upgradeChoices.appendChild(btn)});panels.upgrade.classList.remove('hidden')}
 
-  async function finishGame(){if(state.mode==='game')window.PlatformBridge?.gameplayExit?.();setGameplayActive(false);updateQuestStat('games',1,{mode:'add'});updateQuestStat('score',Math.floor(state.score));updateQuestStat('wave',state.wave);state.mode='gameover';hud.classList.add('hidden');const final=Math.max(0,Math.floor(state.score)),isRecord=final>progress.bestScore;if(isRecord)progress.bestScore=final;progress.gamesPlayed++;progress.coins+=Math.min(120,20+Math.floor(state.wave*4));saveProgress();ui.finalScore.textContent=formatScore(final);ui.finalWave.textContent=state.wave;ui.finalKills.textContent=state.kills;ui.finalCombo.textContent=`×${Math.max(1,state.bestCombo)}`;ui.newRecord.classList.toggle('hidden',!isRecord);ui.rankLine.textContent=window.PlatformBridge?.authorized?'…':t('noRank');showPanel('gameover');if(window.PlatformBridge?.authorized){let scoreResult=null;if(final>0)scoreResult=await window.PlatformBridge.submitScore(final*LEADERBOARD_SCORE_SCALE,{wave:state.wave,kills:state.kills,durationMs:Math.round(state.gameTime*1000)});const gained=Math.max(0,Number(scoreResult?.passXpGained)||0);if(gained>0){seasonPassData=scoreResult?.pass||seasonPassData;showToast(t('passXpGained',{xp:formatScore(gained)}),2200)}const entry=await window.PlatformBridge.getPlayerEntry();ui.rankLine.textContent=entry?.rank?t('rank',{rank:entry.rank}):''}}
+  async function finishGame(){if(state.mode==='game')window.PlatformBridge?.gameplayExit?.();setGameplayActive(false);updateQuestStat('games',1,{mode:'add'});updateQuestStat('score',Math.floor(state.score));updateQuestStat('wave',state.wave);state.mode='gameover';hud.classList.add('hidden');const final=Math.max(0,Math.floor(state.score)),isRecord=final>progress.bestScore;if(isRecord)progress.bestScore=final;progress.gamesPlayed++;progress.coins+=Math.min(120,20+Math.floor(state.wave*4));const seasonXpGained=awardSeasonPassXp(final,state.wave,state.kills);saveProgress();ui.finalScore.textContent=formatScore(final);ui.finalWave.textContent=state.wave;ui.finalKills.textContent=state.kills;ui.finalCombo.textContent=`×${Math.max(1,state.bestCombo)}`;ui.newRecord.classList.toggle('hidden',!isRecord);ui.rankLine.textContent=window.PlatformBridge?.authorized?'…':t('noRank');showPanel('gameover');if(seasonXpGained>0)showToast(t('seasonXpEarned',{xp:formatScore(seasonXpGained)}),2200);if(window.PlatformBridge?.authorized){let scoreResult=null;if(final>0)scoreResult=await window.PlatformBridge.submitScore(final*LEADERBOARD_SCORE_SCALE,{wave:state.wave,kills:state.kills,durationMs:Math.round(state.gameTime*1000)});if(scoreResult?.referralRun?.qualified){if(scoreResult.progress)applyAuthoritativeCloud(scoreResult.progress);showToast(`${t('referralInviteQualified')} ${t('referralWelcome')}`,3200);await loadReferral()}const entry=await window.PlatformBridge.getPlayerEntry();ui.rankLine.textContent=entry?.rank?t('rank',{rank:entry.rank}):''}}
   function updateHUD(){hudScore.textContent=formatScore(state.score);hudWave.textContent=state.wave;hudCombo.textContent=`×${Math.min(10,1+Math.floor(state.combo/3))}`;hpBar.innerHTML='';for(let i=0;i<player.maxHp;i++){const pip=document.createElement('span');pip.className=`hp-pip${i>=player.hp?' empty':''}`;hpBar.appendChild(pip)}if(player.shield>0)hpBar.title=`Shield: ${player.shield}`}
 
   function update(dt){if(state.mode!=='game')return;state.gameTime+=dt;state.waveClock+=dt;state.spawnClock-=dt;state.shootClock-=dt;state.comboClock+=dt;state.bannerClock=Math.max(0,state.bannerClock-dt);state.flash=Math.max(0,state.flash-dt);state.cameraShake*=Math.pow(.04,dt);player.invuln=Math.max(0,player.invuln-dt);updateTempPowerups(dt);if(state.waveClock>=state.waveLength){nextWave();return}const dir=playerDirection();const tempSpeed=state.activePowerups.speed>0?1.38:1;const edge=8*state.scale,leftBound=telegramInset('left')+player.r+edge,rightBound=state.w-telegramInset('right')-player.r-edge,topBound=telegramInset('top')+player.r+edge,bottomBound=state.h-telegramInset('bottom')-player.r-edge;player.x=clamp(player.x+dir.x*player.speed*tempSpeed*dt,Math.min(leftBound,state.w/2),Math.max(state.w/2,rightBound));player.y=clamp(player.y+dir.y*player.speed*tempSpeed*dt,Math.min(topBound,state.h/2),Math.max(state.h/2,bottomBound));if(Math.abs(dir.x)+Math.abs(dir.y)>.05&&Math.random()<.8)player.trail.push({x:player.x,y:player.y,life:.28});player.trail.forEach(p=>p.life-=dt);player.trail=player.trail.filter(p=>p.life>0);const maxEnemies=Math.min(74,12+Math.floor(state.wave*3.15));if(state.spawnClock<=0&&state.enemies.length<maxEnemies){spawnEnemy();state.spawnClock=Math.max(.16,.76-state.wave*.032)*rand(.72,1.22)}if(state.shootClock<=0&&state.enemies.length){shoot();state.shootClock=player.fireRate}for(const e of state.enemies)updateEnemy(e,dt);updateProjectiles(dt);updateParticles(dt);if(state.combo>0&&state.comboClock>state.comboGrace){state.combo=0;updateHUD()}}
@@ -1346,8 +1488,9 @@
 
   document.getElementById('playBtn').addEventListener('click',startGame);document.getElementById('helpPlayBtn').addEventListener('click',startGame);document.getElementById('leaderboardBtn').addEventListener('click',showLeaderboard);document.getElementById('resultLeaderboardBtn').addEventListener('click',showLeaderboard);document.getElementById('closeLeaderboardBtn').addEventListener('click',()=>closeOverlay('leaderboard'));
   document.getElementById('shopBtn').addEventListener('click',()=>{state.mode='shop';showPanel('shop');renderShop();refreshProgressUI()});document.getElementById('closeShopBtn').addEventListener('click',()=>closeOverlay('shop'));ui.shopPreviewPrev?.addEventListener('click',()=>stepShopPreview(-1));ui.shopPreviewNext?.addEventListener('click',()=>stepShopPreview(1));ui.mythicFeatureAction?.addEventListener('click',activateMythicFeature);
-  document.getElementById('seasonPassBtn')?.addEventListener('click',showSeasonPass);document.getElementById('closeSeasonPassBtn')?.addEventListener('click',()=>closeOverlay('seasonPass'));ui.buySeasonPassBtn?.addEventListener('click',buySeasonPass);
   document.getElementById('rewardsBtn').addEventListener('click',()=>{state.mode='rewards';showPanel('rewards');refreshProgressUI()});document.getElementById('closeRewardsBtn').addEventListener('click',()=>closeOverlay('rewards'));
+  document.getElementById('seasonPassBtn').addEventListener('click',()=>{state.mode='seasonPass';showPanel('seasonPass');renderSeasonPass();refreshProgressUI()});document.getElementById('closeSeasonPassBtn').addEventListener('click',()=>closeOverlay('seasonPass'));ui.buySeasonPassBtn?.addEventListener('click',purchaseSeasonPass);
+  document.getElementById('referralBtn').addEventListener('click',showReferral);document.getElementById('closeReferralBtn').addEventListener('click',()=>closeOverlay('referral'));ui.shareReferralBtn?.addEventListener('click',shareReferral);ui.copyReferralBtn?.addEventListener('click',copyReferralLink);
   document.getElementById('helpBtn').addEventListener('click',()=>{state.mode='help';showPanel('help')});document.getElementById('closeHelpBtn').addEventListener('click',()=>closeOverlay('help'));
   document.getElementById('pauseBtn').addEventListener('click',()=>pauseGame(true));document.getElementById('resumeBtn').addEventListener('click',()=>resumeGame(true));document.getElementById('pauseMenuBtn').addEventListener('click',goMenu);document.getElementById('menuBtn').addEventListener('click',goMenu);document.getElementById('retryBtn').addEventListener('click',retryWithAd);ui.loginBtn.addEventListener('click',login);
   ui.claimDailyBtn.addEventListener('click',claimDaily);ui.claimWeeklyBtn.addEventListener('click',claimWeekly);ui.claimAdCreditsBtn.addEventListener('click',claimAdCredits);ui.claimAdCapsuleBtn.addEventListener('click',claimAdCapsule);ui.claimQuestBonusBtn?.addEventListener('click',claimQuestBonus);ui.claimLeaderboardRewardBtn?.addEventListener('click',claimLeaderboardReward);ui.claimLeaderboardCrystalBtn?.addEventListener('click',claimLeaderboardCrystalReward);ui.claimAdCrystalsBtn?.addEventListener('click',claimAdCrystals);
@@ -1359,11 +1502,11 @@
     resize();requestAnimationFrame(loop);window.PlatformBridge?.setCallbacks?.({pause:platformPause,resume:platformResume});
     await withTimeout(window.PlatformBridge?.init?.(),10000,null);lang=window.PlatformBridge?.language||lang;applyLanguage();
     if(ui.bootText)ui.bootText.textContent=lang==='ru'?'Синхронизация прогресса…':'Syncing progress…';
-    if(window.PlatformBridge?.authorized){const cloud=await withTimeout(window.PlatformBridge.loadCloudProgress(),8000,null);mergeCloud(cloud)}
+    if(window.PlatformBridge?.authorized){const cloud=await withTimeout(window.PlatformBridge.loadCloudProgress(),8000,null);mergeCloud(cloud);await withTimeout(bindReferralFromStartParam(),5000,null)}
     persistLocalProgress();
     if(window.PlatformBridge?.authorized)await withTimeout(window.PlatformBridge.saveCloudProgress(progress),5000,false);
     if(ui.bootText)ui.bootText.textContent=lang==='ru'?'Подготовка магазина…':'Preparing shop…';
-    await withTimeout(loadCrystalCatalog(),7000,null);await withTimeout(recoverCrystalPurchases(),8000,null);renderShop();updateAuthUI();finishBoot();setInterval(refreshProgressUI,15000)
+    ensureSeasonPassState();await withTimeout(loadCrystalCatalog(),7000,null);await withTimeout(recoverCrystalPurchases(),8000,null);if(window.PlatformBridge?.authorized)await withTimeout(loadReferral(),5000,null);renderShop();renderSeasonPass();updateAuthUI();finishBoot();setInterval(refreshProgressUI,15000)
   }
   bootstrap().catch(error=>{console.error('[Neon Arena] Bootstrap error:',error);applyLanguage();renderShop();finishBoot()});
 })();

@@ -59,14 +59,15 @@
         <button id="playBtn" class="btn btn-primary" data-i18n="play">Играть</button>
         <button id="leaderboardBtn" class="btn" data-i18n="leaderboard">Рейтинг</button>
         <button id="shopBtn" class="btn" data-i18n="shop">Магазин</button>
-        <button id="seasonPassBtn" class="btn btn-season" data-i18n="seasonPass">Season Pass</button>
         <button id="rewardsBtn" class="btn btn-daily" data-i18n="rewards">Награды</button>
+        <button id="seasonPassBtn" class="btn btn-season" data-i18n="seasonPass">Season Pass</button>
+        <button id="referralBtn" class="btn btn-referral" data-i18n="referralMenu">NEON CREW</button>
         <button id="helpBtn" class="btn" data-i18n="howToPlay">Как играть</button>
       </div>
       <button id="loginBtn" class="btn btn-login hidden"></button>
       <p id="authHint" class="microcopy"></p>
       <p id="rewardStatus" class="microcopy daily-status"></p>
-      <p class="version">v1.5.19 · TELEGRAM · SEASON PASS</p>
+      <p class="version">v1.5.19 · TELEGRAM · NEON CREW</p>
     </section>
 
     <section id="upgradePanel" class="panel panel-wide hidden">
@@ -213,11 +214,6 @@
       </div>
       <div class="shop-section star-chests-section">
         <div class="shop-section-head"><h3 data-i18n="starChestsTitle">Сундуки за Stars</h3><span data-i18n="starChestsHint">Премиальные сундуки за Telegram Stars. Внутри все редкости, включая mythic.</span></div>
-        <div id="starChestPity" class="star-chest-pity">
-          <div><span data-i18n="legendaryGuarantee">Гарант legendary</span><strong id="legendaryPityText">—</strong><i><b id="legendaryPityBar"></b></i></div>
-          <div><span data-i18n="mythicGuarantee">Гарант mythic</span><strong id="mythicPityText">—</strong><i><b id="mythicPityBar"></b></i></div>
-        </div>
-        <p class="microcopy" data-i18n="pitySharedHint">Гарант общий для всех сундуков за Stars. Legendary — максимум на 10-м открытии, mythic — максимум на 100-м.</p>
         <div id="starChestShop" class="star-chest-grid"></div>
       </div>
       <div class="shop-section chest-section">
@@ -296,33 +292,109 @@
       </div>
     </section>
 
-    <section id="seasonPassPanel" class="panel panel-wide hidden">
+
+
+    <section id="seasonPassPanel" class="panel panel-wide hidden season-pass-panel">
       <div class="panel-head">
-        <div><p class="eyebrow">SEASON PASS</p><h2 data-i18n="seasonPass">Season Pass</h2></div>
+        <div><p class="eyebrow" data-i18n="seasonPassTag">NEON PASS</p><h2 data-i18n="seasonPass">Season Pass</h2></div>
         <button id="closeSeasonPassBtn" class="icon-btn" aria-label="Закрыть">×</button>
       </div>
-      <div class="season-pass-hero">
-        <div class="season-pass-copy">
-          <span id="seasonPassId" class="season-pass-tag">—</span>
-          <h3 data-i18n="seasonPassTitle">Neon Season Pass</h3>
-          <p data-i18n="seasonPassHint">20 уровней на 28 дней. Баланс рассчитан примерно на 35–40 обычных забегов. Premium открывает второй трек наград.</p>
-          <div class="season-pass-level-line"><span data-i18n="seasonLevel">Уровень</span><strong id="seasonPassLevel">1 / 20</strong><em id="seasonPassTimer">—</em></div>
-          <div class="season-pass-xp"><b id="seasonPassXpBar"></b></div>
-          <small id="seasonPassXpText">0 / 800 XP</small>
+      <div class="season-hero">
+        <div class="season-hero-copy">
+          <span class="season-chip" data-i18n="seasonPremiumBadge">PREMIUM TRACK</span>
+          <h3 data-i18n="seasonHeroTitle">Коллекционный пропуск сезона</h3>
+          <p id="seasonHeroText" data-i18n="seasonHeroText">Открывай уровни, забирай награды и получай эксклюзивную косметику с премиальной подачей.</p>
+          <div class="season-hero-actions">
+            <button id="buySeasonPassBtn" class="btn btn-primary" type="button" data-i18n="seasonPassBuy">Купить Premium Pass</button>
+            <span id="seasonPassPrice" class="season-price-pill">35 ⭐</span>
+          </div>
+          <small id="seasonPassSupportText" class="microcopy" data-i18n="seasonPassSupport">Премиум-трек открывает дополнительные награды текущего сезона.</small>
         </div>
-        <div class="season-pass-premium-card">
-          <span class="reward-tag" data-i18n="premiumTrack">PREMIUM TRACK</span>
-          <strong data-i18n="premiumPassTitle">Premium Season Pass</strong>
-          <p data-i18n="premiumPassHint">Дополнительные кристаллы и эксклюзивная сезонная косметика. Без боевых преимуществ.</p>
-          <div class="season-pass-price"><span data-i18n="price">Стоимость</span><b id="seasonPassPrice">149 ⭐</b></div>
-          <button id="buySeasonPassBtn" class="btn btn-primary" type="button" data-i18n="buyPremiumPass">Купить Premium</button>
+        <div class="season-hero-visual" aria-hidden="true">
+          <div class="season-orbit a"></div><div class="season-orbit b"></div><div class="season-orbit c"></div>
+          <div class="season-core"></div><div class="season-core-glow"></div><div class="season-spark s1"></div><div class="season-spark s2"></div><div class="season-spark s3"></div>
         </div>
       </div>
-      <div class="season-pass-track-head">
-        <span data-i18n="freeTrack">FREE</span><span data-i18n="premiumTrack">PREMIUM TRACK</span>
+      <div class="season-progress-shell">
+        <div class="season-progress-head">
+          <div>
+            <span class="reward-tag" data-i18n="seasonXpTag">СЕЗОННЫЙ ОПЫТ</span>
+            <strong id="seasonProgressLabel">0 / 120 XP</strong>
+          </div>
+          <div class="season-progress-side">
+            <strong id="seasonLevelLabel">LVL 1</strong>
+            <small id="seasonXpHint">До следующего уровня: 120 XP</small>
+          </div>
+        </div>
+        <div class="season-progress-bar"><i id="seasonProgressFill"></i></div>
       </div>
-      <div id="seasonPassRewards" class="season-pass-rewards"></div>
-      <p class="microcopy" data-i18n="seasonPassNote">Награды детерминированы. Premium Pass и сезонная косметика не усиливают характеристики персонажа.</p>
+      <div class="season-highlight-grid">
+        <article class="season-highlight-card">
+          <span class="reward-tag" data-i18n="seasonCurrentRewardTag">СЛЕДУЮЩАЯ НАГРАДА</span>
+          <div id="seasonNextReward" class="season-next-reward"></div>
+        </article>
+        <article class="season-highlight-card">
+          <span class="reward-tag" data-i18n="seasonProgressStat">ПРОГРЕСС</span>
+          <div class="season-stat-stack">
+            <strong id="seasonClaimedLabel">0 / 40</strong>
+            <small id="seasonClaimedHint" data-i18n="seasonClaimedHint">Наград получено</small>
+          </div>
+        </article>
+      </div>
+      <div class="season-track-head">
+        <div class="season-track-title"><span data-i18n="seasonFreeLane">FREE TRACK</span><span data-i18n="seasonPremiumLane">PREMIUM TRACK</span></div>
+        <div class="season-track-note" id="seasonTrackNote"></div>
+      </div>
+      <div id="seasonPassList" class="season-pass-list"></div>
+      <p class="microcopy season-footnote" data-i18n="seasonFootnote">Косметические награды не усиливают персонажа. Premium Pass открывает только дополнительные визуальные награды и валюту сезона.</p>
+    </section>
+
+    <section id="referralPanel" class="panel panel-wide hidden referral-panel">
+      <div class="panel-head">
+        <div><p class="eyebrow" data-i18n="referralTag">NEON CREW</p><h2 data-i18n="referralTitle">Приглашай друзей</h2></div>
+        <button id="closeReferralBtn" class="icon-btn" aria-label="Закрыть">×</button>
+      </div>
+      <div class="referral-hero">
+        <div class="referral-hero-copy">
+          <span class="referral-kicker" data-i18n="referralHeroKicker">СОБЕРИ СВОЮ КОМАНДУ</span>
+          <h3 data-i18n="referralHeroTitle">Друзья играют — ты открываешь редкую косметику</h3>
+          <p data-i18n="referralHeroText">Друг засчитывается после 3 полноценных забегов. Никаких наград за простой клик — только активные игроки.</p>
+          <div class="referral-share-row">
+            <button id="shareReferralBtn" class="btn btn-primary" type="button" data-i18n="referralShare">Пригласить друзей</button>
+            <button id="copyReferralBtn" class="btn" type="button" data-i18n="referralCopy">Копировать ссылку</button>
+          </div>
+          <div class="referral-code-line"><span data-i18n="referralCode">Код</span><strong id="referralCode">—</strong></div>
+        </div>
+        <div class="referral-hero-visual" aria-hidden="true">
+          <div class="crew-node core">N</div><div class="crew-node n1">1</div><div class="crew-node n2">3</div><div class="crew-node n3">10</div><div class="crew-node n4">50</div>
+          <i class="crew-link l1"></i><i class="crew-link l2"></i><i class="crew-link l3"></i><i class="crew-link l4"></i>
+        </div>
+      </div>
+      <div class="referral-stats">
+        <article><span data-i18n="referralActive">Активные друзья</span><strong id="referralActiveCount">0</strong></article>
+        <article><span data-i18n="referralPending">На проверке</span><strong id="referralPendingCount">0</strong></article>
+        <article><span data-i18n="referralWeekly">За неделю</span><strong id="referralWeeklyCount">0</strong></article>
+      </div>
+      <div id="referralInviteStatus" class="referral-status-card hidden"></div>
+      <div class="referral-section-head">
+        <div><span class="eyebrow" data-i18n="referralPassTag">REFERRAL PASS</span><h3 data-i18n="referralPassTitle">Награды за активных друзей</h3></div>
+        <p data-i18n="referralPassHint">Эти награды нельзя получить за спам приглашениями: учитываются только квалифицированные игроки.</p>
+      </div>
+      <div id="referralMilestones" class="referral-milestones"></div>
+      <div class="referral-columns">
+        <section class="referral-card">
+          <div class="referral-card-head"><div><span class="reward-tag" data-i18n="referralFriendsTag">ТВОЯ КОМАНДА</span><h3 data-i18n="referralFriendsTitle">Приглашённые игроки</h3></div></div>
+          <div id="referralFriendsList" class="referral-friends-list"></div>
+        </section>
+        <section class="referral-card">
+          <div class="referral-card-head"><div><span class="reward-tag" data-i18n="referralWeeklyTopTag">НЕДЕЛЬНЫЙ ТОП</span><h3 data-i18n="referralWeeklyTopTitle">Лучшие рекрутеры</h3></div><span id="referralWeekLabel" class="referral-week-label"></span></div>
+          <div id="referralWeeklyTop" class="referral-weekly-top"></div>
+        </section>
+      </div>
+      <div class="referral-rules">
+        <strong data-i18n="referralRulesTitle">Как засчитывается друг</strong>
+        <p data-i18n="referralRulesText">Игрок должен впервые открыть Mini App по вашей ссылке и завершить 3 забега минимум по 10 секунд. Саморефералы и повторная привязка не учитываются.</p>
+      </div>
     </section>
 
     <section id="helpPanel" class="panel panel-wide hidden">
@@ -346,33 +418,10 @@
 
 
     <section id="capsuleOverlay" class="capsule-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="capsuleTitle">
-      <div id="capsuleDialog" class="capsule-dialog">
-        <div id="capsuleFXLayer" class="capsule-fx-layer" aria-hidden="true">
-          <span class="capsule-ray r1"></span><span class="capsule-ray r2"></span><span class="capsule-ray r3"></span><span class="capsule-ray r4"></span>
-          <span class="capsule-spark s1"></span><span class="capsule-spark s2"></span><span class="capsule-spark s3"></span><span class="capsule-spark s4"></span><span class="capsule-spark s5"></span><span class="capsule-spark s6"></span>
-        </div>
-        <div id="mythicBurst" class="mythic-burst hidden" aria-hidden="true">
-          <span class="mythic-burst-wave w1"></span><span class="mythic-burst-wave w2"></span><span class="mythic-burst-wave w3"></span>
-          <span class="mythic-burst-beam b1"></span><span class="mythic-burst-beam b2"></span><span class="mythic-burst-beam b3"></span><span class="mythic-burst-beam b4"></span>
-          <div class="mythic-burst-core">✦</div>
-          <div class="mythic-burst-copy">
-            <strong id="mythicBurstTitle">MYTHIC DROP!</strong>
-            <span id="mythicBurstHint">Exclusive cosmetic unlocked</span>
-          </div>
-        </div>
-        <div id="capsuleIntro" class="capsule-intro hidden" aria-hidden="true">
-          <div class="star-chest-showcase">
-            <div class="star-chest-showcase-glow"></div>
-            <div class="star-chest-showcase-core">✦</div>
-            <div class="star-chest-showcase-ring ring-a"></div>
-            <div class="star-chest-showcase-ring ring-b"></div>
-          </div>
-          <strong id="capsuleIntroTitle">STAR CHEST</strong>
-          <span id="capsuleIntroHint">Preparing premium reward...</span>
-        </div>
+      <div class="capsule-dialog">
         <p class="eyebrow" data-i18n="capsuleOpening">ОТКРЫТИЕ КАПСУЛЫ</p>
         <h2 id="capsuleTitle" data-i18n="capsuleTitle">Косметическая капсула</h2>
-        <div id="capsuleReelFrame" class="capsule-reel-frame">
+        <div class="capsule-reel-frame">
           <div class="capsule-center-marker" aria-hidden="true"></div>
           <div id="capsuleReel" class="capsule-reel"></div>
         </div>
