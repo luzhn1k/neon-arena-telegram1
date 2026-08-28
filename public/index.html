@@ -45,6 +45,7 @@
       <p class="eyebrow">RANKED SURVIVAL</p>
       <h1>NEON ARENA</h1>
       <p class="lead" data-i18n="tagline">Выживай. Собирай комбо. Поднимайся в рейтинге.</p>
+      <span id="profileBadge" class="profile-badge hidden">NEON RECRUIT</span>
       <div class="menu-showcase" aria-hidden="true">
         <div class="menu-core-visual">
           <span class="menu-core-ring ring-a"></span><span class="menu-core-ring ring-b"></span><span class="menu-core-dot dot-a"></span><span class="menu-core-dot dot-b"></span><span class="menu-core-gem"></span>
@@ -57,6 +58,7 @@
       </div>
       <div class="menu-actions">
         <button id="playBtn" class="btn btn-primary" data-i18n="play">Играть</button>
+        <button id="welcomeOfferBtn" class="btn btn-welcome hidden" type="button"><span data-i18n="welcomePackMenu">Starter Pack</span><strong>29 ⭐</strong></button>
         <button id="leaderboardBtn" class="btn" data-i18n="leaderboard">Рейтинг</button>
         <button id="shopBtn" class="btn" data-i18n="shop">Магазин</button>
         <button id="rewardsBtn" class="btn btn-daily" data-i18n="rewards">Награды</button>
@@ -67,7 +69,7 @@
       <button id="loginBtn" class="btn btn-login hidden"></button>
       <p id="authHint" class="microcopy"></p>
       <p id="rewardStatus" class="microcopy daily-status"></p>
-      <p class="version">v1.5.23 · TELEGRAM · ANALYTICS FIX</p>
+      <p class="version">v1.5.26 · TELEGRAM · NANOREPAIR</p>
     </section>
 
     <section id="upgradePanel" class="panel panel-wide hidden">
@@ -168,6 +170,34 @@
           <button id="shopPreviewNext" class="icon-btn" type="button" aria-label="Следующий">›</button>
         </div>
       </div>
+
+      <section id="welcomePackSection" class="welcome-pack-section hidden">
+        <div class="welcome-pack-glow glow-a"></div><div class="welcome-pack-glow glow-b"></div>
+        <div class="welcome-pack-copy">
+          <div class="welcome-pack-head">
+            <span class="welcome-pack-kicker" data-i18n="welcomePackKicker">WELCOME OFFER</span>
+            <span id="welcomePackPrice" class="welcome-pack-price">29 ⭐</span>
+          </div>
+          <h3 data-i18n="welcomePackTitle">NEON STARTER PACK</h3>
+          <p data-i18n="welcomePackDesc">Одноразовый набор для первых шагов в Neon Arena.</p>
+          <div class="welcome-pack-items">
+            <div class="welcome-pack-item"><i>◈</i><span><strong>100</strong><small data-i18n="welcomePackCrystals">Neo Crystals</small></span></div>
+            <div class="welcome-pack-item"><i>✦</i><span><strong data-i18n="welcomePackChest">Premium Chest</strong><small data-i18n="welcomePackChestHint">открывается сразу после покупки</small></span></div>
+            <div class="welcome-pack-item epic"><i>◆</i><span><strong data-i18n="welcomePackEpic">Guaranteed Epic</strong><small data-i18n="welcomePackEpicHint">гарантированно новая Epic-косметика, пока есть неоткрытые</small></span></div>
+            <div class="welcome-pack-item badge"><i>✪</i><span><strong>NEON RECRUIT</strong><small data-i18n="welcomePackBadge">эксклюзивный профильный бейдж</small></span></div>
+          </div>
+          <div class="welcome-pack-progress">
+            <div class="welcome-pack-progress-head"><span data-i18n="welcomePackUnlock">Откроется после 3 завершённых забегов</span><strong id="welcomePackRuns">0 / 3</strong></div>
+            <div class="welcome-pack-progress-bar"><i id="welcomePackProgressFill"></i></div>
+          </div>
+          <button id="buyWelcomePackBtn" class="btn btn-primary welcome-pack-buy" type="button">Открыть за 29 ⭐</button>
+          <small id="welcomePackStatus" class="welcome-pack-status"></small>
+        </div>
+        <div class="welcome-pack-visual" aria-hidden="true">
+          <div class="welcome-chest"><span class="wc-lid"></span><span class="wc-body"></span><span class="wc-core">✦</span></div>
+          <span class="welcome-particle p1">◇</span><span class="welcome-particle p2">✦</span><span class="welcome-particle p3">◈</span>
+        </div>
+      </section>
 
       <div class="mythic-vault">
         <div class="shop-section-head mythic-vault-head">
