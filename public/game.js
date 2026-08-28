@@ -421,17 +421,17 @@
   const REFERRAL_EXCLUSIVE_KEYS = new Set(ALL_COSMETICS.filter(x=>x.referralExclusive).map(x=>`${x.kind}:${x.id}`));
   const DROPPABLE_COSMETICS = ALL_COSMETICS.filter(x=>x.rarity!=='mythic'&&!x.referralExclusive);
 
-  const STORAGE_KEY = 'neon_arena_progress_v9';
-  const OLD_STORAGE_KEY = 'neon_arena_progress_v8';
+  const STORAGE_KEY = 'neon_arena_progress_v10';
+  const OLD_STORAGE_KEY = 'neon_arena_progress_v9';
   const LEADERBOARD_SCORE_SCALE = 5;
   const defaultQuestStats = () => ({kills:0,score:0,combo:0,wave:1,games:0,bosses:0});
   const defaultProgress = () => ({
-    schemaVersion:10, updatedAt:0, syncRevision:0, bestScore:0, gamesPlayed:0, coins:0, crystals:0, ownedSkins:['aqua'], ownedBullets:['orb'], ownedTrails:['pulseLine'], selectedSkin:'aqua', selectedBullet:'orb', selectedTrail:'pulseLine',
+    schemaVersion:11, updatedAt:0, syncRevision:0, bestScore:0, gamesPlayed:0, coins:0, crystals:0, ownedSkins:['aqua'], ownedBullets:['orb'], ownedTrails:['pulseLine'], selectedSkin:'aqua', selectedBullet:'orb', selectedTrail:'pulseLine',
     lastDailyDate:'', dailyStreak:0, weeklyProgress:0, lastAdCreditsAt:0, lastAdCapsuleAt:0, lastAdCrystalsAt:0,
     dailyQuestDate:'', dailyQuestStats:defaultQuestStats(), dailyQuestClaims:[], dailyQuestBonusClaimed:false,
     leaderboardMilestones:[], leaderboardSeenDate:'', leaderboardSeenRank:0, leaderboardHoldClaimDate:'', leaderboardHoldStreak:0, lastTopCrystalRewardDate:'', lastTopCrystalRewardRank:0, handledPurchaseTokens:[],
     seasonPassSeasonId:'', seasonPassXp:0, seasonPassPremiumOwned:false, seasonPassClaimedFree:[], seasonPassClaimedPremium:[],
-    welcomePackOwned:false, welcomePackEligible:false, welcomePackRuns:0, welcomePackRequiredRuns:WELCOME_PACK_REQUIRED_RUNS, profileBadges:[], selectedProfileBadge:''
+    welcomePackOwned:false, welcomePackEligible:false, welcomePackRuns:0, welcomePackRequiredRuns:WELCOME_PACK_REQUIRED_RUNS, profileBadges:[], selectedProfileBadge:'', supportStars:0, supportCount:0, supportLastAt:0
   });
 
   function uniqueStrings(v, fallback) {
@@ -440,7 +440,7 @@
   function normalizeProgress(raw={}) {
     const p = defaultProgress();
     const incomingSchema=Math.max(0,Math.floor(Number(raw.schemaVersion)||0));
-    p.schemaVersion = 10;
+    p.schemaVersion = 11;
     p.updatedAt = Math.max(0, Number(raw.updatedAt)||0);
     p.syncRevision = Math.max(0, Math.floor(Number(raw.syncRevision)||0));
     p.bestScore = Math.max(0, Math.floor(Number(raw.bestScore)||0));
@@ -489,8 +489,11 @@
     p.welcomePackEligible = !!raw.welcomePackEligible;
     p.welcomePackRuns = Math.max(0,Math.floor(Number(raw.welcomePackRuns)||0));
     p.welcomePackRequiredRuns = Math.max(1,Math.floor(Number(raw.welcomePackRequiredRuns)||WELCOME_PACK_REQUIRED_RUNS));
-    p.profileBadges = uniqueStrings(raw.profileBadges, []).filter(x=>x==='NEON_RECRUIT');
-    p.selectedProfileBadge = p.profileBadges.includes(raw.selectedProfileBadge)?raw.selectedProfileBadge:(p.profileBadges[0]||'');
+    p.profileBadges = uniqueStrings(raw.profileBadges, []).filter(x=>['NEON_RECRUIT','NEON_SUPPORTER','NEON_PATRON'].includes(x));
+    p.selectedProfileBadge = p.profileBadges.includes(raw.selectedProfileBadge)?raw.selectedProfileBadge:(p.profileBadges.includes('NEON_PATRON')?'NEON_PATRON':p.profileBadges.includes('NEON_SUPPORTER')?'NEON_SUPPORTER':(p.profileBadges[0]||''));
+    p.supportStars = Math.max(0,Math.floor(Number(raw.supportStars)||0));
+    p.supportCount = Math.max(0,Math.floor(Number(raw.supportCount)||0));
+    p.supportLastAt = Math.max(0,Math.floor(Number(raw.supportLastAt)||0));
     return p;
   }
   function loadProgress() {
@@ -553,7 +556,7 @@
     projectiles:[],enemies:[],particles:[],stars:[],powerupDrop:null,powerupSpawnClock:9,activePowerups:{speed:0,damage:0,shield:0},joystick:{active:false,pointerId:null,startX:0,startY:0,rawStartX:0,rawStartY:0,x:0,y:0},keys:new Set(),suspendedByPlatform:false,manualPause:false
   };
   const player = {x:0,y:0,r:15,speed:235,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:590,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,invuln:0,trail:[]};
-  const ANALYTICS_APP_VERSION='1.5.26';
+  const ANALYTICS_APP_VERSION='1.5.28';
   function makeAnalyticsId(prefix='evt'){
     try{if(globalThis.crypto?.randomUUID)return `${prefix}_${globalThis.crypto.randomUUID().replace(/-/g,'')}`}catch(_){}
     return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,14)}`;
@@ -1019,6 +1022,14 @@
   function formatDuration(ms){const total=Math.ceil(ms/60000),h=Math.floor(total/60),m=total%60;return h>0?`${h}:${String(m).padStart(2,'0')}`:`${m} ${lang==='ru'?'мин':'min'}`}
   function anyRewardReady(){const sdk=!!window.PlatformBridge?.supportsRewarded;return canClaimDaily()||progress.weeklyProgress>=7||anyQuestRewardReady()||(sdk&&(adCreditsRemaining()<=0||adCapsuleRemaining()<=0))}
 
+  function renderProfileBadge(){
+    if(!ui.profileBadge)return;
+    const badge=String(progress.selectedProfileBadge||'');
+    ui.profileBadge.classList.toggle('hidden',!badge);
+    ui.profileBadge.dataset.badge=badge;
+    ui.profileBadge.textContent=badge.replaceAll('_',' ');
+  }
+
   function refreshProgressUI(){
     ui.menuBest.textContent=formatScore(progress.bestScore);ui.menuCoins.textContent=formatScore(progress.coins);ui.menuCrystals.textContent=formatScore(progress.crystals);ui.shopCoins.textContent=formatScore(progress.coins);ui.shopCrystals.textContent=formatScore(progress.crystals);
     const total=ALL_COSMETICS.length,owned=progress.ownedSkins.length+progress.ownedBullets.length+progress.ownedTrails.length;ui.collectionCount.textContent=`${owned}/${total}`;ui.weeklyProgress.textContent=`${progress.weeklyProgress}/7`;
@@ -1041,7 +1052,7 @@
     renderDailyQuests();
     renderSeasonPass();
     renderWelcomePack();
-    if(ui.profileBadge)ui.profileBadge.classList.toggle('hidden',!progress.welcomePackOwned);
+    renderProfileBadge();
     ui.rewardStatus.textContent=anyRewardReady()?t('rewardReadyShort'):t('rewardWaitShort');
     const rewardsBtn=document.getElementById('rewardsBtn');rewardsBtn.classList.toggle('ready',anyRewardReady());
   }
@@ -1158,8 +1169,8 @@
     progress.welcomePackRuns=Math.max(0,Math.floor(Number(status.runs)||0));
     progress.welcomePackRequiredRuns=Math.max(1,Math.floor(Number(status.requiredRuns)||WELCOME_PACK_REQUIRED_RUNS));
     if(progress.welcomePackOwned){
-      progress.profileBadges=['NEON_RECRUIT'];
-      progress.selectedProfileBadge='NEON_RECRUIT';
+      progress.profileBadges=[...new Set([...(progress.profileBadges||[]),'NEON_RECRUIT'])];
+      if(!progress.selectedProfileBadge)progress.selectedProfileBadge='NEON_RECRUIT';
     }
     persistLocalProgress();
     renderWelcomePack();
@@ -1177,7 +1188,6 @@
     section.classList.toggle('hidden',!visible);
     section.classList.toggle('owned',owned);
     if(menuBtn)menuBtn.classList.toggle('hidden',!eligible||owned);
-    if(ui.profileBadge)ui.profileBadge.classList.toggle('hidden',!owned);
     if(ui.welcomePackRuns)ui.welcomePackRuns.textContent=`${Math.min(runs,required)} / ${required}`;
     if(ui.welcomePackProgressFill)ui.welcomePackProgressFill.style.width=`${clamp(runs/required,0,1)*100}%`;
     if(ui.welcomePackPrice)ui.welcomePackPrice.textContent=welcomePackProduct?.price||WELCOME_PACK_DEFAULT_PRICE;
@@ -1212,7 +1222,7 @@
     }
     const cloud=purchase.progress||await window.PlatformBridge.loadCloudProgress();applyAuthoritativeCloud(cloud);
     const reward=purchase.reward||purchase.fulfillment||null;
-    progress.welcomePackOwned=true;progress.welcomePackEligible=false;progress.profileBadges=['NEON_RECRUIT'];progress.selectedProfileBadge='NEON_RECRUIT';persistLocalProgress();
+    progress.welcomePackOwned=true;progress.welcomePackEligible=false;progress.profileBadges=[...new Set([...(progress.profileBadges||[]),'NEON_RECRUIT'])];if(!progress.selectedProfileBadge)progress.selectedProfileBadge='NEON_RECRUIT';persistLocalProgress();
     renderWelcomePack();refreshProgressUI();renderShop();
     const chestItem=reward?.chest?.item?findCosmetic(reward.chest.item.kind,reward.chest.item.id):null;
     const epicItem=reward?.epic?.item?findCosmetic(reward.epic.item.kind,reward.epic.item.id):null;
