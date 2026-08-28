@@ -32,6 +32,7 @@ const BASE_URL = String(process.env.BASE_URL || WEBAPP_URL || '').replace(/\/$/,
 const WEBHOOK_URL = String(process.env.WEBHOOK_URL || '').replace(/\/$/, '');
 const WEBHOOK_SECRET = String(process.env.WEBHOOK_SECRET || crypto.randomBytes(20).toString('hex'));
 const SUPPORT_USERNAME = String(process.env.SUPPORT_USERNAME || '').replace(/^@/, '');
+const BOT_USERNAME = String(process.env.BOT_USERNAME || 'NeonArenaGameBot').replace(/^@/, '').trim();
 const DEV_MODE = /^(1|true|yes)$/i.test(String(process.env.DEV_MODE || ''));
 const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'));
 const PUBLIC_DIR = path.join(__dirname, 'public');
@@ -47,7 +48,7 @@ const PRODUCTS = Object.freeze({
   star_chest_10:   { id:'star_chest_10', type:'star_chest', stars:10, title:'10 Stars Chest', description:'Premium cosmetic chest. Mythic 1%, Legendary 15%.', chestId:'star_chest_10' },
   star_chest_20:   { id:'star_chest_20', type:'star_chest', stars:20, title:'20 Stars Chest', description:'Premium cosmetic chest. Mythic 1%, Legendary 17%.', chestId:'star_chest_20' },
   star_chest_30:   { id:'star_chest_30', type:'star_chest', stars:30, title:'30 Stars Chest', description:'Premium cosmetic chest. Mythic 1%, Legendary 20%.', chestId:'star_chest_30' },
-  season_pass:     { id:'season_pass', type:'season_pass', stars:149, title:'Neon Season Pass', description:'Premium seasonal reward track. Cosmetics only — no combat advantage.' },
+  season_pass_premium: { id:'season_pass_premium', type:'season_pass', stars:35, title:'Neon Season Pass', description:'Premium access to the current Neon Pass with exclusive cosmetics and extra rewards.' },
 });
 const STAR_CHEST_PRODUCTS = Object.freeze({
   star_chest_10:{id:'star_chest_10',stars:10,odds:[{id:'common',chance:.34},{id:'rare',chance:.30},{id:'epic',chance:.20},{id:'legendary',chance:.15},{id:'mythic',chance:.01}]},
@@ -55,44 +56,18 @@ const STAR_CHEST_PRODUCTS = Object.freeze({
   star_chest_30:{id:'star_chest_30',stars:30,odds:[{id:'common',chance:.08},{id:'rare',chance:.26},{id:'epic',chance:.45},{id:'legendary',chance:.20},{id:'mythic',chance:.01}]},
 });
 const DUPLICATE_CHEST_COINS = Object.freeze({common:35,rare:90,epic:260,legendary:900,mythic:2500});
-const LEGENDARY_PITY_AT = 10;
-const MYTHIC_PITY_AT = 100;
-const PASS_SEASON_DAYS = 28;
-const PASS_LEVELS = 20;
-const PASS_XP_PER_LEVEL = 800;
-const PASS_MAX_XP = (PASS_LEVELS-1)*PASS_XP_PER_LEVEL;
-const PASS_BASE_UTC = Date.UTC(2026,0,5,0,0,0,0);
-const PASS_COSMETICS = Object.freeze([
-  {kind:'skin',id:'seasonFlux'},
-  {kind:'skin',id:'seasonCrown'},
-  {kind:'skin',id:'seasonAscendant'},
-  {kind:'bullet',id:'seasonPulse'},
-  {kind:'bullet',id:'seasonNova'},
-  {kind:'trail',id:'seasonComet'},
-  {kind:'trail',id:'seasonHalo'},
-]);
-const PASS_REWARDS = Object.freeze({
-  free:Object.freeze([
-    null,
-    {credits:100},{credits:150},{crystals:10},{credits:200},{crystals:15},
-    {credits:250},{crystals:15},{credits:300},{crystals:20},{cosmetic:{kind:'bullet',id:'seasonPulse'}},
-    {credits:300},{crystals:20},{credits:350},{crystals:25},{cosmetic:{kind:'trail',id:'seasonComet'}},
-    {credits:400},{crystals:25},{credits:450},{crystals:30},{cosmetic:{kind:'skin',id:'seasonFlux'}},
-  ]),
-  premium:Object.freeze([
-    null,
-    {crystals:15},{credits:200},{crystals:25},{credits:250},{cosmetic:{kind:'skin',id:'seasonCrown'}},
-    {crystals:25},{credits:300},{crystals:30},{credits:350},{cosmetic:{kind:'bullet',id:'seasonNova'}},
-    {crystals:30},{credits:400},{crystals:35},{credits:450},{cosmetic:{kind:'trail',id:'seasonHalo'}},
-    {crystals:40},{credits:500},{crystals:50},{credits:600},{cosmetic:{kind:'skin',id:'seasonAscendant'}},
-  ]),
-});
 const SERVER_COSMETIC_POOLS = Object.freeze({
   common: Object.freeze([{kind:'skin',id:'aqua',rarity:'common'}, {kind:'skin',id:'magenta',rarity:'common'}, {kind:'skin',id:'lime',rarity:'common'}, {kind:'skin',id:'coral',rarity:'common'}, {kind:'skin',id:'cobalt',rarity:'common'}, {kind:'skin',id:'mint',rarity:'common'}, {kind:'skin',id:'sunset',rarity:'common'}, {kind:'bullet',id:'orb',rarity:'common'}, {kind:'bullet',id:'bolt',rarity:'common'}, {kind:'bullet',id:'shard',rarity:'common'}, {kind:'bullet',id:'needle',rarity:'common'}, {kind:'bullet',id:'spark',rarity:'common'}, {kind:'bullet',id:'beamlet',rarity:'common'}, {kind:'bullet',id:'glimmer',rarity:'common'}, {kind:'trail',id:'pulseLine',rarity:'common'}, {kind:'trail',id:'afterglow',rarity:'common'}, {kind:'trail',id:'shimmerTrail',rarity:'common'}, {kind:'trail',id:'driftTrail',rarity:'common'}]),
   rare: Object.freeze([{kind:'skin',id:'solar',rarity:'rare'}, {kind:'skin',id:'void',rarity:'rare'}, {kind:'skin',id:'ice',rarity:'rare'}, {kind:'skin',id:'ember',rarity:'rare'}, {kind:'skin',id:'toxic',rarity:'rare'}, {kind:'skin',id:'moon',rarity:'rare'}, {kind:'skin',id:'thunder',rarity:'rare'}, {kind:'skin',id:'jade',rarity:'rare'}, {kind:'bullet',id:'comet',rarity:'rare'}, {kind:'bullet',id:'pulse',rarity:'rare'}, {kind:'bullet',id:'arc',rarity:'rare'}, {kind:'bullet',id:'rocket',rarity:'rare'}, {kind:'bullet',id:'plasma',rarity:'rare'}, {kind:'bullet',id:'hex',rarity:'rare'}, {kind:'bullet',id:'vortex',rarity:'rare'}, {kind:'bullet',id:'emberBolt',rarity:'rare'}, {kind:'trail',id:'emberTrail',rarity:'rare'}, {kind:'trail',id:'frostTrail',rarity:'rare'}, {kind:'trail',id:'ionRibbon',rarity:'rare'}, {kind:'trail',id:'sparklineTrail',rarity:'rare'}, {kind:'trail',id:'mistTrail',rarity:'rare'}]),
   epic: Object.freeze([{kind:'skin',id:'ghost',rarity:'epic'}, {kind:'skin',id:'royal',rarity:'epic'}, {kind:'skin',id:'glitch',rarity:'epic'}, {kind:'skin',id:'aurora',rarity:'epic'}, {kind:'skin',id:'bloom',rarity:'epic'}, {kind:'skin',id:'matrix',rarity:'epic'}, {kind:'skin',id:'velvet',rarity:'epic'}, {kind:'skin',id:'holo',rarity:'epic'}, {kind:'bullet',id:'star',rarity:'epic'}, {kind:'bullet',id:'wave',rarity:'epic'}, {kind:'bullet',id:'echo',rarity:'epic'}, {kind:'bullet',id:'flare',rarity:'epic'}, {kind:'bullet',id:'petal',rarity:'epic'}, {kind:'bullet',id:'fractal',rarity:'epic'}, {kind:'bullet',id:'blossom',rarity:'epic'}, {kind:'bullet',id:'overclock',rarity:'epic'}, {kind:'trail',id:'glitchTrail',rarity:'epic'}, {kind:'trail',id:'auroraTrail',rarity:'epic'}, {kind:'trail',id:'stardustTrail',rarity:'epic'}, {kind:'trail',id:'velvetTrail',rarity:'epic'}, {kind:'trail',id:'pixelTrail',rarity:'epic'}]),
   legendary: Object.freeze([{kind:'skin',id:'nova',rarity:'legendary'}, {kind:'skin',id:'prism',rarity:'legendary'}, {kind:'skin',id:'eclipse',rarity:'legendary'}, {kind:'skin',id:'tempest',rarity:'legendary'}, {kind:'skin',id:'nebula',rarity:'legendary'}, {kind:'skin',id:'monarch',rarity:'legendary'}, {kind:'skin',id:'supernova',rarity:'legendary'}, {kind:'bullet',id:'singularity',rarity:'legendary'}, {kind:'bullet',id:'rainbow',rarity:'legendary'}, {kind:'bullet',id:'chronos',rarity:'legendary'}, {kind:'bullet',id:'helix',rarity:'legendary'}, {kind:'bullet',id:'meteor',rarity:'legendary'}, {kind:'bullet',id:'crownShot',rarity:'legendary'}, {kind:'bullet',id:'stormCore',rarity:'legendary'}, {kind:'trail',id:'prismTrail',rarity:'legendary'}, {kind:'trail',id:'solarTrail',rarity:'legendary'}, {kind:'trail',id:'eclipseTrail',rarity:'legendary'}, {kind:'trail',id:'cometTrail',rarity:'legendary'}, {kind:'trail',id:'haloTrail',rarity:'legendary'}]),
   mythic: Object.freeze([{kind:'skin',id:'quantum',rarity:'mythic'}, {kind:'skin',id:'phoenix',rarity:'mythic'}, {kind:'skin',id:'astral',rarity:'mythic'}, {kind:'skin',id:'seraph',rarity:'mythic'}, {kind:'skin',id:'abyssal',rarity:'mythic'}, {kind:'bullet',id:'celestial',rarity:'mythic'}, {kind:'bullet',id:'dragonPulse',rarity:'mythic'}, {kind:'bullet',id:'voidLance',rarity:'mythic'}, {kind:'bullet',id:'seraphic',rarity:'mythic'}, {kind:'bullet',id:'blackstar',rarity:'mythic'}, {kind:'trail',id:'galaxyTrail',rarity:'mythic'}, {kind:'trail',id:'lightningTrail',rarity:'mythic'}, {kind:'trail',id:'cosmicRoyalTrail',rarity:'mythic'}, {kind:'trail',id:'seraphTrail',rarity:'mythic'}, {kind:'trail',id:'voidStormTrail',rarity:'mythic'}]),
+});
+
+const REFERRAL_LOCKED_BY_KIND = Object.freeze({
+  skin:new Set(['referralCommander','referralArchitect']),
+  bullet:new Set(['referralNetworkPulse']),
+  trail:new Set(['referralSignalTrail']),
 });
 
 const PREMIUM_ITEMS = Object.freeze({
@@ -113,12 +88,24 @@ const PREMIUM_ITEMS = Object.freeze({
   'trail:voidStormTrail': {kind:'trail',id:'voidStormTrail',price:980},
 });
 const PREMIUM_BY_KIND = {
-  skin:new Set(Object.values(PREMIUM_ITEMS).filter(x=>x.kind==='skin').map(x=>x.id)),
-  bullet:new Set(Object.values(PREMIUM_ITEMS).filter(x=>x.kind==='bullet').map(x=>x.id)),
-  trail:new Set(Object.values(PREMIUM_ITEMS).filter(x=>x.kind==='trail').map(x=>x.id)),
+  skin:new Set([...Object.values(PREMIUM_ITEMS).filter(x=>x.kind==='skin').map(x=>x.id),...REFERRAL_LOCKED_BY_KIND.skin]),
+  bullet:new Set([...Object.values(PREMIUM_ITEMS).filter(x=>x.kind==='bullet').map(x=>x.id),...REFERRAL_LOCKED_BY_KIND.bullet]),
+  trail:new Set([...Object.values(PREMIUM_ITEMS).filter(x=>x.kind==='trail').map(x=>x.id),...REFERRAL_LOCKED_BY_KIND.trail]),
 };
-for(const item of PASS_COSMETICS) PREMIUM_BY_KIND[item.kind].add(item.id);
 const WEEKLY_CRYSTAL_REWARDS = Object.freeze({1:180,2:140,3:110,4:90,5:75,6:60,7:50,8:45,9:40,10:35});
+const REFERRAL_QUALIFY_RUNS = 3;
+const REFERRAL_MIN_RUN_MS = 10000;
+const REFERRAL_MIN_SCORE = 100;
+const REFERRAL_RUN_GAP_MS = 15000;
+const REFERRAL_WELCOME = Object.freeze({coins:200, crystals:10});
+const REFERRAL_MILESTONES = Object.freeze([
+  {count:1, reward:{coins:150,crystals:15}},
+  {count:3, reward:{coins:300,crystals:30}},
+  {count:5, reward:{cosmetic:{kind:'trail',id:'referralSignalTrail',rarity:'epic'}}},
+  {count:10,reward:{cosmetic:{kind:'bullet',id:'referralNetworkPulse',rarity:'legendary'},crystals:50}},
+  {count:25,reward:{cosmetic:{kind:'skin',id:'referralCommander',rarity:'legendary'},crystals:100}},
+  {count:50,reward:{cosmetic:{kind:'skin',id:'referralArchitect',rarity:'mythic'},crystals:200}},
+]);
 const SCORE_SCALE = 1000;
 const LEADERBOARD_LIMIT = 50;
 
@@ -139,18 +126,17 @@ CREATE TABLE IF NOT EXISTS users (
   weekly_best_score INTEGER NOT NULL DEFAULT 0,
   weekly_best_score_at INTEGER NOT NULL DEFAULT 0,
   weekly_best_week_id TEXT NOT NULL DEFAULT '',
-  star_chest_legendary_pity INTEGER NOT NULL DEFAULT 0,
-  star_chest_mythic_pity INTEGER NOT NULL DEFAULT 0,
-  pass_season_id TEXT NOT NULL DEFAULT '',
-  pass_xp INTEGER NOT NULL DEFAULT 0,
-  pass_premium INTEGER NOT NULL DEFAULT 0,
-  pass_claims_json TEXT NOT NULL DEFAULT '{"free":[],"premium":[]}',
-  pass_last_xp_at INTEGER NOT NULL DEFAULT 0,
   crystals INTEGER NOT NULL DEFAULT 0,
   progress_json TEXT NOT NULL DEFAULT '{}',
   premium_owned_json TEXT NOT NULL DEFAULT '{"skin":[],"bullet":[],"trail":[]}',
   weekly_reward_claim_week TEXT NOT NULL DEFAULT '',
-  weekly_reward_claim_rank INTEGER NOT NULL DEFAULT 0
+  weekly_reward_claim_rank INTEGER NOT NULL DEFAULT 0,
+  referral_code TEXT NOT NULL DEFAULT '',
+  referred_by INTEGER NOT NULL DEFAULT 0,
+  referral_bound_at INTEGER NOT NULL DEFAULT 0,
+  referral_games INTEGER NOT NULL DEFAULT 0,
+  referral_last_run_at INTEGER NOT NULL DEFAULT 0,
+  referral_qualified_at INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS purchases (
   purchase_id TEXT PRIMARY KEY,
@@ -173,8 +159,18 @@ CREATE TABLE IF NOT EXISTS payment_events (
   payload TEXT NOT NULL,
   created_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS referral_claims (
+  telegram_id INTEGER NOT NULL,
+  milestone_count INTEGER NOT NULL,
+  claimed_at INTEGER NOT NULL,
+  PRIMARY KEY(telegram_id,milestone_count),
+  FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
+);
 CREATE INDEX IF NOT EXISTS idx_users_leaderboard ON users(best_score DESC, best_score_at ASC, telegram_id ASC);
+CREATE INDEX IF NOT EXISTS idx_users_weekly_leaderboard ON users(weekly_best_week_id, weekly_best_score DESC, weekly_best_score_at ASC, telegram_id ASC);
 CREATE INDEX IF NOT EXISTS idx_purchases_user ON purchases(telegram_id, created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code!='';
+CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by, referral_qualified_at);
 `);
 
 function hasColumn(table, column){
@@ -189,16 +185,17 @@ addColumnIfMissing('users', 'weekly_best_score_at', 'weekly_best_score_at INTEGE
 addColumnIfMissing('users', 'weekly_best_week_id', "weekly_best_week_id TEXT NOT NULL DEFAULT ''");
 addColumnIfMissing('users', 'weekly_reward_claim_week', "weekly_reward_claim_week TEXT NOT NULL DEFAULT ''");
 addColumnIfMissing('users', 'weekly_reward_claim_rank', 'weekly_reward_claim_rank INTEGER NOT NULL DEFAULT 0');
-addColumnIfMissing('users', 'star_chest_legendary_pity', 'star_chest_legendary_pity INTEGER NOT NULL DEFAULT 0');
-addColumnIfMissing('users', 'star_chest_mythic_pity', 'star_chest_mythic_pity INTEGER NOT NULL DEFAULT 0');
-addColumnIfMissing('users', 'pass_season_id', "pass_season_id TEXT NOT NULL DEFAULT ''");
-addColumnIfMissing('users', 'pass_xp', 'pass_xp INTEGER NOT NULL DEFAULT 0');
-addColumnIfMissing('users', 'pass_premium', 'pass_premium INTEGER NOT NULL DEFAULT 0');
-addColumnIfMissing('users', 'pass_claims_json', `pass_claims_json TEXT NOT NULL DEFAULT '{"free":[],"premium":[]}'`);
-addColumnIfMissing('users', 'pass_last_xp_at', 'pass_last_xp_at INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('purchases', 'fulfillment_json', "fulfillment_json TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('users', 'referral_code', "referral_code TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('users', 'referred_by', 'referred_by INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'referral_bound_at', 'referral_bound_at INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'referral_games', 'referral_games INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'referral_last_run_at', 'referral_last_run_at INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'referral_qualified_at', 'referral_qualified_at INTEGER NOT NULL DEFAULT 0');
 
 db.exec('CREATE INDEX IF NOT EXISTS idx_users_weekly_leaderboard ON users(weekly_best_week_id, weekly_best_score DESC, weekly_best_score_at ASC, telegram_id ASC)');
+db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code!=''");
+db.exec('CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by, referral_qualified_at)');
 
 const q = {
   getUser: db.prepare('SELECT * FROM users WHERE telegram_id=?'),
@@ -211,14 +208,23 @@ const q = {
   claimWeeklyReward: db.prepare(`UPDATE users SET crystals=?,weekly_reward_claim_week=?,weekly_reward_claim_rank=?,progress_json=?,updated_at=? WHERE telegram_id=?`),
   topWeekly: db.prepare(`SELECT * FROM users WHERE weekly_best_week_id=? AND weekly_best_score>0 ORDER BY weekly_best_score DESC,weekly_best_score_at ASC,telegram_id ASC LIMIT ${LEADERBOARD_LIMIT}`),
   rankCountWeekly: db.prepare(`SELECT COUNT(*) AS n FROM users WHERE weekly_best_week_id=? AND (weekly_best_score>? OR (weekly_best_score=? AND (weekly_best_score_at<? OR (weekly_best_score_at=? AND telegram_id<?))))`),
-  setChestPity: db.prepare(`UPDATE users SET star_chest_legendary_pity=?,star_chest_mythic_pity=?,updated_at=? WHERE telegram_id=?`),
-  setPassState: db.prepare(`UPDATE users SET pass_season_id=?,pass_xp=?,pass_premium=?,pass_claims_json=?,pass_last_xp_at=?,updated_at=? WHERE telegram_id=?`),
-  setPassAndProgress: db.prepare(`UPDATE users SET pass_season_id=?,pass_xp=?,pass_premium=?,pass_claims_json=?,pass_last_xp_at=?,crystals=?,premium_owned_json=?,progress_json=?,updated_at=? WHERE telegram_id=?`),
   insertPurchase: db.prepare(`INSERT INTO purchases(purchase_id,telegram_id,product_id,stars,payload,status,created_at) VALUES(?,?,?,?,?,'pending',?)`),
   getPurchase: db.prepare(`SELECT * FROM purchases WHERE purchase_id=?`),
   getPurchasePayload: db.prepare(`SELECT * FROM purchases WHERE payload=?`),
   markPaid: db.prepare(`UPDATE purchases SET status='paid',telegram_charge_id=?,paid_at=?,fulfillment_json=? WHERE purchase_id=? AND status!='paid'`),
   insertPaymentEvent: db.prepare(`INSERT INTO payment_events(telegram_charge_id,telegram_id,product_id,stars,payload,created_at) VALUES(?,?,?,?,?,?)`),
+  setReferralCode: db.prepare(`UPDATE users SET referral_code=?,updated_at=? WHERE telegram_id=?`),
+  findByReferralCode: db.prepare(`SELECT * FROM users WHERE referral_code=?`),
+  bindReferral: db.prepare(`UPDATE users SET referred_by=?,referral_bound_at=?,updated_at=? WHERE telegram_id=? AND referred_by=0`),
+  updateReferralRun: db.prepare(`UPDATE users SET referral_games=?,referral_last_run_at=?,updated_at=? WHERE telegram_id=?`),
+  qualifyReferral: db.prepare(`UPDATE users SET referral_qualified_at=?,crystals=?,progress_json=?,updated_at=? WHERE telegram_id=?`),
+  referralCounts: db.prepare(`SELECT SUM(CASE WHEN referral_qualified_at>0 THEN 1 ELSE 0 END) AS active, SUM(CASE WHEN referral_qualified_at=0 THEN 1 ELSE 0 END) AS pending FROM users WHERE referred_by=?`),
+  referralWeeklyCount: db.prepare(`SELECT COUNT(*) AS n FROM users WHERE referred_by=? AND referral_qualified_at>=? AND referral_qualified_at<?`),
+  referralChildren: db.prepare(`SELECT telegram_id,username,first_name,last_name,photo_url,referral_games,referral_qualified_at,created_at FROM users WHERE referred_by=? ORDER BY CASE WHEN referral_qualified_at>0 THEN 0 ELSE 1 END, referral_qualified_at DESC, created_at DESC LIMIT 20`),
+  referralWeeklyTop: db.prepare(`SELECT r.telegram_id,r.username,r.first_name,r.last_name,r.photo_url,COUNT(c.telegram_id) AS referrals FROM users c JOIN users r ON r.telegram_id=c.referred_by WHERE c.referral_qualified_at>=? AND c.referral_qualified_at<? GROUP BY c.referred_by ORDER BY referrals DESC,r.updated_at ASC LIMIT 10`),
+  referralClaims: db.prepare(`SELECT milestone_count,claimed_at FROM referral_claims WHERE telegram_id=? ORDER BY milestone_count ASC`),
+  hasReferralClaim: db.prepare(`SELECT 1 AS ok FROM referral_claims WHERE telegram_id=? AND milestone_count=?`),
+  insertReferralClaim: db.prepare(`INSERT INTO referral_claims(telegram_id,milestone_count,claimed_at) VALUES(?,?,?)`),
 };
 
 function now(){ return Date.now(); }
@@ -230,6 +236,110 @@ function publicName(row){
   if(full) return full.slice(0,48);
   if(row.username) return '@'+String(row.username).slice(0,47);
   return 'Player';
+}
+
+function makeReferralCode(){
+  return crypto.randomBytes(6).toString('base64url').replace(/[-_]/g,'').slice(0,8).toUpperCase();
+}
+function ensureReferralCode(row){
+  if(row?.referral_code) return row;
+  for(let i=0;i<10;i++){
+    const code=makeReferralCode();
+    try{q.setReferralCode.run(code,now(),row.telegram_id);return q.getUser.get(row.telegram_id)}catch(e){if(!String(e.message||'').includes('UNIQUE')) throw e}
+  }
+  throw new Error('referral_code_generation_failed');
+}
+function referralRewardSummary(reward){
+  return {
+    coins:Number(reward?.coins)||0,
+    crystals:Number(reward?.crystals)||0,
+    cosmetic:reward?.cosmetic?{...reward.cosmetic}:null,
+  };
+}
+function grantReferralReward(row,reward){
+  const owned=premiumOwned(row);
+  const nextCrystals=Math.max(0,Number(row.crystals)||0)+Math.max(0,Number(reward?.crystals)||0);
+  let cosmetic=null;
+  const p=bumpProgress(row,x=>{
+    x.coins=Math.max(0,Number(x.coins)||0)+Math.max(0,Number(reward?.coins)||0);
+    x.crystals=nextCrystals;
+    if(reward?.cosmetic){
+      cosmetic={...reward.cosmetic};
+      const kind=cosmetic.kind,id=cosmetic.id;
+      const listKey=kind==='skin'?'ownedSkins':kind==='bullet'?'ownedBullets':'ownedTrails';
+      if(!owned[kind].includes(id))owned[kind].push(id);
+      x[listKey]=[...new Set([...(Array.isArray(x[listKey])?x[listKey]:[]),id])];
+    }
+  });
+  q.setPremiumState.run(nextCrystals,JSON.stringify(owned),JSON.stringify(p),now(),row.telegram_id);
+  return {progress:getProgress(q.getUser.get(row.telegram_id)),reward:{...referralRewardSummary(reward),cosmetic}};
+}
+function referralPayload(row){
+  row=ensureReferralCode(row);
+  const week=getUtcWeekInfo();
+  const counts=q.referralCounts.get(row.telegram_id)||{};
+  const active=Math.max(0,Number(counts.active)||0),pending=Math.max(0,Number(counts.pending)||0);
+  const weekly=Math.max(0,Number(q.referralWeeklyCount.get(row.telegram_id,week.startAt,week.resetAt).n)||0);
+  const claimed=new Set(q.referralClaims.all(row.telegram_id).map(x=>Number(x.milestone_count)));
+  const milestones=REFERRAL_MILESTONES.map(m=>({count:m.count,reward:referralRewardSummary(m.reward),claimed:claimed.has(m.count),claimable:active>=m.count&&!claimed.has(m.count)}));
+  const friends=q.referralChildren.all(row.telegram_id).map(r=>({
+    name:publicName(r),photoUrl:String(r.photo_url||''),games:Math.min(REFERRAL_QUALIFY_RUNS,Math.max(0,Number(r.referral_games)||0)),qualified:Boolean(r.referral_qualified_at),qualifiedAt:Number(r.referral_qualified_at)||0,
+  }));
+  const weeklyTop=q.referralWeeklyTop.all(week.startAt,week.resetAt).map((r,i)=>({rank:i+1,name:publicName(r),photoUrl:String(r.photo_url||''),referrals:Number(r.referrals)||0,mine:Number(r.telegram_id)===Number(row.telegram_id)}));
+  const startParam=`ref_${row.referral_code}`;
+  const inviteUrl=`https://t.me/${encodeURIComponent(BOT_USERNAME)}?startapp=${encodeURIComponent(startParam)}`;
+  return {
+    code:row.referral_code,startParam,inviteUrl,active,pending,weekly,qualifyRuns:REFERRAL_QUALIFY_RUNS,minRunMs:REFERRAL_MIN_RUN_MS,welcome:REFERRAL_WELCOME,
+    milestones,friends,weeklyTop,week:{weekId:week.weekId,resetAt:week.resetAt},
+    referredBy:Boolean(row.referred_by),myReferralGames:Math.min(REFERRAL_QUALIFY_RUNS,Math.max(0,Number(row.referral_games)||0)),myQualified:Boolean(row.referral_qualified_at),
+  };
+}
+function bindReferral(row,startParam){
+  row=ensureReferralCode(row);
+  if(row.referred_by) return {ok:true,alreadyBound:true,referral:referralPayload(row)};
+  if(Number(row.best_score)>0 || Number(row.referral_games)>0) return {ok:false,reason:'not_new'};
+  if(now()-Number(row.created_at||0)>72*3600*1000) return {ok:false,reason:'too_late'};
+  const match=/^ref_([A-Z0-9]{6,16})$/i.exec(String(startParam||'').trim());
+  if(!match) return {ok:false,reason:'invalid_code'};
+  const referrer=q.findByReferralCode.get(match[1].toUpperCase());
+  if(!referrer) return {ok:false,reason:'not_found'};
+  if(Number(referrer.telegram_id)===Number(row.telegram_id)) return {ok:false,reason:'self'};
+  if(Number(referrer.referred_by)===Number(row.telegram_id)) return {ok:false,reason:'cycle'};
+  q.bindReferral.run(referrer.telegram_id,now(),now(),row.telegram_id);
+  return {ok:true,bound:true,referrer:{name:publicName(referrer)},referral:referralPayload(q.getUser.get(row.telegram_id))};
+}
+function trackReferralRun(row,{score,durationMs}){
+  if(!row?.referred_by || row.referral_qualified_at) return {counted:false,qualified:false};
+  if(score<REFERRAL_MIN_SCORE || durationMs<REFERRAL_MIN_RUN_MS) return {counted:false,qualified:false};
+  const ts=now();
+  if(ts-Number(row.referral_last_run_at||0)<REFERRAL_RUN_GAP_MS) return {counted:false,qualified:false};
+  const games=Math.min(REFERRAL_QUALIFY_RUNS,Math.max(0,Number(row.referral_games)||0)+1);
+  q.updateReferralRun.run(games,ts,ts,row.telegram_id);
+  if(games<REFERRAL_QUALIFY_RUNS) return {counted:true,qualified:false,games};
+  const fresh=q.getUser.get(row.telegram_id);
+  if(fresh.referral_qualified_at) return {counted:true,qualified:false,games};
+  const nextCrystals=Math.max(0,Number(fresh.crystals)||0)+REFERRAL_WELCOME.crystals;
+  const p=bumpProgress(fresh,x=>{x.coins=Math.max(0,Number(x.coins)||0)+REFERRAL_WELCOME.coins;x.crystals=nextCrystals;x.referralWelcomeClaimed=true});
+  q.qualifyReferral.run(ts,nextCrystals,JSON.stringify(p),ts,row.telegram_id);
+  return {counted:true,qualified:true,games,reward:REFERRAL_WELCOME};
+}
+function claimReferralMilestone(row,count){
+  count=Number(count);
+  const milestone=REFERRAL_MILESTONES.find(x=>x.count===count);
+  if(!milestone) return {ok:false,reason:'unknown'};
+  const counts=q.referralCounts.get(row.telegram_id)||{};
+  const active=Math.max(0,Number(counts.active)||0);
+  if(active<count) return {ok:false,reason:'locked',active,needed:count};
+  if(q.hasReferralClaim.get(row.telegram_id,count)) return {ok:false,reason:'claimed'};
+  try{
+    db.exec('BEGIN IMMEDIATE');
+    const fresh=q.getUser.get(row.telegram_id);
+    if(q.hasReferralClaim.get(row.telegram_id,count)){db.exec('COMMIT');return {ok:false,reason:'claimed'}}
+    const granted=grantReferralReward(fresh,milestone.reward);
+    q.insertReferralClaim.run(row.telegram_id,count,now());
+    db.exec('COMMIT');
+    return {ok:true,count,progress:granted.progress,reward:granted.reward,referral:referralPayload(q.getUser.get(row.telegram_id))};
+  }catch(e){try{db.exec('ROLLBACK')}catch{};throw e}
 }
 function getUtcWeekInfo(ts=Date.now()){
   const dayMs=86400000;
@@ -257,6 +367,7 @@ function getUtcWeekInfo(ts=Date.now()){
   };
 }
 function leaderboardWeekId(){ return getUtcWeekInfo().weekId; }
+function currentSeasonPassId(ts=Date.now()){const d=new Date(ts);return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;}
 function weeklyRewardAmount(rank){ return WEEKLY_CRYSTAL_REWARDS[rank] || 0; }
 function currentWeeklyScore(row){ return row && row.weekly_best_week_id===leaderboardWeekId() ? Number(row.weekly_best_score)||0 : 0; }
 function currentWeeklyScoreAt(row){ return row && row.weekly_best_week_id===leaderboardWeekId() ? Number(row.weekly_best_score_at)||0 : 0; }
@@ -267,63 +378,13 @@ function weightedChancePick(odds){
   for(const item of odds){ roll-=Math.max(0,Number(item.chance)||0); if(roll<=0) return item.id; }
   return odds[odds.length-1]?.id || 'common';
 }
-function passSeasonInfo(ts=Date.now()){
-  const span=PASS_SEASON_DAYS*86400000;
-  const idx=Math.max(0,Math.floor((ts-PASS_BASE_UTC)/span));
-  const startAt=PASS_BASE_UTC+idx*span;
-  const resetAt=startAt+span;
-  const start=new Date(startAt);
-  return {seasonId:`${start.getUTCFullYear()}-S${String(idx+1).padStart(2,'0')}`,startAt,resetAt,levels:PASS_LEVELS,xpPerLevel:PASS_XP_PER_LEVEL};
-}
-function normalizePassClaims(raw){
-  const value=safeJsonParse(raw,{free:[],premium:[]});
-  return {free:[...new Set((Array.isArray(value.free)?value.free:[]).map(Number).filter(x=>x>=1&&x<=PASS_LEVELS))],premium:[...new Set((Array.isArray(value.premium)?value.premium:[]).map(Number).filter(x=>x>=1&&x<=PASS_LEVELS))]};
-}
-function passState(row){
-  const season=passSeasonInfo();
-  const same=String(row?.pass_season_id||'')===season.seasonId;
-  const xp=same?clampInt(row.pass_xp,0,PASS_MAX_XP):0;
-  const premium=same?Boolean(row.pass_premium):false;
-  const claims=same?normalizePassClaims(row.pass_claims_json):{free:[],premium:[]};
-  const level=Math.min(PASS_LEVELS,1+Math.floor(xp/PASS_XP_PER_LEVEL));
-  return {season,xp,premium,claims,level,lastXpAt:same?Number(row.pass_last_xp_at)||0:0};
-}
-function pityState(row){
-  const legendary=clampInt(row?.star_chest_legendary_pity,0,LEGENDARY_PITY_AT-1);
-  const mythic=clampInt(row?.star_chest_mythic_pity,0,MYTHIC_PITY_AT-1);
-  return {legendary:{count:legendary,guaranteedAt:LEGENDARY_PITY_AT,remaining:LEGENDARY_PITY_AT-legendary},mythic:{count:mythic,guaranteedAt:MYTHIC_PITY_AT,remaining:MYTHIC_PITY_AT-mythic}};
-}
-function passRewardPublic(reward){
-  if(!reward)return null;
-  if(reward.cosmetic)return {type:'cosmetic',cosmetic:{...reward.cosmetic}};
-  if(reward.crystals)return {type:'crystals',amount:Number(reward.crystals)||0};
-  return {type:'credits',amount:Number(reward.credits)||0};
-}
-function passPayload(row){
-  const s=passState(row);
-  return {season:s.season,xp:s.xp,level:s.level,premium:s.premium,claims:s.claims,priceStars:PRODUCTS.season_pass.stars,rewards:{free:PASS_REWARDS.free.slice(1).map(passRewardPublic),premium:PASS_REWARDS.premium.slice(1).map(passRewardPublic)}};
-}
-function addPassXp(row,{score=0,wave=0,kills=0,durationMs=0}={}){
-  const s=passState(row),ts=now();
-  if(ts-s.lastXpAt<8000 || Number(durationMs)<5000 || Number(score)<=0) return {state:s,gained:0};
-  const gain=clampInt(125+Number(wave)*22+Number(kills)*2.2+Math.floor(Number(score)/100),100,800);
-  const xp=Math.min(PASS_MAX_XP,s.xp+gain);
-  q.setPassState.run(s.season.seasonId,xp,s.premium?1:0,JSON.stringify(s.claims),ts,ts,row.telegram_id);
-  return {state:{...s,xp,level:Math.min(PASS_LEVELS,1+Math.floor(xp/PASS_XP_PER_LEVEL)),lastXpAt:ts},gained:gain};
-}
 function grantStarChestReward(row, chestId){
   const config=STAR_CHEST_PRODUCTS[chestId];
   if(!config) throw new Error('unknown_star_chest');
   const owned=premiumOwned(row);
-  const prevLegendary=clampInt(row.star_chest_legendary_pity,0,LEGENDARY_PITY_AT-1);
-  const prevMythic=clampInt(row.star_chest_mythic_pity,0,MYTHIC_PITY_AT-1);
-  let rarity=weightedChancePick(config.odds),guarantee='';
-  if(prevMythic>=MYTHIC_PITY_AT-1){rarity='mythic';guarantee='mythic'}
-  else if(prevLegendary>=LEGENDARY_PITY_AT-1 && rarity!=='legendary' && rarity!=='mythic'){rarity='legendary';guarantee='legendary'}
-  const nextLegendary=(rarity==='legendary'||rarity==='mythic')?0:Math.min(LEGENDARY_PITY_AT-1,prevLegendary+1);
-  const nextMythic=rarity==='mythic'?0:Math.min(MYTHIC_PITY_AT-1,prevMythic+1);
   let rewardItem=null, duplicate=false, coins=0;
   const progress=bumpProgress(row, x => {
+    const rarity=weightedChancePick(config.odds);
     const pool=SERVER_COSMETIC_POOLS[rarity] || SERVER_COSMETIC_POOLS.common;
     rewardItem=randomPick(pool) || randomPick(SERVER_COSMETIC_POOLS.common);
     if(!rewardItem) throw new Error('empty_cosmetic_pool');
@@ -341,8 +402,7 @@ function grantStarChestReward(row, chestId){
   return {
     progress,
     premiumOwnedJson: JSON.stringify(owned),
-    pity:{legendary:{count:nextLegendary,guaranteedAt:LEGENDARY_PITY_AT,remaining:LEGENDARY_PITY_AT-nextLegendary},mythic:{count:nextMythic,guaranteedAt:MYTHIC_PITY_AT,remaining:MYTHIC_PITY_AT-nextMythic}},
-    reward: {type:'star_chest', chestId:config.id, duplicate, coins, guarantee, item:rewardItem}
+    reward: {type:'star_chest', chestId:config.id, duplicate, coins, item:rewardItem}
   };
 }
 function premiumOwned(row){
@@ -351,7 +411,7 @@ function premiumOwned(row){
 }
 function getProgress(row){
   const p=safeJsonParse(row.progress_json,{});
-  p.schemaVersion=Math.max(8,clampInt(p.schemaVersion,0,100));
+  p.schemaVersion=Math.max(9,clampInt(p.schemaVersion,0,100));
   p.bestScore=Math.max(0,Number(row.best_score)||0);
   p.crystals=Math.max(0,Number(row.crystals)||0);
   p.lastWeeklyCrystalRewardWeek=row.weekly_reward_claim_week||'';
@@ -381,7 +441,7 @@ function applyPremiumOwnership(row, raw){
 }
 function sanitizeProgress(row, raw){
   const p = raw && typeof raw==='object' && !Array.isArray(raw) ? {...raw} : {};
-  p.schemaVersion=Math.max(8,clampInt(p.schemaVersion,0,100));
+  p.schemaVersion=Math.max(9,clampInt(p.schemaVersion,0,100));
   p.updatedAt=clampInt(p.updatedAt,0,Number.MAX_SAFE_INTEGER);
   p.syncRevision=clampInt(p.syncRevision,0,1_000_000_000);
   p.gamesPlayed=clampInt(p.gamesPlayed,0,1_000_000_000);
@@ -390,6 +450,11 @@ function sanitizeProgress(row, raw){
   p.weeklyProgress=clampInt(p.weeklyProgress,0,7);
   p.lastAdCreditsAt=0;p.lastAdCapsuleAt=0;p.lastAdCrystalsAt=0;
   p.handledPurchaseTokens=[];
+  p.seasonPassSeasonId=String(p.seasonPassSeasonId||'').slice(0,16);
+  p.seasonPassXp=clampInt(p.seasonPassXp,0,1000000);
+  p.seasonPassPremiumOwned=!!p.seasonPassPremiumOwned;
+  p.seasonPassClaimedFree=arrayStrings(p.seasonPassClaimedFree,64);
+  p.seasonPassClaimedPremium=arrayStrings(p.seasonPassClaimedPremium,64);
   p.dailyQuestClaims=arrayStrings(p.dailyQuestClaims,64);
   p.leaderboardMilestones=arrayStrings(p.leaderboardMilestones,64);
   if(p.dailyQuestStats && typeof p.dailyQuestStats==='object'){
@@ -405,45 +470,10 @@ function sanitizeProgress(row, raw){
 function bumpProgress(row, mutate){
   let p=getProgress(row);
   mutate(p);
-  p.schemaVersion=Math.max(8,Number(p.schemaVersion)||8);
+  p.schemaVersion=Math.max(9,Number(p.schemaVersion)||9);
   p.updatedAt=now();
   p.syncRevision=Math.max(0,Number(p.syncRevision)||0)+1;
   return p;
-}
-function claimPassReward(row, track, level){
-  track=track==='premium'?'premium':'free';
-  level=clampInt(level,1,PASS_LEVELS);
-  const state=passState(row);
-  if(level>state.level) throw Object.assign(new Error('pass_level_locked'),{status:409,reason:'locked'});
-  if(track==='premium'&&!state.premium) throw Object.assign(new Error('premium_pass_required'),{status:409,reason:'premium'});
-  if(state.claims[track].includes(level)) throw Object.assign(new Error('pass_reward_claimed'),{status:409,reason:'claimed'});
-  const reward=PASS_REWARDS[track][level];
-  if(!reward) throw Object.assign(new Error('pass_reward_missing'),{status:404,reason:'missing'});
-  const claims={free:[...state.claims.free],premium:[...state.claims.premium]};
-  claims[track].push(level);claims[track].sort((a,b)=>a-b);
-  const owned=premiumOwned(row);
-  let nextCrystals=Math.max(0,Number(row.crystals)||0),duplicate=false,duplicateCredits=0;
-  const progress=bumpProgress(row,x=>{
-    if(reward.credits) x.coins=Math.max(0,Number(x.coins)||0)+Number(reward.credits);
-    if(reward.crystals){nextCrystals+=Number(reward.crystals);x.crystals=nextCrystals}
-    if(reward.cosmetic){
-      const {kind,id}=reward.cosmetic;
-      const listKey=kind==='skin'?'ownedSkins':kind==='bullet'?'ownedBullets':'ownedTrails';
-      const current=Array.isArray(x[listKey])?x[listKey]:[];
-      const already=current.includes(id)||owned[kind].includes(id);
-      if(already){duplicate=true;duplicateCredits=250;x.coins=Math.max(0,Number(x.coins)||0)+duplicateCredits}
-      else{x[listKey]=[...new Set([...current,id])];owned[kind]=[...new Set([...owned[kind],id])]}
-    }
-  });
-  q.setPassAndProgress.run(state.season.seasonId,state.xp,state.premium?1:0,JSON.stringify(claims),state.lastXpAt,nextCrystals,JSON.stringify(owned),JSON.stringify(progress),now(),row.telegram_id);
-  const latest=q.getUser.get(row.telegram_id);
-  return {ok:true,track,level,reward:passRewardPublic(reward),duplicate,duplicateCredits,progress:getProgress(latest),pass:passPayload(latest)};
-}
-function activateSeasonPass(row){
-  const state=passState(row);
-  if(state.premium) return {alreadyOwned:true,seasonId:state.season.seasonId};
-  q.setPassState.run(state.season.seasonId,state.xp,1,JSON.stringify(state.claims),state.lastXpAt,now(),row.telegram_id);
-  return {alreadyOwned:false,seasonId:state.season.seasonId};
 }
 function ensureUser(tgUser){
   const id=Number(tgUser.id);
@@ -455,7 +485,7 @@ function ensureUser(tgUser){
   }else{
     q.updateUserIdentity.run(...identity,now(),id); row=q.getUser.get(id);
   }
-  return row;
+  return ensureReferralCode(row);
 }
 
 function validateInitData(initData){
@@ -571,11 +601,17 @@ async function sendLeaderboard(chatId,userId){
   const mine=row&&currentWeeklyScore(row)>0?`\n\nВаше место: #${getWeeklyRank(row)} · ${Number(currentWeeklyScore(row)).toLocaleString('ru-RU')}`:'';
   return botApi('sendMessage',{chat_id:chatId,text:`🏆 Недельный рейтинг Neon Arena\n\n${lines}${mine}`});
 }
+async function sendInvite(chatId,from){
+  const row=ensureUser(from||{});const referral=referralPayload(row);
+  const text=`⚡ NEON CREW\n\nПриглашай друзей в Neon Arena. Друг засчитывается после ${REFERRAL_QUALIFY_RUNS} полноценных забегов. За активных друзей открываются неон-кредиты, кристаллы и эксклюзивная косметика.\n\n${referral.inviteUrl}`;
+  const rows=[[{text:'👥 Пригласить друзей',url:`https://t.me/share/url?url=${encodeURIComponent(referral.inviteUrl)}&text=${encodeURIComponent('Залетай в Neon Arena — играем за рейтинг ⚡')}`}]];const app=webAppButton();if(app)rows.push([app]);
+  return botApi('sendMessage',{chat_id:chatId,text,reply_markup:{inline_keyboard:rows}});
+}
 function supportText(payment=false){
   const contact=SUPPORT_USERNAME?`@${SUPPORT_USERNAME}`:'у владельца бота (укажите SUPPORT_USERNAME в настройках сервера)';
   return payment?`Поддержка по платежам: ${contact}. При обращении укажите дату покупки и количество Stars.`:`Поддержка Neon Arena: ${contact}.`;
 }
-const TERMS_TEXT='Neon Arena продаёт цифровую косметическую валюту, премиальные сундуки, сезонный пропуск и косметические предметы за Telegram Stars. Сундуки содержат случайные косметические награды с опубликованными шансами и системой гаранта. Все цифровые предметы не имеют денежной стоимости внутри игры, не подлежат выводу и не дают преимущества в боевых характеристиках. Возвраты по обоснованным платёжным обращениям рассматриваются поддержкой проекта.';
+const TERMS_TEXT='Neon Arena продаёт цифровую косметическую валюту, премиальные сундуки и предметы за Telegram Stars. Они не имеют денежной стоимости внутри игры, не подлежат выводу и не дают преимущества в боевых характеристиках. Возвраты по обоснованным платёжным обращениям рассматриваются поддержкой проекта.';
 
 function parsePayload(payload){
   const m=/^neon:([a-f0-9]{24}):(\d+):([a-z0-9_]+)$/i.exec(String(payload||''));
@@ -594,17 +630,26 @@ function processSuccessfulPayment(message){
     if(duplicate){db.exec('COMMIT');return}
     const row=q.getUser.get(fromId);if(!row)throw new Error('user_missing');
     q.insertPaymentEvent.run(charge,fromId,product.id,product.stars,sp.invoice_payload,now());
-    let nextCrystals=Math.max(0,Number(row.crystals)||0), premiumJson=row.premium_owned_json, progressJson=JSON.stringify(getProgress(row));
+    let nextCrystals=Math.max(0,Number(row.crystals)||0), premiumJson=row.premium_owned_json, progressJson='';
     let fulfillment={type:product.type||'crystals'};
     if(product.type==='star_chest'){
       const opened=grantStarChestReward(row, product.chestId||product.id);
       premiumJson=opened.premiumOwnedJson;
       progressJson=JSON.stringify(opened.progress);
-      fulfillment={...opened.reward,pity:opened.pity};
-      q.setChestPity.run(opened.pity.legendary.count,opened.pity.mythic.count,now(),fromId);
+      fulfillment=opened.reward;
     }else if(product.type==='season_pass'){
-      const activated=activateSeasonPass(row);
-      fulfillment={type:'season_pass',seasonId:activated.seasonId,alreadyOwned:activated.alreadyOwned};
+      const seasonId=currentSeasonPassId();
+      const p=bumpProgress(row,x=>{
+        if(String(x.seasonPassSeasonId||'')!==seasonId){
+          x.seasonPassSeasonId=seasonId;
+          x.seasonPassXp=0;
+          x.seasonPassClaimedFree=[];
+          x.seasonPassClaimedPremium=[];
+        }
+        x.seasonPassPremiumOwned=true;
+      });
+      progressJson=JSON.stringify(p);
+      fulfillment={type:'season_pass',seasonId};
     }else{
       nextCrystals=Math.max(0,Number(row.crystals)||0)+Number(product.crystals||0);
       const p=bumpProgress(row,x=>{x.crystals=nextCrystals});
@@ -612,7 +657,7 @@ function processSuccessfulPayment(message){
       fulfillment={type:'crystals',crystals:Number(product.crystals)||0};
     }
     q.markPaid.run(charge,now(),JSON.stringify(fulfillment),purchase.purchase_id);
-    if(product.type!=='season_pass')q.setPremiumState.run(nextCrystals,premiumJson,progressJson,now(),fromId);
+    q.setPremiumState.run(nextCrystals,premiumJson,progressJson,now(),fromId);
     db.exec('COMMIT');
   }catch(e){try{db.exec('ROLLBACK')}catch{};console.error('[payment]',e)}
 }
@@ -622,9 +667,6 @@ async function processBotUpdate(update){
     try{
       const parsed=parsePayload(pc.invoice_payload);const purchase=parsed&&q.getPurchase.get(parsed.purchaseId);const product=parsed&&PRODUCTS[parsed.productId];
       ok=Boolean(parsed&&purchase&&product&&purchase.status==='pending'&&Number(pc.from?.id)===parsed.telegramId&&purchase.telegram_id===parsed.telegramId&&pc.currency==='XTR'&&Number(pc.total_amount)===product.stars);
-      if(ok&&product.type==='season_pass'){
-        const buyer=q.getUser.get(parsed.telegramId);if(buyer&&passState(buyer).premium){ok=false;error_message='Premium Season Pass уже активирован для текущего сезона.'}
-      }
       if(ok)error_message=undefined;
     }catch{}
     await botApi('answerPreCheckoutQuery',{pre_checkout_query_id:pc.id,ok,...(error_message?{error_message}:{})}).catch(console.error);return;
@@ -635,6 +677,7 @@ async function processBotUpdate(update){
     const cmd=msg.text.trim().split(/\s+/)[0].split('@')[0].toLowerCase();
     if(cmd==='/start'||cmd==='/play') return sendStart(msg.chat.id).catch(console.error);
     if(cmd==='/leaderboard') return sendLeaderboard(msg.chat.id,msg.from?.id).catch(console.error);
+    if(cmd==='/invite') return sendInvite(msg.chat.id,msg.from).catch(console.error);
     if(cmd==='/terms') return botApi('sendMessage',{chat_id:msg.chat.id,text:TERMS_TEXT}).catch(console.error);
     if(cmd==='/support') return botApi('sendMessage',{chat_id:msg.chat.id,text:supportText(false)}).catch(console.error);
     if(cmd==='/paysupport') return botApi('sendMessage',{chat_id:msg.chat.id,text:supportText(true)}).catch(console.error);
@@ -659,6 +702,7 @@ async function configureBot(){
   await botApi('setMyCommands',{commands:[
     {command:'play',description:'Открыть Neon Arena'},
     {command:'leaderboard',description:'Недельный рейтинг'},
+    {command:'invite',description:'Пригласить друзей'},
     {command:'terms',description:'Условия покупок'},
     {command:'support',description:'Поддержка'},
     {command:'paysupport',description:'Поддержка по платежам'},
@@ -690,7 +734,7 @@ async function handleApi(req,res,pathname,url){
     const meta=body.meta||{};const durationMs=clampInt(meta.durationMs,0,24*3600*1000);const wave=clampInt(meta.wave,0,10000);const kills=clampInt(meta.kills,0,10_000_000);
     if(score>0 && durationMs>0 && durationMs<2500) return sendJson(res,422,{ok:false,reason:'run_too_short'});
     if(score>50_000_000 || wave>5000 || kills>5_000_000) return sendJson(res,422,{ok:false,reason:'implausible_score'});
-    const fresh=q.getUser.get(row.telegram_id);const passGain=addPassXp(fresh,{score,wave,kills,durationMs});let newBest=false,newWeeklyBest=false;const weekId=leaderboardWeekId();
+    const fresh=q.getUser.get(row.telegram_id);let newBest=false,newWeeklyBest=false;const weekId=leaderboardWeekId();
     const currentWeekly=fresh.weekly_best_week_id===weekId?Number(fresh.weekly_best_score||0):0;
     const shouldUpdateBest=score>Number(fresh.best_score||0);
     const shouldUpdateWeekly=score>currentWeekly;
@@ -714,21 +758,13 @@ async function handleApi(req,res,pathname,url){
         newWeeklyBest=true;
       }
     }
-    const latest=q.getUser.get(row.telegram_id);return sendJson(res,200,{ok:true,newBest,newWeeklyBest,passXpGained:passGain.gained,pass:passPayload(latest),entry:playerEntry(latest)});
+    let latest=q.getUser.get(row.telegram_id);const referralRun=trackReferralRun(latest,{score,durationMs});latest=q.getUser.get(row.telegram_id);return sendJson(res,200,{ok:true,newBest,newWeeklyBest,entry:playerEntry(latest),referralRun,progress:referralRun.qualified?getProgress(latest):undefined});
   }
   if(pathname==='/api/leaderboard' && req.method==='GET') return sendJson(res,200,{ok:true,...leaderboardPayload(q.getUser.get(row.telegram_id))});
   if(pathname==='/api/player-entry' && req.method==='GET') return sendJson(res,200,{ok:true,entry:playerEntry(q.getUser.get(row.telegram_id))});
-  if(pathname==='/api/star-chest/status' && req.method==='GET') return sendJson(res,200,{ok:true,pity:pityState(q.getUser.get(row.telegram_id))});
-  if(pathname==='/api/pass' && req.method==='GET') return sendJson(res,200,{ok:true,...passPayload(q.getUser.get(row.telegram_id))});
-  if(pathname==='/api/pass/claim' && req.method==='POST'){
-    const body=await readJson(req);const fresh=q.getUser.get(row.telegram_id);
-    try{return sendJson(res,200,claimPassReward(fresh,String(body.track||'free'),Number(body.level)||0))}
-    catch(e){return sendJson(res,Number(e.status)||409,{ok:false,reason:e.reason||e.message||'pass_claim_failed'})}
-  }
   if(pathname==='/api/invoice' && req.method==='POST'){
     if(!BOT_TOKEN)throw Object.assign(new Error('payments_unavailable'),{status:503});
     const body=await readJson(req);const product=PRODUCTS[String(body.productId||body.product_id||'')];if(!product)throw Object.assign(new Error('unknown_product'),{status:404});
-    if(product.type==='season_pass'&&passState(q.getUser.get(row.telegram_id)).premium) return sendJson(res,409,{ok:false,reason:'already_owned'});
     const purchaseId=crypto.randomBytes(12).toString('hex');const payload=`neon:${purchaseId}:${row.telegram_id}:${product.id}`;
     q.insertPurchase.run(purchaseId,row.telegram_id,product.id,product.stars,payload,now());
     const invoiceLink=await botApi('createInvoiceLink',{title:product.title,description:product.description,payload,currency:'XTR',provider_token:'',prices:[{label:product.title,amount:product.stars}]});
@@ -762,6 +798,17 @@ async function handleApi(req,res,pathname,url){
       q.claimWeeklyReward.run(nextCrystals,weekId,rank,JSON.stringify(p),now(),row.telegram_id);db.exec('COMMIT');result={ok:true,rank,amount,weekId,progress:getProgress(q.getUser.get(row.telegram_id))};
     }catch(e){try{db.exec('ROLLBACK')}catch{};throw e}
     return sendJson(res,200,result);
+  }
+  if(pathname==='/api/referral' && req.method==='GET'){
+    return sendJson(res,200,{ok:true,referral:referralPayload(q.getUser.get(row.telegram_id))});
+  }
+  if(pathname==='/api/referral/bind' && req.method==='POST'){
+    const body=await readJson(req);const result=bindReferral(q.getUser.get(row.telegram_id),String(body.startParam||body.start_param||body.code||''));
+    return sendJson(res,result.ok?200:409,result);
+  }
+  if(pathname==='/api/referral/claim' && req.method==='POST'){
+    const body=await readJson(req);const result=claimReferralMilestone(q.getUser.get(row.telegram_id),body.count);
+    return sendJson(res,result.ok?200:409,result);
   }
   return sendJson(res,404,{ok:false,error:'not_found'});
 }
