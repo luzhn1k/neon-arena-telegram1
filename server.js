@@ -167,10 +167,7 @@ CREATE TABLE IF NOT EXISTS referral_claims (
   FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
 );
 CREATE INDEX IF NOT EXISTS idx_users_leaderboard ON users(best_score DESC, best_score_at ASC, telegram_id ASC);
-CREATE INDEX IF NOT EXISTS idx_users_weekly_leaderboard ON users(weekly_best_week_id, weekly_best_score DESC, weekly_best_score_at ASC, telegram_id ASC);
 CREATE INDEX IF NOT EXISTS idx_purchases_user ON purchases(telegram_id, created_at DESC);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code!='';
-CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by, referral_qualified_at);
 `);
 
 function hasColumn(table, column){
