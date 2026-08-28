@@ -23,7 +23,18 @@
         this.initData=String(this.tg.initData||'');this.user=this.tg.initDataUnsafe?.user||null;this.startParam=String(this.tg.initDataUnsafe?.start_param||new URLSearchParams(location.search).get('tgWebAppStartParam')||'');
         const lc=String(this.user?.language_code||'').toLowerCase();if(lc)this.language=lc.startsWith('ru')?'ru':'en';
         this.authorized=!!this.initData;this.platformAvailable=true;this.platformApi={telegram:true};
-        const viewportSignal=()=>{try{window.dispatchEvent(new CustomEvent('neon:telegramviewport'))}catch(_){window.dispatchEvent(new Event('resize'))}};
+        const syncSafeInsets=()=>{
+          try{
+            const safe=this.tg?.contentSafeAreaInset||this.tg?.safeAreaInset||{};
+            const root=document.documentElement;
+            for(const side of ['top','right','bottom','left']){
+              const value=Math.max(0,Number(safe?.[side])||0);
+              root.style.setProperty(`--neon-content-safe-${side}`,`${value}px`);
+            }
+          }catch(_){ }
+        };
+        const viewportSignal=()=>{syncSafeInsets();try{window.dispatchEvent(new CustomEvent('neon:telegramviewport'))}catch(_){window.dispatchEvent(new Event('resize'))}};
+        syncSafeInsets();
         this.tg.onEvent?.('deactivated',()=>this.callbacks.pause());this.tg.onEvent?.('activated',()=>this.callbacks.resume());
         this.tg.onEvent?.('viewportChanged',viewportSignal);this.tg.onEvent?.('safeAreaChanged',viewportSignal);this.tg.onEvent?.('contentSafeAreaChanged',viewportSignal);
       }else{
@@ -50,6 +61,7 @@
     async loadCloudProgress(){if(!this.authorized)return null;try{return(await this.api('/api/me')).progress}catch(e){console.warn('[Telegram] cloud load',e);return null}}
     async saveCloudProgress(progress){if(!this.authorized)return false;try{await this.api('/api/progress',{method:'PUT',body:JSON.stringify({progress})});return true}catch(e){console.warn('[Telegram] cloud save',e);return false}}
     async submitScore(score,meta={}){if(!this.authorized)return false;try{return await this.api('/api/score',{method:'POST',body:JSON.stringify({score:Math.max(0,Math.floor(Number(score)||0)),meta})})}catch(e){console.warn('[Telegram] score',e);return false}}
+    async analyticsHeartbeat(payload={},keepalive=false){if(!this.authorized)return false;try{return await this.api('/api/analytics/heartbeat',{method:'POST',body:JSON.stringify(payload),keepalive:!!keepalive})}catch(e){if(!keepalive)console.warn('[Telegram] analytics',e);return false}}
     async getLeaderboard(){if(!this.authorized)return null;try{const d=await this.api('/api/leaderboard');return{entries:d.entries||[],userRank:d.userRank||0,season:d.season||null,reward:d.reward||null}}catch(e){console.warn('[Telegram] leaderboard',e);return null}}
     async getPlayerEntry(){if(!this.authorized)return null;try{return(await this.api('/api/player-entry')).entry||null}catch(_){return null}}
     async getPaymentsCatalog(){try{return(await this.api('/api/store')).products||[]}catch(_){return[]}}

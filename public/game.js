@@ -528,11 +528,28 @@
 
   const state = {
     mode:'menu', prevMode:'menu', w:1280,h:720,dpr:1,scale:1,lastTime:performance.now(), gameTime:0,wave:1,waveClock:0,waveLength:22.5,
-    arenaW:1280,arenaH:720,cameraX:0,cameraY:0,waveDirector:null,lastBossKind:'',
+    arenaW:1280,arenaH:720,cameraX:0,cameraY:0,waveDirector:null,lastBossKind:'',runId:'',
     spawnClock:0,shootClock:0,score:0,kills:0,combo:0,comboClock:99,bestCombo:0,comboGrace:3,cameraShake:0,flash:0,bannerText:'',bannerClock:0,
     projectiles:[],enemies:[],particles:[],stars:[],powerupDrop:null,powerupSpawnClock:9,activePowerups:{speed:0,damage:0,shield:0},joystick:{active:false,pointerId:null,startX:0,startY:0,rawStartX:0,rawStartY:0,x:0,y:0},keys:new Set(),suspendedByPlatform:false,manualPause:false
   };
   const player = {x:0,y:0,r:15,speed:235,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:590,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,repairEvery:999,killsSinceRepair:0,invuln:0,trail:[]};
+  const ANALYTICS_APP_VERSION='1.5.23';
+  function makeAnalyticsId(prefix='evt'){
+    try{if(globalThis.crypto?.randomUUID)return `${prefix}_${globalThis.crypto.randomUUID().replace(/-/g,'')}`}catch(_){}
+    return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,14)}`;
+  }
+  let analyticsSessionId=makeAnalyticsId('sess'),analyticsTimer=null;
+  function analyticsMode(){return String(state.mode||'menu').slice(0,32)}
+  function sendAnalyticsHeartbeat(active=true,keepalive=false){
+    if(!window.PlatformBridge?.authorized)return Promise.resolve(false);
+    return window.PlatformBridge.analyticsHeartbeat?.({sessionId:analyticsSessionId,active:!!active,mode:analyticsMode(),version:ANALYTICS_APP_VERSION},keepalive)||Promise.resolve(false);
+  }
+  function startAnalyticsTracking(){
+    if(!window.PlatformBridge?.authorized||analyticsTimer)return;
+    sendAnalyticsHeartbeat(true,false);
+    analyticsTimer=setInterval(()=>{if(!document.hidden)sendAnalyticsHeartbeat(true,false)},25000);
+  }
+
   const enemyTypes = {
     chaser:{r:14,hp:1,speed:80,score:22},dasher:{r:12,hp:1,speed:58,score:28},tank:{r:22,hp:5,speed:42,score:42},
     shooter:{r:15,hp:2,speed:53,score:34},splitter:{r:17,hp:3,speed:63,score:36},orbiter:{r:14,hp:2,speed:58,score:34},
@@ -1376,7 +1393,7 @@
   }
   function makeStars(){const target=Math.round((state.w*state.h)/14000);state.stars=Array.from({length:clamp(target,28,100)},()=>({x:Math.random()*state.w,y:Math.random()*state.h,r:rand(.4,1.5)*Math.min(1.2,state.scale),a:rand(.12,.55),p:rand(0,Math.PI*2)}))}
   function resetPlayer(){const s=state.scale;updateArenaMetrics();Object.assign(player,{x:arenaWidth()/2,y:arenaHeight()/2,r:14*s,speed:245*s,hp:5,maxHp:5,damage:1,fireRate:.42,projectileSpeed:600*s,projectileScale:1,multishot:1,spread:.14,crit:.08,critMult:2,shield:0,pierce:0,evasion:0,waveGuard:999,repairEvery:999,killsSinceRepair:0,invuln:0,trail:[]});snapCameraToPlayer()}
-  function resetGame(){ensureDailyQuestDate();state.gameTime=0;state.wave=1;state.waveClock=0;state.spawnClock=.3;state.shootClock=0;state.score=0;state.kills=0;state.combo=0;state.comboClock=99;state.bestCombo=0;state.comboGrace=3;state.cameraShake=0;state.flash=0;state.bannerClock=2;state.bannerText='';state.projectiles=[];state.enemies=[];state.particles=[];state.powerupDrop=null;state.powerupSpawnClock=rand(7,14);state.activePowerups={speed:0,damage:0,shield:0};resetPlayer();rollWaveDirector();state.bannerText=`${t('waveIncoming',{wave:1})} · ${waveDirectorLabel()}`;updateHUD()}
+  function resetGame(){ensureDailyQuestDate();state.runId=makeAnalyticsId('run');state.gameTime=0;state.wave=1;state.waveClock=0;state.spawnClock=.3;state.shootClock=0;state.score=0;state.kills=0;state.combo=0;state.comboClock=99;state.bestCombo=0;state.comboGrace=3;state.cameraShake=0;state.flash=0;state.bannerClock=2;state.bannerText='';state.projectiles=[];state.enemies=[];state.particles=[];state.powerupDrop=null;state.powerupSpawnClock=rand(7,14);state.activePowerups={speed:0,damage:0,shield:0};resetPlayer();rollWaveDirector();state.bannerText=`${t('waveIncoming',{wave:1})} · ${waveDirectorLabel()}`;updateHUD()}
   function beginGameNow(){pendingLandscapeStart=false;rotateOverlay?.classList.add('hidden');setGameplayActive(true);hideAllPanels();hud.classList.remove('hidden');state.mode='game';state.manualPause=false;resize();resetGame();sound.ensure();window.PlatformBridge?.gameplayStart?.()}
   function startGame(){sound.ensure();window.PlatformBridge?.prepareGameplay?.();if(requiresLandscapeGate()){pendingLandscapeStart=true;setGameplayActive(false);hideAllPanels();hud.classList.add('hidden');rotateOverlay?.classList.remove('hidden');return}beginGameNow()}
   function syncPendingLandscapeStart(){if(!pendingLandscapeStart)return;if(requiresLandscapeGate()){rotateOverlay?.classList.remove('hidden');return}beginGameNow()}
@@ -1441,7 +1458,7 @@
   function nextWave(){state.wave++;state.waveClock=0;state.score+=state.wave*35;rollWaveDirector();updateQuestStat('wave',state.wave);updateQuestStat('score',Math.floor(state.score));if(player.waveGuard<900&&state.wave%player.waveGuard===0)player.shield=Math.min(4,player.shield+1);state.bannerText=state.wave%5===0?t('bossIncoming',{wave:state.wave}):`${t('waveIncoming',{wave:state.wave})} · ${waveDirectorLabel()}`;state.bannerClock=2;if(state.wave%5===0)spawnBoss();showUpgrades();updateHUD()}
   function showUpgrades(){if(state.mode!=='game')return;state.mode='upgrade';window.PlatformBridge?.gameplayStop?.();ui.upgradeChoices.innerHTML='';const pool=[...upgrades].sort(()=>Math.random()-.5).slice(0,3);pool.forEach(up=>{const rarity=weightedPick(UPGRADE_RARITIES),copy=up[lang]||up.ru,btn=document.createElement('button');btn.className=`upgrade-card rarity-${rarity.id}`;const powerLabel=rarity.power.toFixed(rarity.power%1?1:0);btn.innerHTML=`<span class="upgrade-icon">${up.icon}</span><h3>${copy[0]}</h3><p>${copy[1]}</p><span class="rarity-label">${t(RARITY[rarity.id].key)} · ${t('rarityPower',{power:powerLabel})}</span>`;btn.addEventListener('click',()=>{up.apply(rarity.power);panels.upgrade.classList.add('hidden');state.mode='game';updateHUD();sound.tone(rarity.id==='legendary'?980:720,.14,'sine',.038);window.PlatformBridge?.gameplayStart?.()},{once:true});ui.upgradeChoices.appendChild(btn)});panels.upgrade.classList.remove('hidden')}
 
-  async function finishGame(){if(state.mode==='game')window.PlatformBridge?.gameplayStop?.();state.cameraShake=0;state.flash=0;setGameplayActive(false);updateQuestStat('games',1,{mode:'add'});updateQuestStat('score',Math.floor(state.score));updateQuestStat('wave',state.wave);state.mode='gameover';hud.classList.add('hidden');const final=Math.max(0,Math.floor(state.score)),isRecord=final>progress.bestScore;if(isRecord)progress.bestScore=final;progress.gamesPlayed++;progress.coins+=Math.min(120,20+Math.floor(state.wave*4));const seasonXpGained=awardSeasonPassXp(final,state.wave,state.kills);saveProgress();ui.finalScore.textContent=formatScore(final);ui.finalWave.textContent=state.wave;ui.finalKills.textContent=state.kills;ui.finalCombo.textContent=`×${Math.max(1,state.bestCombo)}`;ui.newRecord.classList.toggle('hidden',!isRecord);ui.rankLine.textContent=window.PlatformBridge?.authorized?'…':t('noRank');showPanel('gameover');if(seasonXpGained>0)showToast(t('seasonXpEarned',{xp:formatScore(seasonXpGained)}),2200);if(window.PlatformBridge?.authorized){let scoreResult=null;if(final>0)scoreResult=await window.PlatformBridge.submitScore(final*LEADERBOARD_SCORE_SCALE,{wave:state.wave,kills:state.kills,durationMs:Math.round(state.gameTime*1000)});if(scoreResult?.referralRun?.qualified){if(scoreResult.progress)applyAuthoritativeCloud(scoreResult.progress);showToast(`${t('referralInviteQualified')} ${t('referralWelcome')}`,3200);await loadReferral()}const entry=await window.PlatformBridge.getPlayerEntry();ui.rankLine.textContent=entry?.rank?t('rank',{rank:entry.rank}):''}}
+  async function finishGame(){if(state.mode==='game')window.PlatformBridge?.gameplayStop?.();state.cameraShake=0;state.flash=0;setGameplayActive(false);updateQuestStat('games',1,{mode:'add'});updateQuestStat('score',Math.floor(state.score));updateQuestStat('wave',state.wave);state.mode='gameover';hud.classList.add('hidden');const final=Math.max(0,Math.floor(state.score)),isRecord=final>progress.bestScore;if(isRecord)progress.bestScore=final;progress.gamesPlayed++;progress.coins+=Math.min(120,20+Math.floor(state.wave*4));const seasonXpGained=awardSeasonPassXp(final,state.wave,state.kills);saveProgress();ui.finalScore.textContent=formatScore(final);ui.finalWave.textContent=state.wave;ui.finalKills.textContent=state.kills;ui.finalCombo.textContent=`×${Math.max(1,state.bestCombo)}`;ui.newRecord.classList.toggle('hidden',!isRecord);ui.rankLine.textContent=window.PlatformBridge?.authorized?'…':t('noRank');showPanel('gameover');if(seasonXpGained>0)showToast(t('seasonXpEarned',{xp:formatScore(seasonXpGained)}),2200);if(window.PlatformBridge?.authorized){let scoreResult=null;const durationMs=Math.round(state.gameTime*1000);if(durationMs>=2500)scoreResult=await window.PlatformBridge.submitScore(final*LEADERBOARD_SCORE_SCALE,{runId:state.runId||makeAnalyticsId('run'),wave:state.wave,kills:state.kills,durationMs});if(scoreResult?.referralRun?.qualified){if(scoreResult.progress)applyAuthoritativeCloud(scoreResult.progress);showToast(`${t('referralInviteQualified')} ${t('referralWelcome')}`,3200);await loadReferral()}const entry=await window.PlatformBridge.getPlayerEntry();ui.rankLine.textContent=entry?.rank?t('rank',{rank:entry.rank}):''}}
   function updateHUD(){hudScore.textContent=formatScore(state.score);hudWave.textContent=state.wave;hudCombo.textContent=`×${Math.min(10,1+Math.floor(state.combo/3))}`;hpBar.innerHTML='';for(let i=0;i<player.maxHp;i++){const pip=document.createElement('span');pip.className=`hp-pip${i>=player.hp?' empty':''}`;hpBar.appendChild(pip)}if(player.shield>0)hpBar.title=`Shield: ${player.shield}`}
 
   function update(dt){
@@ -1688,7 +1705,7 @@
   }
   rotateCancelBtn?.addEventListener('click',cancelLandscapeStart);
   document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('selectstart',e=>e.preventDefault());
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)platformPause();else if(state.suspendedByPlatform)platformResume();else sound.resume()});window.addEventListener('blur',()=>{if(state.mode==='game')platformPause()});window.addEventListener('focus',()=>{if(state.suspendedByPlatform)platformResume()});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){sendAnalyticsHeartbeat(false,true);platformPause()}else{sendAnalyticsHeartbeat(true,false);if(state.suspendedByPlatform)platformResume();else sound.resume()}});window.addEventListener('pagehide',()=>sendAnalyticsHeartbeat(false,true));window.addEventListener('blur',()=>{if(state.mode==='game')platformPause()});window.addEventListener('focus',()=>{if(state.suspendedByPlatform)platformResume()});
   window.addEventListener('resize',handleViewportChange);window.addEventListener('orientationchange',()=>setTimeout(handleViewportChange,90));window.addEventListener('neon:telegramviewport',()=>requestAnimationFrame(handleViewportChange));
 
   document.getElementById('playBtn').addEventListener('click',startGame);document.getElementById('helpPlayBtn').addEventListener('click',startGame);document.getElementById('leaderboardBtn').addEventListener('click',showLeaderboard);document.getElementById('resultLeaderboardBtn').addEventListener('click',showLeaderboard);document.getElementById('closeLeaderboardBtn').addEventListener('click',()=>closeOverlay('leaderboard'));
@@ -1705,7 +1722,7 @@
   function finishBoot(){state.mode='menu';showPanel('menu');ui.bootOverlay?.classList.add('hidden');window.PlatformBridge?.ready?.();refreshProgressUI()}
   async function bootstrap(){
     resize();requestAnimationFrame(loop);window.PlatformBridge?.setCallbacks?.({pause:platformPause,resume:platformResume});
-    await withTimeout(window.PlatformBridge?.init?.(),10000,null);lang=window.PlatformBridge?.language||lang;applyLanguage();
+    await withTimeout(window.PlatformBridge?.init?.(),10000,null);lang=window.PlatformBridge?.language||lang;applyLanguage();startAnalyticsTracking();
     if(ui.bootText)ui.bootText.textContent=lang==='ru'?'Синхронизация прогресса…':'Syncing progress…';
     if(window.PlatformBridge?.authorized){const cloud=await withTimeout(window.PlatformBridge.loadCloudProgress(),8000,null);mergeCloud(cloud);await withTimeout(bindReferralFromStartParam(),5000,null)}
     persistLocalProgress();
