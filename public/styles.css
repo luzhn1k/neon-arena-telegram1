@@ -1345,3 +1345,115 @@ html, body {
 @media (max-width:860px){.referral-milestones{grid-template-columns:repeat(2,minmax(0,1fr))}.referral-columns{grid-template-columns:1fr}}
 @media (max-width:760px){.referral-hero{grid-template-columns:1fr;padding:15px}.referral-hero-visual{min-height:185px}.referral-stats{grid-template-columns:1fr 1fr}.referral-stats article:last-child{grid-column:1/-1}.referral-section-head{flex-direction:column;align-items:flex-start}.referral-milestones{grid-template-columns:1fr}.referral-share-row .btn{flex:1 1 180px}}
 @media (max-width:430px){.referral-hero h3{font-size:22px}.referral-hero p{font-size:13px}.referral-hero-visual{min-height:165px}.crew-node.core{width:64px;height:64px}.crew-node.n1,.crew-node.n2,.crew-node.n3,.crew-node.n4{width:36px;height:36px}.referral-stats{grid-template-columns:1fr}.referral-stats article:last-child{grid-column:auto}.referral-milestone{padding:12px}.referral-reward-icon{height:68px}.referral-columns{gap:10px}}
+
+
+/* v1.5.20 — cleaner main menu */
+#mainMenu.menu-shell{
+  width:min(94vw,590px);
+  padding:24px 24px 20px;
+  background:
+    radial-gradient(circle at 50% 0,rgba(75,231,255,.10),transparent 34%),
+    radial-gradient(circle at 88% 18%,rgba(255,91,231,.08),transparent 28%),
+    linear-gradient(155deg,rgba(13,25,49,.96),rgba(5,10,23,.97));
+  border-color:rgba(108,217,255,.16);
+}
+#mainMenu.menu-shell::after{inset:12px;border-radius:21px}
+#mainMenu .brand-mark{transform:scale(.88);margin-bottom:-2px}
+#mainMenu .eyebrow{letter-spacing:.20em;color:#8eefff}
+#mainMenu h1{letter-spacing:.035em;text-shadow:0 0 24px rgba(99,238,255,.12)}
+#mainMenu .lead{margin:7px auto 8px;font-size:13px;line-height:1.42;color:#aebfd5}
+#mainMenu .menu-showcase{height:74px;margin:0 auto 10px}
+#mainMenu .menu-core-visual{transform:scale(.70) translateY(-12px)}
+#mainMenu .menu-stats{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:2px 0 8px;
+}
+#mainMenu .record-line,#mainMenu .currency-line{
+  min-width:0;
+  padding:10px 8px;
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+}
+#mainMenu .record-line span,#mainMenu .currency-line span{
+  font-size:9px;
+  line-height:1.15;
+  letter-spacing:.08em;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+#mainMenu .record-line strong,#mainMenu .currency-line strong{font-size:20px;line-height:1.05}
+#mainMenu .menu-actions{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+#mainMenu .menu-actions .btn{
+  min-height:44px;
+  padding:9px 12px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:13px;
+  background:linear-gradient(180deg,rgba(82,108,174,.13),rgba(13,18,36,.52));
+  border-color:rgba(124,174,255,.13);
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+#mainMenu #playBtn{
+  grid-column:1/-1;
+  min-height:50px;
+  font-size:15px;
+  color:#04111a;
+  background:linear-gradient(135deg,#57eff0,#7fb8ff 64%,#9b8dff);
+  border-color:rgba(153,245,255,.52);
+  box-shadow:0 12px 28px rgba(74,216,255,.16),inset 0 1px rgba(255,255,255,.45);
+}
+#mainMenu #playBtn::before{content:'▶';font-size:11px}
+#mainMenu #leaderboardBtn::before{content:'▤';color:#82dfff}
+#mainMenu #shopBtn::before{content:'◇';color:#e58aff}
+#mainMenu #rewardsBtn::before{content:'✦';color:#ffd36a}
+#mainMenu #seasonPassBtn::before{content:'★';color:#ffd36a}
+#mainMenu #referralBtn::before{content:'⌘';color:#69f6ff}
+#mainMenu #helpBtn::before{content:'?';display:inline-grid;place-items:center;width:17px;height:17px;border:1px solid rgba(255,255,255,.25);border-radius:50%;font-size:10px}
+#mainMenu #seasonPassBtn{
+  background:linear-gradient(135deg,rgba(255,211,106,.13),rgba(207,100,255,.13));
+  border-color:rgba(255,201,108,.24);
+}
+#mainMenu #referralBtn{
+  background:linear-gradient(135deg,rgba(73,235,255,.10),rgba(106,115,255,.10));
+  border-color:rgba(92,230,255,.22);
+}
+#mainMenu .microcopy{margin-top:7px;margin-bottom:0;font-size:10px;line-height:1.3}
+#mainMenu .daily-status{color:#d4b96f}
+#mainMenu .version{margin:8px 0 -4px;font-size:9px;opacity:.42;letter-spacing:.06em}
+
+@media(max-width:700px){
+  #mainMenu.menu-shell{width:min(96vw,540px);padding:20px 18px 17px}
+  #mainMenu .menu-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #mainMenu .menu-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #mainMenu .menu-showcase{height:64px}
+  #mainMenu .menu-core-visual{transform:scale(.62) translateY(-16px)}
+}
+@media(max-width:410px){
+  #mainMenu.menu-shell{padding:18px 14px 15px}
+  #mainMenu h1{font-size:32px}
+  #mainMenu .lead{font-size:12px}
+  #mainMenu .menu-stats{gap:6px}
+  #mainMenu .record-line,#mainMenu .currency-line{padding:9px 5px}
+  #mainMenu .record-line strong,#mainMenu .currency-line strong{font-size:18px}
+  #mainMenu .record-line span,#mainMenu .currency-line span{font-size:8px}
+  #mainMenu .menu-actions{gap:7px}
+  #mainMenu .menu-actions .btn{font-size:12px;min-height:42px;padding:8px 7px}
+  #mainMenu #playBtn{min-height:48px;font-size:14px}
+}
+@media(max-height:690px) and (orientation:portrait){
+  #mainMenu .brand-mark{display:none}
+  #mainMenu .menu-showcase{height:48px}
+  #mainMenu .menu-core-visual{transform:scale(.50) translateY(-28px)}
+  #mainMenu .lead{margin-bottom:5px}
+  #mainMenu .menu-actions .btn{min-height:39px}
+  #mainMenu #playBtn{min-height:45px}
+  #mainMenu .microcopy{font-size:9px}
+}
