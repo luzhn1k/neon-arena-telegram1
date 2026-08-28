@@ -1208,16 +1208,43 @@
   function telegramInset(side){const tg=window.Telegram?.WebApp;return Math.max(0,Number(tg?.contentSafeAreaInset?.[side]||tg?.safeAreaInset?.[side]||0)||0)}
 
   const WAVE_PROFILES = [
-    {id:'swarm',length:[18,24],interval:[.28,.68],burst:[2,4],cap:1.28,cluster:.52,bias:{chaser:1.8,dasher:1.7,minion:1.5,splitter:1.1}},
-    {id:'crossfire',length:[21,28],interval:[.52,1.04],burst:[1,2],cap:.96,cluster:.22,bias:{shooter:1.9,sniper:1.8,orbiter:1.45,spinner:1.15}},
-    {id:'heavy',length:[22,29],interval:[.62,1.18],burst:[1,2],cap:.88,cluster:.30,bias:{tank:2.2,splitter:1.7,spinner:1.45,chaser:.7}},
-    {id:'rush',length:[17,22],interval:[.22,.52],burst:[2,3],cap:1.18,cluster:.44,bias:{dasher:2.35,chaser:1.55,spinner:1.2}},
-    {id:'orbit',length:[20,27],interval:[.44,.92],burst:[1,3],cap:1.02,cluster:.26,bias:{orbiter:2.3,spinner:1.75,shooter:1.25}},
-    {id:'storm',length:[19,28],interval:[.24,1.10],burst:[1,4],cap:1.15,cluster:.36,bias:{chaser:1.15,dasher:1.2,tank:1.05,shooter:1.1,splitter:1.1,orbiter:1.1,sniper:1.05,spinner:1.05}},
-    {id:'ambush',length:[18,25],interval:[.34,.78],burst:[2,4],cap:1.10,cluster:.72,bias:{dasher:1.55,splitter:1.35,chaser:1.25,sniper:1.1}},
+    {id:'intro',minWave:1,length:[16,19],interval:[1.00,1.48],burst:[1,1],cap:1.00,cluster:.08,bias:{chaser:2.4}},
+    {id:'swarm',minWave:2,length:[18,23],interval:[.48,.82],burst:[1,3],cap:1.10,cluster:.45,bias:{chaser:1.8,dasher:1.55,minion:1.4,splitter:1.05}},
+    {id:'rush',minWave:2,length:[17,22],interval:[.44,.74],burst:[1,3],cap:1.08,cluster:.34,bias:{dasher:2.15,chaser:1.5,spinner:1.1}},
+    {id:'ambush',minWave:3,length:[18,24],interval:[.50,.86],burst:[1,3],cap:1.05,cluster:.64,bias:{dasher:1.45,splitter:1.25,chaser:1.2,sniper:1.05}},
+    {id:'heavy',minWave:4,length:[20,26],interval:[.68,1.12],burst:[1,2],cap:.94,cluster:.26,bias:{tank:2.15,splitter:1.6,spinner:1.35,chaser:.72}},
+    {id:'crossfire',minWave:6,length:[20,27],interval:[.58,1.00],burst:[1,2],cap:.98,cluster:.18,bias:{shooter:1.85,sniper:1.7,orbiter:1.4,spinner:1.1}},
+    {id:'orbit',minWave:6,length:[20,26],interval:[.50,.90],burst:[1,3],cap:1.02,cluster:.24,bias:{orbiter:2.2,spinner:1.65,shooter:1.2}},
+    {id:'storm',minWave:8,length:[19,27],interval:[.36,.94],burst:[1,4],cap:1.08,cluster:.34,bias:{chaser:1.12,dasher:1.18,tank:1.04,shooter:1.08,splitter:1.08,orbiter:1.08,sniper:1.04,spinner:1.04}},
   ];
-  const WAVE_PROFILE_LABELS={ru:{swarm:'РОЙ',crossfire:'ПЕРЕКРЁСТНЫЙ ОГОНЬ',heavy:'ТЯЖЁЛАЯ',rush:'РЫВОК',orbit:'ОРБИТА',storm:'ХАОС',ambush:'ЗАСАДА'},en:{swarm:'SWARM',crossfire:'CROSSFIRE',heavy:'HEAVY',rush:'RUSH',orbit:'ORBIT',storm:'CHAOS',ambush:'AMBUSH'}};
+  const WAVE_PROFILE_LABELS={ru:{intro:'РАЗОГРЕВ',swarm:'РОЙ',crossfire:'ПЕРЕКРЁСТНЫЙ ОГОНЬ',heavy:'ТЯЖЁЛАЯ',rush:'РЫВОК',orbit:'ОРБИТА',storm:'ХАОС',ambush:'ЗАСАДА'},en:{intro:'WARM-UP',swarm:'SWARM',crossfire:'CROSSFIRE',heavy:'HEAVY',rush:'RUSH',orbit:'ORBIT',storm:'CHAOS',ambush:'AMBUSH'}};
   function waveDirectorLabel(){return WAVE_PROFILE_LABELS[lang]?.[state.waveDirector?.id]||String(state.waveDirector?.id||'').toUpperCase()}
+  const EARLY_WAVE_DIFFICULTY = [
+    null,
+    {cap:6, interval:1.42, burstMax:1, hp:.82, speed:.92, intensity:[.94,1.02]},
+    {cap:8, interval:1.26, burstMax:1, hp:.88, speed:.96, intensity:[.96,1.04]},
+    {cap:10,interval:1.14, burstMax:2, hp:.96, speed:1.00,intensity:[.97,1.06]},
+    {cap:13,interval:1.03, burstMax:2, hp:1.04,speed:1.04,intensity:[.98,1.07]},
+    {cap:14,interval:1.10, burstMax:1, hp:1.12,speed:1.07,intensity:[.98,1.06]},
+    {cap:17,interval:.95, burstMax:2, hp:1.20,speed:1.10,intensity:[.99,1.08]},
+    {cap:20,interval:.89, burstMax:2, hp:1.29,speed:1.13,intensity:[1.00,1.09]},
+    {cap:23,interval:.83, burstMax:3, hp:1.38,speed:1.16,intensity:[1.00,1.10]},
+    {cap:26,interval:.78, burstMax:3, hp:1.48,speed:1.20,intensity:[1.01,1.11]},
+    {cap:28,interval:.84, burstMax:2, hp:1.58,speed:1.23,intensity:[1.01,1.10]},
+  ];
+  function difficultyForWave(w=state.wave){
+    w=Math.max(1,Math.floor(w||1));
+    if(w<=10)return EARLY_WAVE_DIFFICULTY[w];
+    const extra=w-10,boss=w%5===0;
+    return{
+      cap:Math.min(72,28+Math.floor(extra*2.8)),
+      interval:Math.max(.54,.76-extra*.018)*(boss?1.08:1),
+      burstMax:Math.min(5,3+Math.floor(extra/6)),
+      hp:Math.min(3.10,1.58+extra*.105),
+      speed:Math.min(1.60,1.23+extra*.025),
+      intensity:[Math.min(1.12,1.02+extra*.003),Math.min(1.24,1.11+extra*.006)],
+    };
+  }
   function arenaWidth(){return Math.max(state.w,state.arenaW||state.w)}
   function arenaHeight(){return Math.max(state.h,state.arenaH||state.h)}
   function updateArenaMetrics(){
@@ -1267,22 +1294,25 @@
     return weights[weights.length-1]?.[0]||'chaser';
   }
   function rollWaveDirector(){
-    const candidates=WAVE_PROFILES.filter(p=>{
-      if(state.wave<4&&['heavy','crossfire'].includes(p.id))return false;
-      if(state.wave<6&&p.id==='orbit')return false;
-      return true;
-    });
-    const base=candidates[Math.floor(Math.random()*candidates.length)]||WAVE_PROFILES[0];
+    const previous=state.waveDirector?.id||'';
+    let candidates=WAVE_PROFILES.filter(p=>state.wave>=p.minWave);
+    if(state.wave===1)candidates=candidates.filter(p=>p.id==='intro');
+    else{
+      const withoutPrevious=candidates.filter(p=>p.id!==previous&&p.id!=='intro');
+      if(withoutPrevious.length)candidates=withoutPrevious;
+    }
+    const base=candidates[Math.floor(Math.random()*candidates.length)]||WAVE_PROFILES[0],difficulty=difficultyForWave(state.wave);
     state.waveDirector={
       ...base,
-      intensity:rand(.88,1.16),
+      intensity:rand(difficulty.intensity[0],difficulty.intensity[1]),
       pulse:rand(0,Math.PI*2),
       side:Math.floor(Math.random()*4),
       lastSide:-1,
       eventCount:0,
     };
-    state.waveLength=state.wave%5===0?rand(24,30):rand(base.length[0],base.length[1]);
-    state.spawnClock=rand(.18,.72);
+    const boss=state.wave%5===0;
+    state.waveLength=boss?rand(22,26):rand(base.length[0],base.length[1]);
+    state.spawnClock=state.wave===1?rand(.85,1.25):rand(.34,.78);
   }
   function chaoticSpawnPoint(padding=58,forceSide=null){
     padding*=state.scale;
@@ -1300,11 +1330,13 @@
   function spawnWaveEvent(maxEnemies){
     const d=state.waveDirector||WAVE_PROFILES[0];
     const progressInWave=clamp(state.waveClock/Math.max(1,state.waveLength),0,1);
+    const difficulty=difficultyForWave(state.wave);
     let burst=Math.floor(rand(d.burst[0],d.burst[1]+.999));
-    if(d.id==='storm'&&Math.random()<.30)burst+=Math.floor(rand(1,3));
-    if(d.id==='swarm'&&progressInWave>.62)burst+=1;
+    if(d.id==='storm'&&state.wave>=8&&Math.random()<.26)burst+=Math.floor(rand(1,3));
+    if(d.id==='swarm'&&state.wave>=4&&progressInWave>.68)burst+=1;
     if(d.id==='heavy')burst=Math.min(2,burst);
     if(state.wave%5===0)burst=Math.min(2,burst);
+    burst=Math.max(1,Math.min(difficulty.burstMax,burst));
     const cluster=Math.random()<d.cluster;
     const anchor=cluster?chaoticSpawnPoint(58):null;
     for(let i=0;i<burst&&state.enemies.length<maxEnemies;i++){
@@ -1313,10 +1345,11 @@
     }
     d.eventCount++;
     let interval=rand(d.interval[0],d.interval[1])/(d.intensity||1);
-    if(d.id==='storm')interval*=rand(.55,1.45);
-    if(d.id==='ambush'&&d.eventCount%4===0)interval*=1.45;
-    if(d.id==='swarm'&&progressInWave>.7)interval*=.72;
-    state.spawnClock=Math.max(.13,interval);
+    interval*=difficulty.interval;
+    if(d.id==='storm')interval*=rand(.72,1.28);
+    if(d.id==='ambush'&&d.eventCount%4===0)interval*=1.34;
+    if(d.id==='swarm'&&state.wave>=5&&progressInWave>.72)interval*=.82;
+    state.spawnClock=Math.max(state.wave<=2?.62:.16,interval);
   }
 
   function setGameplayActive(active){document.documentElement.classList.toggle('gameplay-active',!!active)}
@@ -1361,7 +1394,15 @@
     if(d.id==='storm'&&Math.random()<.16)return availableEnemyTypes()[Math.floor(Math.random()*availableEnemyTypes().length)]?.[0]||'chaser';
     return weightedEnemyPick(weights);
   }
-  function spawnEnemy(type=chooseEnemyType(),at=null){const base=enemyTypes[type],pos=at||enemySpawnPoint(type==='boss'?90:50);const waveHp=type==='boss'?1+Math.max(0,state.wave-5)*.135:1+Math.max(0,state.wave-1)*.054;const hp=Math.max(.45,base.hp*waveHp*.9);const e={type,x:pos.x,y:pos.y,r:base.r*state.scale,hp,maxHp:hp,speed:base.speed*state.scale*(1+Math.min(.66,state.wave*.0245)),score:base.score,age:0,dashClock:rand(.4,1.6),dashTime:0,vx:0,vy:0,shootClock:rand(.4,1.4),summonClock:rand(2.8,4.2),hitFlash:0,orbit:Math.random()<.5?-1:1,bossKind:null};state.enemies.push(e);return e}
+  function spawnEnemy(type=chooseEnemyType(),at=null){
+    const base=enemyTypes[type],pos=at||enemySpawnPoint(type==='boss'?90:50),difficulty=difficultyForWave(state.wave);
+    const bossStage=Math.max(0,Math.floor(state.wave/5)-1);
+    const hpScale=type==='boss'?Math.min(2.45,1+bossStage*.16):difficulty.hp;
+    const speedScale=type==='boss'?Math.min(1.38,1+bossStage*.055):difficulty.speed;
+    const hp=Math.max(.45,base.hp*hpScale);
+    const e={type,x:pos.x,y:pos.y,r:base.r*state.scale,hp,maxHp:hp,speed:base.speed*state.scale*speedScale,score:base.score,age:0,dashClock:rand(.4,1.6),dashTime:0,vx:0,vy:0,shootClock:rand(.4,1.4),summonClock:rand(2.8,4.2),hitFlash:0,orbit:Math.random()<.5?-1:1,bossKind:null};
+    state.enemies.push(e);return e
+  }
   function spawnBoss(){let options=BOSS_KINDS.filter(k=>k.id!==state.lastBossKind);if(!options.length)options=BOSS_KINDS;const kind=options[Math.floor(Math.random()*options.length)],e=spawnEnemy('boss');state.lastBossKind=kind.id;e.bossKind=kind.id;e.shootClock=.65;e.dashClock=1.25;e.summonClock=3.1;if(kind.id==='spiral'){e.speed*=.86;e.hp=Math.ceil(e.hp*.94);e.maxHp=e.hp}else if(kind.id==='charger'){e.speed*=1.18;e.hp=Math.ceil(e.hp*.9);e.maxHp=e.hp}else if(kind.id==='summoner'){e.speed*=.88;e.hp=Math.ceil(e.hp*1.08);e.maxHp=e.hp}state.bannerText=`${t('bossIncoming',{wave:state.wave})} · ${kind[lang]||kind.ru}`;state.bannerClock=2.4;sound.tone(110,.3,'sawtooth',.05)}
   function playerDirection(){let x=0,y=0;if(state.keys.has('KeyA')||state.keys.has('ArrowLeft'))x--;if(state.keys.has('KeyD')||state.keys.has('ArrowRight'))x++;if(state.keys.has('KeyW')||state.keys.has('ArrowUp'))y--;if(state.keys.has('KeyS')||state.keys.has('ArrowDown'))y++;if(state.joystick.active){const dx=state.joystick.x-state.joystick.startX,dy=state.joystick.y-state.joystick.startY,len=Math.hypot(dx,dy);if(len>5*state.scale){x+=dx/Math.max(55*state.scale,len);y+=dy/Math.max(55*state.scale,len)}}const len=Math.hypot(x,y);return len>0?{x:x/Math.max(1,len),y:y/Math.max(1,len)}:{x:0,y:0}}
   function nearestEnemy(){let best=null,bestD=Infinity;for(const e of state.enemies){const d=dist2(player.x,player.y,e.x,e.y);if(d<bestD){bestD=d;best=e}}return best}
@@ -1415,7 +1456,8 @@
     updateCamera(dt);
     if(Math.abs(dir.x)+Math.abs(dir.y)>.05&&Math.random()<.8)player.trail.push({x:player.x,y:player.y,life:.28});
     player.trail.forEach(p=>p.life-=dt);player.trail=player.trail.filter(p=>p.life>0);
-    const d=state.waveDirector||WAVE_PROFILES[0],baseCap=12+Math.floor(state.wave*3.15),maxEnemies=Math.min(88,Math.max(10,Math.floor(baseCap*(d.cap||1)*(d.intensity||1))));
+    const d=state.waveDirector||WAVE_PROFILES[0],difficulty=difficultyForWave(state.wave);
+    const maxEnemies=Math.min(76,Math.max(4,Math.round(difficulty.cap*(d.cap||1)*(d.intensity||1))));
     if(state.spawnClock<=0&&state.enemies.length<maxEnemies)spawnWaveEvent(maxEnemies);
     if(state.shootClock<=0&&state.enemies.length){shoot();state.shootClock=player.fireRate}
     for(const e of state.enemies)updateEnemy(e,dt);
