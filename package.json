@@ -2,7 +2,7 @@
   "name": "neon-arena-telegram",
   "version": "1.2.0",
   "private": true,
-  "description": "Neon Arena v1.5.19 Telegram Mini App + bot with NEON CREW referrals",
+  "description": "Neon Arena v1.5.20 - expanded arena, chaotic wave director, menu polish, referrals and Telegram monetization",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

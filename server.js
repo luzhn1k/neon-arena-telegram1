@@ -48,7 +48,7 @@ const PRODUCTS = Object.freeze({
   star_chest_10:   { id:'star_chest_10', type:'star_chest', stars:10, title:'10 Stars Chest', description:'Premium cosmetic chest. Mythic 1%, Legendary 15%.', chestId:'star_chest_10' },
   star_chest_20:   { id:'star_chest_20', type:'star_chest', stars:20, title:'20 Stars Chest', description:'Premium cosmetic chest. Mythic 1%, Legendary 17%.', chestId:'star_chest_20' },
   star_chest_30:   { id:'star_chest_30', type:'star_chest', stars:30, title:'30 Stars Chest', description:'Premium cosmetic chest. Mythic 1%, Legendary 20%.', chestId:'star_chest_30' },
-  season_pass_premium: { id:'season_pass_premium', type:'season_pass', stars:35, title:'Neon Season Pass', description:'Premium access to the current Neon Pass with exclusive cosmetics and extra rewards.' },
+  season_pass_premium: { id:'season_pass_premium', type:'season_pass', stars:99, title:'Neon Season Pass', description:'Premium access to the current Neon Pass with exclusive cosmetics and extra rewards.' },
 });
 const STAR_CHEST_PRODUCTS = Object.freeze({
   star_chest_10:{id:'star_chest_10',stars:10,odds:[{id:'common',chance:.34},{id:'rare',chance:.30},{id:'epic',chance:.20},{id:'legendary',chance:.15},{id:'mythic',chance:.01}]},
