@@ -38,6 +38,7 @@ const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const DB_PATH = path.join(DATA_DIR, 'neon-arena.sqlite');
 const INIT_DATA_MAX_AGE_SEC = Math.max(60, Number(process.env.INIT_DATA_MAX_AGE_SEC || 86400));
+const ADMIN_TOKEN = String(process.env.ADMIN_TOKEN || '').trim();
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
@@ -136,7 +137,12 @@ CREATE TABLE IF NOT EXISTS users (
   referral_bound_at INTEGER NOT NULL DEFAULT 0,
   referral_games INTEGER NOT NULL DEFAULT 0,
   referral_last_run_at INTEGER NOT NULL DEFAULT 0,
-  referral_qualified_at INTEGER NOT NULL DEFAULT 0
+  referral_qualified_at INTEGER NOT NULL DEFAULT 0,
+  analytics_runs INTEGER NOT NULL DEFAULT 0,
+  analytics_run_ms INTEGER NOT NULL DEFAULT 0,
+  analytics_play_ms INTEGER NOT NULL DEFAULT 0,
+  analytics_sessions INTEGER NOT NULL DEFAULT 0,
+  analytics_last_seen_at INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE IF NOT EXISTS purchases (
   purchase_id TEXT PRIMARY KEY,
@@ -166,6 +172,38 @@ CREATE TABLE IF NOT EXISTS referral_claims (
   PRIMARY KEY(telegram_id,milestone_count),
   FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
 );
+CREATE TABLE IF NOT EXISTS analytics_sessions (
+  session_id TEXT PRIMARY KEY,
+  telegram_id INTEGER NOT NULL,
+  started_at INTEGER NOT NULL,
+  last_seen_at INTEGER NOT NULL,
+  active_ms INTEGER NOT NULL DEFAULT 0,
+  is_active INTEGER NOT NULL DEFAULT 1,
+  last_mode TEXT NOT NULL DEFAULT 'menu',
+  app_version TEXT NOT NULL DEFAULT '',
+  FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
+);
+CREATE TABLE IF NOT EXISTS analytics_daily (
+  day TEXT NOT NULL,
+  telegram_id INTEGER NOT NULL,
+  play_ms INTEGER NOT NULL DEFAULT 0,
+  runs INTEGER NOT NULL DEFAULT 0,
+  run_ms INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY(day,telegram_id),
+  FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
+);
+CREATE TABLE IF NOT EXISTS run_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id TEXT NOT NULL DEFAULT '',
+  telegram_id INTEGER NOT NULL,
+  score INTEGER NOT NULL DEFAULT 0,
+  wave INTEGER NOT NULL DEFAULT 0,
+  kills INTEGER NOT NULL DEFAULT 0,
+  duration_ms INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  week_id TEXT NOT NULL DEFAULT '',
+  FOREIGN KEY(telegram_id) REFERENCES users(telegram_id)
+);
 CREATE INDEX IF NOT EXISTS idx_users_leaderboard ON users(best_score DESC, best_score_at ASC, telegram_id ASC);
 CREATE INDEX IF NOT EXISTS idx_purchases_user ON purchases(telegram_id, created_at DESC);
 `);
@@ -189,10 +227,21 @@ addColumnIfMissing('users', 'referral_bound_at', 'referral_bound_at INTEGER NOT 
 addColumnIfMissing('users', 'referral_games', 'referral_games INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('users', 'referral_last_run_at', 'referral_last_run_at INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('users', 'referral_qualified_at', 'referral_qualified_at INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'analytics_runs', 'analytics_runs INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'analytics_run_ms', 'analytics_run_ms INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'analytics_play_ms', 'analytics_play_ms INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'analytics_sessions', 'analytics_sessions INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('users', 'analytics_last_seen_at', 'analytics_last_seen_at INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('run_events', 'run_id', "run_id TEXT NOT NULL DEFAULT ''");
 
 db.exec('CREATE INDEX IF NOT EXISTS idx_users_weekly_leaderboard ON users(weekly_best_week_id, weekly_best_score DESC, weekly_best_score_at ASC, telegram_id ASC)');
 db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code) WHERE referral_code!=''");
 db.exec('CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by, referral_qualified_at)');
+db.exec('CREATE INDEX IF NOT EXISTS idx_analytics_sessions_user ON analytics_sessions(telegram_id,last_seen_at DESC)');
+db.exec('CREATE INDEX IF NOT EXISTS idx_analytics_daily_day ON analytics_daily(day,telegram_id)');
+db.exec('CREATE INDEX IF NOT EXISTS idx_run_events_created ON run_events(created_at DESC)');
+db.exec('CREATE INDEX IF NOT EXISTS idx_run_events_user ON run_events(telegram_id,created_at DESC)');
+db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_run_events_run_id ON run_events(run_id) WHERE run_id!=''");
 
 const q = {
   getUser: db.prepare('SELECT * FROM users WHERE telegram_id=?'),
@@ -222,9 +271,115 @@ const q = {
   referralClaims: db.prepare(`SELECT milestone_count,claimed_at FROM referral_claims WHERE telegram_id=? ORDER BY milestone_count ASC`),
   hasReferralClaim: db.prepare(`SELECT 1 AS ok FROM referral_claims WHERE telegram_id=? AND milestone_count=?`),
   insertReferralClaim: db.prepare(`INSERT INTO referral_claims(telegram_id,milestone_count,claimed_at) VALUES(?,?,?)`),
+  getAnalyticsSession: db.prepare(`SELECT * FROM analytics_sessions WHERE session_id=?`),
+  insertAnalyticsSession: db.prepare(`INSERT INTO analytics_sessions(session_id,telegram_id,started_at,last_seen_at,active_ms,is_active,last_mode,app_version) VALUES(?,?,?,?,0,?,?,?)`),
+  updateAnalyticsSession: db.prepare(`UPDATE analytics_sessions SET last_seen_at=?,active_ms=active_ms+?,is_active=?,last_mode=?,app_version=? WHERE session_id=?`),
+  bumpUserSession: db.prepare(`UPDATE users SET analytics_sessions=analytics_sessions+1,analytics_last_seen_at=?,updated_at=? WHERE telegram_id=?`),
+  bumpUserPlaytime: db.prepare(`UPDATE users SET analytics_play_ms=analytics_play_ms+?,analytics_last_seen_at=?,updated_at=? WHERE telegram_id=?`),
+  bumpUserRun: db.prepare(`UPDATE users SET analytics_runs=analytics_runs+1,analytics_run_ms=analytics_run_ms+?,analytics_last_seen_at=?,updated_at=? WHERE telegram_id=?`),
+  upsertDailyPlay: db.prepare(`INSERT INTO analytics_daily(day,telegram_id,play_ms,runs,run_ms) VALUES(?,?,?,0,0) ON CONFLICT(day,telegram_id) DO UPDATE SET play_ms=play_ms+excluded.play_ms`),
+  upsertDailyRun: db.prepare(`INSERT INTO analytics_daily(day,telegram_id,play_ms,runs,run_ms) VALUES(?,?,0,1,?) ON CONFLICT(day,telegram_id) DO UPDATE SET runs=runs+1,run_ms=run_ms+excluded.run_ms`),
+  insertRunEvent: db.prepare(`INSERT OR IGNORE INTO run_events(run_id,telegram_id,score,wave,kills,duration_ms,created_at,week_id) VALUES(?,?,?,?,?,?,?,?)`),
+  adminOverview: db.prepare(`SELECT COUNT(*) AS players,COALESCE(SUM(analytics_runs),0) AS runs,COALESCE(SUM(analytics_run_ms),0) AS run_ms,COALESCE(SUM(analytics_play_ms),0) AS play_ms,COALESCE(SUM(analytics_sessions),0) AS sessions FROM users`),
+  adminActiveSince: db.prepare(`SELECT COUNT(*) AS n FROM users WHERE analytics_last_seen_at>=?`),
+  adminActiveNow: db.prepare(`SELECT COUNT(DISTINCT telegram_id) AS n FROM analytics_sessions WHERE is_active=1 AND last_seen_at>=?`),
+  adminDailyRange: db.prepare(`SELECT day,COUNT(*) AS active_players,COALESCE(SUM(runs),0) AS runs,COALESCE(SUM(run_ms),0) AS run_ms,COALESCE(SUM(play_ms),0) AS play_ms FROM analytics_daily WHERE day>=? AND day<=? GROUP BY day ORDER BY day ASC`),
+  adminToday: db.prepare(`SELECT COUNT(*) AS active_players,COALESCE(SUM(runs),0) AS runs,COALESCE(SUM(run_ms),0) AS run_ms,COALESCE(SUM(play_ms),0) AS play_ms FROM analytics_daily WHERE day=?`),
+  adminRunMetrics: db.prepare(`SELECT COUNT(*) AS runs,COALESCE(AVG(duration_ms),0) AS avg_duration_ms,COALESCE(AVG(wave),0) AS avg_wave,COALESCE(AVG(score),0) AS avg_score,COALESCE(AVG(kills),0) AS avg_kills FROM run_events WHERE created_at>=?`),
+  adminSessionMetrics: db.prepare(`SELECT COUNT(*) AS sessions,COALESCE(AVG(active_ms),0) AS avg_session_ms,COALESCE(MAX(active_ms),0) AS max_session_ms FROM analytics_sessions WHERE started_at>=?`),
+  adminPlayers: db.prepare(`SELECT telegram_id,username,first_name,last_name,created_at,best_score,analytics_runs,analytics_run_ms,analytics_play_ms,analytics_sessions,analytics_last_seen_at FROM users ORDER BY analytics_play_ms DESC,analytics_runs DESC LIMIT ?`),
+  adminPurchases: db.prepare(`SELECT COUNT(*) AS purchases,COUNT(DISTINCT telegram_id) AS payers,COALESCE(SUM(stars),0) AS stars FROM purchases WHERE status='paid' AND paid_at>=?`),
 };
 
 function now(){ return Date.now(); }
+function analyticsDayKey(ts=Date.now()){ return new Date(ts).toISOString().slice(0,10); }
+function safeAdminEqual(a,b){
+  const aa=Buffer.from(String(a||'')),bb=Buffer.from(String(b||''));
+  return aa.length===bb.length && aa.length>0 && crypto.timingSafeEqual(aa,bb);
+}
+function requireAdmin(req){
+  if(!ADMIN_TOKEN) throw Object.assign(new Error('admin_not_configured'),{status:503});
+  const auth=String(req.headers.authorization||'');
+  const bearer=auth.startsWith('Bearer ')?auth.slice(7).trim():'';
+  const supplied=bearer||String(req.headers['x-admin-token']||'').trim();
+  if(!safeAdminEqual(supplied,ADMIN_TOKEN)) throw Object.assign(new Error('admin_unauthorized'),{status:401});
+}
+function normalizeAnalyticsMode(value){
+  const mode=String(value||'menu').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32);
+  return mode||'menu';
+}
+function trackAnalyticsHeartbeat(row,body={}){
+  const sessionId=String(body.sessionId||body.session_id||'').trim();
+  if(!/^[A-Za-z0-9_-]{12,80}$/.test(sessionId)) throw Object.assign(new Error('invalid_session_id'),{status:422});
+  const active=body.active!==false,mode=normalizeAnalyticsMode(body.mode),version=String(body.version||'').slice(0,32),ts=now(),day=analyticsDayKey(ts);
+  let session=q.getAnalyticsSession.get(sessionId);
+  if(!session){
+    q.insertAnalyticsSession.run(sessionId,row.telegram_id,ts,ts,active?1:0,mode,version);
+    q.bumpUserSession.run(ts,ts,row.telegram_id);
+    q.upsertDailyPlay.run(day,row.telegram_id,0);
+    return {ok:true,sessionId,active,addedMs:0};
+  }
+  if(Number(session.telegram_id)!==Number(row.telegram_id)) throw Object.assign(new Error('session_owner_mismatch'),{status:409});
+  const rawDelta=Math.max(0,ts-Number(session.last_seen_at||ts));
+  const addedMs=Number(session.is_active)===1 && rawDelta<=90000 ? rawDelta : 0;
+  q.updateAnalyticsSession.run(ts,addedMs,active?1:0,mode,version,sessionId);
+  q.bumpUserPlaytime.run(addedMs,ts,ts,row.telegram_id);
+  q.upsertDailyPlay.run(day,row.telegram_id,addedMs);
+  return {ok:true,sessionId,active,addedMs};
+}
+function recordRunAnalytics(row,{runId='',score=0,wave=0,kills=0,durationMs=0}={}){
+  const cleanRunId=/^[A-Za-z0-9_-]{12,80}$/.test(String(runId||''))?String(runId):'';
+  const ts=now(),day=analyticsDayKey(ts),duration=clampInt(durationMs,0,24*3600*1000);
+  const result=q.insertRunEvent.run(cleanRunId,row.telegram_id,score,wave,kills,duration,ts,leaderboardWeekId());
+  if(Number(result.changes||0)<=0) return {counted:false,duplicate:true};
+  q.bumpUserRun.run(duration,ts,ts,row.telegram_id);
+  q.upsertDailyRun.run(day,row.telegram_id,duration);
+  return {counted:true,duplicate:false};
+}
+function utcDayOffset(days){
+  const d=new Date();d.setUTCHours(0,0,0,0);d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);
+}
+function fillAnalyticsTrend(rows,days=14){
+  const byDay=new Map(rows.map(r=>[r.day,r]));
+  const out=[];
+  for(let i=-(days-1);i<=0;i++){
+    const day=utcDayOffset(i),r=byDay.get(day)||{};
+    out.push({day,activePlayers:Number(r.active_players)||0,runs:Number(r.runs)||0,runMs:Number(r.run_ms)||0,playMs:Number(r.play_ms)||0});
+  }
+  return out;
+}
+function adminStatsPayload(){
+  const ts=now(),day=analyticsDayKey(ts),start14=utcDayOffset(-13),start7=ts-7*86400000,start30=ts-30*86400000;
+  const overview=q.adminOverview.get()||{},today=q.adminToday.get(day)||{};
+  const runs7=q.adminRunMetrics.get(start7)||{},sessions7=q.adminSessionMetrics.get(start7)||{};
+  const purchasesAll=q.adminPurchases.get(0)||{},purchases30=q.adminPurchases.get(start30)||{};
+  const players=q.adminPlayers.all(100).map(r=>({
+    id:String(r.telegram_id),name:publicName(r),username:r.username?`@${r.username}`:'',createdAt:Number(r.created_at)||0,bestScore:Number(r.best_score)||0,
+    runs:Number(r.analytics_runs)||0,runMs:Number(r.analytics_run_ms)||0,playMs:Number(r.analytics_play_ms)||0,sessions:Number(r.analytics_sessions)||0,lastSeenAt:Number(r.analytics_last_seen_at)||0,
+  }));
+  return {
+    generatedAt:ts,timezone:'UTC',
+    overview:{
+      players:Number(overview.players)||0,
+      activeNow:Number(q.adminActiveNow.get(ts-90000)?.n)||0,
+      active7d:Number(q.adminActiveSince.get(start7)?.n)||0,
+      active30d:Number(q.adminActiveSince.get(start30)?.n)||0,
+      runs:Number(overview.runs)||0,runMs:Number(overview.run_ms)||0,playMs:Number(overview.play_ms)||0,sessions:Number(overview.sessions)||0,
+    },
+    today:{activePlayers:Number(today.active_players)||0,runs:Number(today.runs)||0,runMs:Number(today.run_ms)||0,playMs:Number(today.play_ms)||0},
+    last7d:{
+      runs:Number(runs7.runs)||0,avgRunMs:Number(runs7.avg_duration_ms)||0,avgWave:Number(runs7.avg_wave)||0,avgScore:Number(runs7.avg_score)||0,avgKills:Number(runs7.avg_kills)||0,
+      sessions:Number(sessions7.sessions)||0,avgSessionMs:Number(sessions7.avg_session_ms)||0,maxSessionMs:Number(sessions7.max_session_ms)||0,
+    },
+    monetization:{
+      all:{purchases:Number(purchasesAll.purchases)||0,payers:Number(purchasesAll.payers)||0,stars:Number(purchasesAll.stars)||0},
+      last30d:{purchases:Number(purchases30.purchases)||0,payers:Number(purchases30.payers)||0,stars:Number(purchases30.stars)||0},
+    },
+    trend:fillAnalyticsTrend(q.adminDailyRange.all(start14,day),14),
+    players,
+  };
+}
+
 function safeJsonParse(text, fallback){ try { const v=JSON.parse(text); return v ?? fallback; } catch { return fallback; } }
 function arrayStrings(v, max=100){ return Array.isArray(v) ? [...new Set(v.filter(x=>typeof x==='string' && x.length<=80))].slice(0,max) : []; }
 function clampInt(v,min,max){ v=Math.floor(Number(v)||0); return Math.max(min,Math.min(max,v)); }
@@ -715,11 +870,17 @@ async function configureBot(){
 }
 
 async function handleApi(req,res,pathname,url){
-  if(pathname==='/api/health') return sendJson(res,200,{ok:true,telegram:Boolean(BOT_TOKEN),webapp:Boolean(WEBAPP_URL),devMode:DEV_MODE});
+  if(pathname==='/api/health') return sendJson(res,200,{ok:true,telegram:Boolean(BOT_TOKEN),webapp:Boolean(WEBAPP_URL),devMode:DEV_MODE,analytics:true,adminConfigured:Boolean(ADMIN_TOKEN)});
+  if(pathname==='/api/admin/stats' && req.method==='GET'){
+    requireAdmin(req);return sendJson(res,200,{ok:true,...adminStatsPayload()});
+  }
   if(pathname==='/api/store' && req.method==='GET'){
     return sendJson(res,200,{products:Object.values(PRODUCTS).map(p=>({id:p.id,type:p.type||'crystals',title:p.title,description:p.description,price:`${p.stars} ⭐`,stars:p.stars,amount:Number(p.crystals)||0}))});
   }
   const row=authenticate(req);
+  if(pathname==='/api/analytics/heartbeat' && req.method==='POST'){
+    const body=await readJson(req);return sendJson(res,200,trackAnalyticsHeartbeat(q.getUser.get(row.telegram_id),body));
+  }
   if(pathname==='/api/me' && req.method==='GET') return sendJson(res,200,{ok:true,user:{id:row.telegram_id,username:row.username,first_name:row.first_name,language_code:row.language_code},progress:getProgress(row),entry:playerEntry(row)});
   if(pathname==='/api/progress' && (req.method==='PUT'||req.method==='POST')){
     const body=await readJson(req);const fresh=q.getUser.get(row.telegram_id);const p=sanitizeProgress(fresh,body.progress||body);
@@ -728,10 +889,10 @@ async function handleApi(req,res,pathname,url){
   }
   if(pathname==='/api/score' && req.method==='POST'){
     const body=await readJson(req);const scaled=clampInt(body.score,0,50_000_000*SCORE_SCALE);const score=Math.floor(scaled/SCORE_SCALE);
-    const meta=body.meta||{};const durationMs=clampInt(meta.durationMs,0,24*3600*1000);const wave=clampInt(meta.wave,0,10000);const kills=clampInt(meta.kills,0,10_000_000);
+    const meta=body.meta||{};const durationMs=clampInt(meta.durationMs,0,24*3600*1000);const wave=clampInt(meta.wave,0,10000);const kills=clampInt(meta.kills,0,10_000_000);const runId=String(meta.runId||meta.run_id||'').slice(0,80);
     if(score>0 && durationMs>0 && durationMs<2500) return sendJson(res,422,{ok:false,reason:'run_too_short'});
     if(score>50_000_000 || wave>5000 || kills>5_000_000) return sendJson(res,422,{ok:false,reason:'implausible_score'});
-    const fresh=q.getUser.get(row.telegram_id);let newBest=false,newWeeklyBest=false;const weekId=leaderboardWeekId();
+    const fresh=q.getUser.get(row.telegram_id);const analyticsRun=recordRunAnalytics(fresh,{runId,score,wave,kills,durationMs});let newBest=false,newWeeklyBest=false;const weekId=leaderboardWeekId();
     const currentWeekly=fresh.weekly_best_week_id===weekId?Number(fresh.weekly_best_score||0):0;
     const shouldUpdateBest=score>Number(fresh.best_score||0);
     const shouldUpdateWeekly=score>currentWeekly;
@@ -755,7 +916,7 @@ async function handleApi(req,res,pathname,url){
         newWeeklyBest=true;
       }
     }
-    let latest=q.getUser.get(row.telegram_id);const referralRun=trackReferralRun(latest,{score,durationMs});latest=q.getUser.get(row.telegram_id);return sendJson(res,200,{ok:true,newBest,newWeeklyBest,entry:playerEntry(latest),referralRun,progress:referralRun.qualified?getProgress(latest):undefined});
+    let latest=q.getUser.get(row.telegram_id);const referralRun=trackReferralRun(latest,{score,durationMs});latest=q.getUser.get(row.telegram_id);return sendJson(res,200,{ok:true,newBest,newWeeklyBest,analyticsRun,entry:playerEntry(latest),referralRun,progress:referralRun.qualified?getProgress(latest):undefined});
   }
   if(pathname==='/api/leaderboard' && req.method==='GET') return sendJson(res,200,{ok:true,...leaderboardPayload(q.getUser.get(row.telegram_id))});
   if(pathname==='/api/player-entry' && req.method==='GET') return sendJson(res,200,{ok:true,entry:playerEntry(q.getUser.get(row.telegram_id))});
@@ -819,6 +980,7 @@ const server=http.createServer(async(req,res)=>{
       const update=await readJson(req,512*1024);sendJson(res,200,{ok:true});processBotUpdate(update).catch(console.error);return;
     }
     if(pathname.startsWith('/api/'))return await handleApi(req,res,pathname,url);
+    if(pathname==='/admin')return serveStatic(req,res,'/admin.html');
     return serveStatic(req,res,pathname);
   }catch(e){
     const status=Number(e.status)||500;if(status>=500)console.error('[http]',e);

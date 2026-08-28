@@ -1,8 +1,8 @@
 {
   "name": "neon-arena-telegram",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
-  "description": "Neon Arena v1.5.22 - progressive difficulty balance with calmer early waves and escalating chaotic wave director",
+  "description": "Neon Arena v1.5.23 - owner analytics dashboard with runs, playtime, activity and Stars metrics",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
